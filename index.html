@@ -21808,7 +21808,7 @@ const PAGES=[
 ];
 const LS_KEY='infra-hisob-v2';
 let hf=null,over={},dirty=false,page=PAGES[0];
-const ui={showAll:{},q:'',cat:'',old:false,areas:1,pipes:{},pe:null,objs:{b:1,p:0}};
+const ui={setup:false,showAll:{},q:'',cat:'',old:false,areas:1,pipes:{},pe:null,objs:{b:1,p:0}};
 
 const ICON={umumiy:'M4 4h6v6H4z M14 4h6v6h-6z M14 14h6v6h-6z M4 14h6v6H4z',obodonlashtirish:'M12 3l4 5h-2l3 4h-2l3 4H6l3-4H7l3-4H8z M12 16v5',elektr:'M13 2L4 14h7l-1 8 9-12h-7z',suv:'M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z',kanalizatsiya:'M3 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0 M3 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0 M3 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0','yomgir-suvi':'M7 15a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.6 1.5A3.3 3.3 0 0 1 17.5 15z M8 18v3 M12 18v3 M16 18v3',gaz:'M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-8.5z',yol:'M6 21L9 3 M18 21L15 3 M12 5v3 M12 11v3 M12 17v3',yoritish:'M9 18h6 M10 21h4 M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z',qoshimcha:'M4 4h16v16H4z M12 8v8 M8 12h8',narxlar:'M3 12V4h8l10 10-8 8z M7.5 8h.01',obyektlar:'M5 21V5l7-2v18 M12 9l7 2v10 M3 21h18 M8 9h1 M8 13h1 M8 17h1 M15 14h1 M15 17h1',
   params:'M4 6h9 M17 6h3 M4 12h3 M11 12h9 M4 18h11 M19 18h1 M15 4v4 M9 10v4 M17 16v4',result:'M6 3h12v18H6z M9 7h6 M9 12h.01 M12 12h.01 M15 12h.01 M9 16h.01 M12 16h.01 M15 16h.01',list:'M3 8l9-5 9 5v8l-9 5-9-5z M3 8l9 5 9-5 M12 13v8',
@@ -22165,6 +22165,7 @@ function overviewPage(){
       h('div',{class:'ln'},h('a',{href:'#obyektlar'},'Byudjet hisobidan quriladigan obyektlar'),h('span',null,mln(s1)+' mln')),
       h('div',{class:'ln'},h('span',null,'Xususiy sheriklik obyektlari (byudjet ulushi)'),h('span',null,mln(s2)+' mln')),
       h('div',{class:'grand'},h('span',null,'Jami, QQS bilan'),h('b',null,mln(total+s4)+' mln'),h('small',null,som(total+s4)+" so'm")))))}
+  {const g=ghCard();if(g)out.push(g)}
   out.push(h('p',{class:'note'},icon('warn',1),"Diqqat: barcha summalar taxminiy hisob. Ularni loyihaga to'g'ridan-to'g'ri qo'llab bo'lmaydi — aniq summa loyiha-smeta hujjatlari ishlab chiqilganda aniqlanadi."));
   out.push(h('div',{class:'foot'},
     h('span',{id:'status',role:'status'},statusText),
@@ -22543,12 +22544,86 @@ function go(){
 })();
 
 /* ---------- saving: this browser always, shared store when available ---------- */
+/* ---------- stand-alone site on GitHub Pages: everyone shares one calculation, kept on the "data" branch of the same repository.
+   The access key is stored there encrypted with the site password, so whoever knows the password can read and save. ---------- */
+const GH=window.infraRepo||(()=>{const m=/^([^.]+)\.github\.io$/.exec(location.hostname),seg=location.pathname.split('/').filter(Boolean);return m&&seg[0]?{owner:m[1],repo:seg[0]}:null})();
+let ghTok=null,ghSha=null,ghTimer=null,ghBusy=false,ghAgain=false,ghLast=null,ghState='';
+const ghApi=p=>'https://api.github.com/repos/'+GH.owner+'/'+GH.repo+p;
+const ghHead=()=>({Authorization:'Bearer '+ghTok,Accept:'application/vnd.github+json'});
+const b64e=u8=>{let s='';for(let i=0;i<u8.length;i+=8192)s+=String.fromCharCode.apply(null,u8.subarray(i,i+8192));return btoa(s)};
+const b64d=s=>Uint8Array.from(atob(s.replace(/\s/g,'')),c=>c.charCodeAt(0));
+const utf8e=s=>new TextEncoder().encode(s),utf8d=u=>new TextDecoder().decode(u);
+async function pwKey(salt){const k=await crypto.subtle.importKey('raw',utf8e(sitePw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:250000,hash:'SHA-256'},k,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function seal(text){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},await pwKey(salt),utf8e(text));return {s:b64e(salt),i:b64e(iv),c:b64e(new Uint8Array(ct))}}
+async function unseal(o){return utf8d(new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(o.i)},await pwKey(b64d(o.s)),b64d(o.c))))}
+function ghSet(s){ghState=s;const e=$('ghs');if(e)e.textContent=s}
+async function ghGet(path){const r=await fetch(ghApi('/contents/'+path+'?ref=data&t='+Date.now()),{headers:ghHead(),cache:'no-store'});if(r.status===404)return null;if(!r.ok)throw Object.assign(new Error('gh'),{status:r.status});return r.json()}
+async function ghPut(path,text,sha,msg){const r=await fetch(ghApi('/contents/'+path),{method:'PUT',headers:ghHead(),body:JSON.stringify({message:msg,content:b64e(utf8e(text)),branch:'data',sha:sha||undefined})});
+  if(!r.ok)throw Object.assign(new Error('gh'),{status:r.status});return (await r.json()).content.sha}
+async function ghLoad(){
+  const j=await ghGet('data.json');if(!j){ghSha=null;return}
+  ghSha=j.sha;let d;try{d=JSON.parse(utf8d(b64d(j.content)))}catch(e){return}
+  const cells=JSON.stringify(d.cells||{});if(cells===ghLast)return;
+  const act=document.activeElement;if(dirty||(act&&act.tagName==='INPUT'&&act.type==='text'&&$('main').contains(act)))return;
+  ghLast=cells;if(cells!==JSON.stringify(over)){applyOver(d.cells||{});saveLocal();render()}
+}
+async function ghSave(){
+  if(!ghTok)return;if(ghBusy){ghAgain=true;return}
+  ghBusy=true;const cells=JSON.stringify(over),body=JSON.stringify({v:1,at:Date.now(),cells:over});
+  try{
+    try{ghSha=await ghPut('data.json',body,ghSha,'Hisob yangilandi')}
+    catch(e){if(e.status!==409&&e.status!==422)throw e;const j=await ghGet('data.json');ghSha=await ghPut('data.json',body,j?j.sha:null,'Hisob yangilandi')}
+    ghLast=cells;dirty=false;saveLocal();status("O'zgarishlar saqlandi — hamma kirganlarga ko'rinadi");
+  }catch(e){status(e.status===401||e.status===403?"Saqlab bo'lmadi: kirish kaliti yaroqsiz yoki muddati tugagan":"Saqlab bo'lmadi — internetni tekshiring, o'zgarishlar shu qurilmada turibdi")}
+  ghBusy=false;if(ghAgain){ghAgain=false;ghSave()}
+}
+async function ghInit(){
+  if(!GH||!window.crypto||!crypto.subtle)return;
+  try{
+    const r=await fetch('https://raw.githubusercontent.com/'+GH.owner+'/'+GH.repo+'/data/sync.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok){ghSet('off');if(page.k==='umumiy')render();return}
+    ghTok=await unseal(await r.json());
+    await ghLoad();if(dirty)ghSave();
+    ghSet('on');status("Umumiy saqlash yoqilgan — kiritilganlar hamma kirganlarga ko'rinadi");if(page.k==='umumiy')render();
+    setInterval(()=>{if(!document.hidden&&!ghBusy)ghLoad().catch(()=>{})},20000);
+  }catch(e){ghTok=null;ghSet('off');if(page.k==='umumiy')render()}
+}
+async function ghSetup(token,msg){
+  const say=t=>{msg.textContent=t};say('Tekshirilmoqda…');ghTok=token.trim();
+  try{
+    let r=await fetch(ghApi(''),{headers:ghHead()});if(!r.ok)throw Object.assign(new Error('gh'),{status:r.status});
+    const def=(await r.json()).default_branch||'main';
+    r=await fetch(ghApi('/git/ref/heads/data'),{headers:ghHead()});
+    if(r.status===404){const b=await fetch(ghApi('/git/ref/heads/'+def),{headers:ghHead()});if(!b.ok)throw Object.assign(new Error('gh'),{status:b.status});
+      const c=await fetch(ghApi('/git/refs'),{method:'POST',headers:ghHead(),body:JSON.stringify({ref:'refs/heads/data',sha:(await b.json()).object.sha})});if(!c.ok)throw Object.assign(new Error('gh'),{status:c.status})}
+    const old=await ghGet('sync.json');await ghPut('sync.json',JSON.stringify(await seal(ghTok)),old?old.sha:null,'Umumiy saqlash sozlandi');
+    const d=await ghGet('data.json');ghSha=d?d.sha:null;
+    if(d&&!Object.keys(over).length){await ghLoad()}else{dirty=true;await ghSave()}
+    ghSet('on');ui.setup=false;render();
+    setInterval(()=>{if(!document.hidden&&!ghBusy)ghLoad().catch(()=>{})},20000);
+  }catch(e){ghTok=null;say(e.status===401?"Kalit noto'g'ri yoki muddati tugagan.":e.status===403||e.status===404?"Kalitda bu repozitoriyga yozish ruxsati yo'q (Contents: Read and write kerak).":"Ulanib bo'lmadi. Internetni tekshirib, qayta urinib ko'ring.")}
+}
+function ghCard(){
+  if(!GH)return null;
+  if(ghTok)return h('p',{class:'fine'},icon('obyektlar',1),"Umumiy saqlash yoqilgan: bu saytda kiritilgan ma'lumotlar parolni bilgan hamma uchun bir xil ko'rinadi va saqlanadi.");
+  if(ghState!=='off')return null;
+  if(!ui.setup)return h('section',{class:'card'},h('h3',null,icon('refresh',1),'Umumiy saqlash'),
+    h('p',{class:'fine'},"Hozir ma'lumotlar faqat shu qurilmada saqlanyapti. Hamma kirganlar bir xil hisobni ko'rishi uchun umumiy saqlashni bir marta sozlang."),
+    h('button',{class:'btn',type:'button',style:'margin-top:10px',onclick:()=>{ui.setup=true;render();const e=$('ghtok');if(e)e.focus()}},icon('plus',1),'Umumiy saqlashni sozlash'));
+  const msg=h('span',{class:'hint',role:'status'});
+  const inp=h('input',{type:'password',class:'in',id:'ghtok',placeholder:'github_pat_…','aria-label':'GitHub kirish kaliti',autocomplete:'off'});
+  return h('section',{class:'card'},h('h3',null,icon('refresh',1),'Umumiy saqlashni sozlash'),
+    h('p',{class:'fine'},"GitHub'da shu repozitoriy uchun yaratilgan kirish kalitini (token) kiriting. Kalit sayt paroli bilan shifrlanib saqlanadi; uni faqat parolni bilganlar ishlata oladi."),
+    h('div',{class:'qs',style:'margin-top:8px'},qrow('GitHub kirish kaliti',inp,{for:'ghtok',icon:'lock'}),
+      h('div',{class:'q addq'},h('span'),h('div',{class:'qc'},h('button',{class:'btn',type:'button',onclick:()=>{if(inp.value.trim())ghSetup(inp.value,msg)}},'Ulash'),msg))));
+}
 let db=null,docRef=null,writing=false,again=false,timer=null,canWrite=true,lastRemote=null,statusText='';
 function status(t){statusText=t;const e=$('status');if(e)e.textContent=t}
 function loadLocal(){try{const s=localStorage.getItem(LS_KEY);if(s){const o=JSON.parse(s);dirty=!!o.dirty;return o.cells||{}}}catch(e){}return {}}
 function saveLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify({cells:over,dirty}))}catch(e){}}
 function saveSoon(){
   dirty=true;saveLocal();
+  if(ghTok){status('Saqlanmoqda…');clearTimeout(ghTimer);ghTimer=setTimeout(ghSave,1500);return}
   if(!docRef||!canWrite){status("O'zgarishlar shu qurilmada saqlandi");return}
   status('Saqlanmoqda…');clearTimeout(timer);timer=setTimeout(push,700);
 }
@@ -22586,20 +22661,21 @@ function start(){
   if(typeof HyperFormula==='undefined'){$('main').replaceChildren(h('p',{class:'loading'},"Hisoblash kutubxonasi yuklanmadi. Internetni tekshirib, sahifani qayta oching."));return}
   hf=buildEngine(HyperFormula,M);
   const local=loadLocal();if(Object.keys(local).length)applyOver(local);
-  window.addEventListener('hashchange',go);go();connect();connectDownloads();
+  window.addEventListener('hashchange',go);go();connect();connectDownloads();ghInit();
 }
 /* ---------- password screen (a simple lock, not real protection) ---------- */
-const PW=2249179244286472,UNLOCK='infra-unlock-v1';
+const PW=2249179244286472,UNLOCK='infra-pw-v2';let sitePw='';
 function hash(str){let h1=0xdeadbeef^7,h2=0x41c6ce57^7;for(let i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507);h1^=Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507);h2^=Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0)}
 function unlock(){$('gate').hidden=true;$('app').hidden=false;setTimeout(start,30)}
 function lock(){try{localStorage.removeItem(UNLOCK)}catch(e){}location.reload()}
 window.infraLock=lock;
 $('gateform').addEventListener('submit',e=>{
   e.preventDefault();
-  if(hash('infra:'+$('pw').value.trim())===PW){try{localStorage.setItem(UNLOCK,String(PW))}catch(x){}unlock()}
+  const v=$('pw').value.trim();
+  if(hash('infra:'+v)===PW){sitePw=v;try{localStorage.setItem(UNLOCK,v)}catch(x){}unlock()}
   else{$('pwerr').textContent="Parol noto'g'ri. Qaytadan urinib ko'ring.";$('pw').select()}
 });
-(function(){let ok=false;try{ok=localStorage.getItem(UNLOCK)===String(PW)}catch(e){}if(ok)unlock();else $('pw').focus()})();
+(function(){let v='';try{v=localStorage.getItem(UNLOCK)||''}catch(e){}if(v&&hash('infra:'+v)===PW){sitePw=v;unlock()}else $('pw').focus()})();
 })();
 </script>
 
