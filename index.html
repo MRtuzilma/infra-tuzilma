@@ -13,6 +13,7 @@
 <style>
 /* Layout: navy masthead carrying the project total; a section list on the left that doubles as the cost breakdown; each section is questions first, result second, materials last. */
 :root{
+  color-scheme:light;
   --bg:#f3f5f9; --surface:#ffffff; --ink:#152033; --muted:#627089; --line:#e0e5ee;
   --brand:#1f3864; --on-brand:#ffffff; --on-brand-soft:#c5d3ec; --brand-ink:#1f3864; --brand-soft:#e9eef8;
   --field:#ffffff; --field-line:#bcc7da; --accent:#2460c7; --bar:#3a6fd6;
@@ -22,16 +23,7 @@
   --font-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --font-display:"Space Grotesk","Inter",system-ui,sans-serif;
 }
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#0d121b; --surface:#151c29; --ink:#e6ebf4; --muted:#93a0b8; --line:#263146;
-  --brand:#1b3160; --on-brand:#ffffff; --on-brand-soft:#b9c9e8; --brand-ink:#a9c4f5; --brand-soft:#1c2943;
-  --field:#0f1622; --field-line:#3a4963; --accent:#82b3ff; --bar:#5b8def;
-  --warn:#f0b266; --warn-bg:#35270f; --bad:#ff9d94; --bad-bg:#41201d; --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#008300; color-scheme:dark } }
-:root[data-theme="dark"]{
-  --bg:#0d121b; --surface:#151c29; --ink:#e6ebf4; --muted:#93a0b8; --line:#263146;
-  --brand:#1b3160; --on-brand:#ffffff; --on-brand-soft:#b9c9e8; --brand-ink:#a9c4f5; --brand-soft:#1c2943;
-  --field:#0f1622; --field-line:#3a4963; --accent:#82b3ff; --bar:#5b8def;
-  --warn:#f0b266; --warn-bg:#35270f; --bad:#ff9d94; --bad-bg:#41201d; --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#008300; color-scheme:dark }
+
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:14px;line-height:1.45}
@@ -1674,11 +1666,14 @@ function extendModel(M){
   add('Yo\'l','Taktil plitka (beton, 30×30 sm)','m²',180000,'Yol, Byudjet',"Ko'zi ojizlar uchun yo'naltiruvchi relyefli plitka.");
   add('Yo\'l','Beton lotok (ariq) 40×40 sm','m',160000,'Yol, Byudjet',"Yo'l chetidagi suv oqadigan tayyor beton nov.");
   ask(Y,'S5','Trotuar qoplamasi',{v:['Plitka (bruschatka)','Beton (quyma)'],def:'Plitka (bruschatka)'},{after:8,show:'$C$8="Ha"'});
+  ask(Y,'S14',"Shundan hudud chegarasidan tashqarida (m)",{},{after:7,hint:"Narx butun uzunlikdan hisoblanadi; hudud ko'rsatkichlariga faqat ichkaridagi qism kiradi."});
+  ask(Y,'S15',"Shundan hudud chegarasidan tashqarida (m)",{},{after:10,show:'$C$8="Ha"',hint:"Narx butun uzunlikdan hisoblanadi; hudud ko'rsatkichlariga faqat ichkaridagi qism kiradi."});
   ask(Y,'S6',"Taktil plitka (ko'zi ojizlar yo'lagi) bormi?",{v:["Yo'q",'Ha'],def:"Yo'q"},{after:10,show:'$C$8="Ha"'});
   ask(Y,'S7',"Taktil yo'lak uzunligi (m)",{},{after:10,show:'AND($C$8="Ha",$S$6="Ha")',hint:"Bo'sh qolsa, trotuar uzunligi olinadi."});
   ask(Y,'S11',"Velo yo'lak bormi?",{v:["Yo'q",'Ha'],def:"Yo'q"},{after:11});
   ask(Y,'S12',"Velo yo'lak uzunligi (m)",{},{after:11,show:'$S$11="Ha"'});
   ask(Y,'S13',"Velo yo'lak eni (m)",{},{after:11,show:'$S$11="Ha"',hint:"Odatda bir tomonlama 1,5–2 m, ikki tomonlama 2,5–3 m."});
+  ask(Y,'S16',"Shundan hudud chegarasidan tashqarida (m)",{},{after:11,show:'$S$11="Ha"',hint:"Narx butun uzunlikdan hisoblanadi; hudud ko'rsatkichlariga faqat ichkaridagi qism kiradi."});
   ask(Y,'S8',"Yo'l chetida ariq bormi?",{v:["Yo'q",'Ha'],def:"Yo'q"},{after:11});
   ask(Y,'S9','Ariq qayerda?',{v:['Bir tomonda','Ikki tomonda'],def:'Bir tomonda'},{after:11,show:'$S$8="Ha"'});
   ask(Y,'S10',"Ariq uzunligi (m), bir tomoni",{},{after:11,show:'$S$8="Ha"',hint:"Bo'sh qolsa, yo'l uzunligi olinadi."});
@@ -1985,6 +1980,7 @@ const ICON={umumiy:'M4 4h6v6H4z M14 4h6v6h-6z M14 14h6v6h-6z M4 14h6v6H4z',obodo
   help:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7 M12 17h.01',percent:'M7.5 5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z M16.5 14a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z M5 19L19 5',type:'M8 6h12 M8 12h12 M8 18h12 M4 6h.01 M4 12h.01 M4 18h.01'};
 function qIcon(lab,auto){
   if(auto||/avtomatik|jami/i.test(lab))return 'result';
+  if(/tashqari/i.test(lab))return 'pin';
   if(/chuqurlig/i.test(lab))return 'down';
   if(/uzunlig|uzunlik|\beni\b/i.test(lab))return 'ruler';
   if(/soni|dona/i.test(lab))return 'hash';
@@ -2329,6 +2325,7 @@ function workText(s){
   else if(s.sheet==='Yol'){const l=N('Yol','C5'),w=N('Yol','C6');if(l)p.push(nUz(l)+' m uzunlikdagi'+(w?', '+nUz(w)+' m enli':'')+' avtomobil yo\'lini qurish');
     if(V('Yol','C8')==='Ha'&&N('Yol','C11'))p.push(nUz(N('Yol','C9'))+' m '+(V('Yol','S5')==='Beton (quyma)'?'beton':'plitkali')+' trotuar barpo etish');
     if(V('Yol','C8')==='Ha'&&V('Yol','S6')==='Ha'){const tl=N('Yol','S7')!==null?N('Yol','S7'):N('Yol','C9');p.push((tl?nUz(tl)+' m ':'')+'taktil yo\'lak (ko\'zi ojizlar uchun) yotqizish')}
+    {const o=N('Yol','S14');if(o&&l)p[0]=p[0].replace(" avtomobil yo'lini qurish"," avtomobil yo'lini (shundan "+nUz(Math.min(o,l))+" m hudud tashqarisida) qurish")}
     if(V('Yol','S11')==='Ha'&&N('Yol','S12'))p.push(nUz(N('Yol','S12'))+' m uzunlikdagi'+(N('Yol','S13')?', '+nUz(N('Yol','S13'))+' m enli':'')+' velo yo\'lak qurish');
     if(V('Yol','S8')==='Ha')p.push(nUz((N('Yol','S10')||l||0)*(V('Yol','S9')==='Ikki tomonda'?2:1))+' m yo\'l chetidagi ariq (beton lotok) qurish')}
   else if(s.sheet==='Yoritish'){const l=N('Yoritish','C5');if(l)p.push(km(l)+' km ko\'chani '+(V('Yoritish','S5')==='Quyosh panelli (avtonom)'?'quyosh panelli':V('Yoritish','C6')+' LED')+' chiroqlar bilan yoritish')}
@@ -2774,8 +2771,12 @@ function lotRatesCard(){
 }
 
 /* ---------- area summary («Hudud ko'rsatkichlari») ---------- */
-function roadsOf(){const Y='Yol',velo=V(Y,'S11')==='Ha'?(N(Y,'S12')||0)*(N(Y,'S13')||0):0,trotOn=V(Y,'C8')==='Ha';
-  return {road:N(Y,'C7')||0,trot:trotOn?(N(Y,'C11')||0):0,velo,veloLen:V(Y,'S11')==='Ha'?(N(Y,'S12')||0):0,taktil:trotOn&&V(Y,'S6')==='Ha'?(N(Y,'S7')!==null?N(Y,'S7'):(N(Y,'C9')||0)):0}}
+/* roads, pavements and bike lanes: the whole length is priced, but only the part inside the site counts in the area balance */
+function roadsOf(){const Y='Yol',g=a=>N(Y,a)||0,part=(len,out,w)=>{const L=g(len),o=Math.min(L,g(out)),W=g(w);return {in:(L-o)*W,out:o*W}};
+  const trotOn=V(Y,'C8')==='Ha',veloOn=V(Y,'S11')==='Ha';
+  const r=part('C5','S14','C6'),t=trotOn?part('C9','S15','C10'):{in:0,out:0},v=veloOn?part('S12','S16','S13'):{in:0,out:0};
+  return {road:r.in,trot:t.in,velo:v.in,roadOut:r.out,trotOut:t.out,veloOut:v.out,outside:r.out+t.out+v.out,veloLen:veloOn?g('S12'):0,
+    taktil:trotOn&&V(Y,'S6')==='Ha'?(N(Y,'S7')!==null?g('S7'):g('C9')):0}}
 function info(){
   const J='Jamlama',land=((N(J,'C6')||0)+(N(J,'C7')||0))*10000;
   const lots=LOTROWS.filter(lotUsed).map(lotData);
@@ -2794,7 +2795,7 @@ function info(){
   const jobs={t:0,i:0,x:0};lots.forEach(d=>{jobs[d.cat.sec]+=d.jobs||0});objs3.forEach(b=>{jobs[b.sec]+=b.jobs||0});
   const cap=sum(lots,d=>d.cap)+sum(objs3,b=>b.cap);
   const infra=N('Hisobot','G15')||0,invCost=sum(lots,d=>d.total)+sum(dx,b=>b.inv),budCost=infra+sum(bud,b=>b.cost)+sum(dx,b=>b.bud);
-  return {land:total,landTyped:!!land,lots,bud,dx,fp,green,pool,road,trot,velo,veloLen:rd.veloLen,taktil:rd.taktil,trades,objs,jobs,jobsAll:jobs.t+jobs.i+jobs.x,cap,
+  return {land:total,landTyped:!!land,lots,bud,dx,fp,green,pool,road,trot,velo,veloLen:rd.veloLen,taktil:rd.taktil,trades,objs,jobs,jobsAll:jobs.t+jobs.i+jobs.x,cap,roadOut:rd.roadOut,trotOut:rd.trotOut,veloOut:rd.veloOut,outside:rd.outside,
     over:land?Math.max(0,fp+road+trot+velo+pool-land):0,
     invArea,budArea:Math.max(0,total-invArea),invCost,budCost,infra,budObj:sum(bud,b=>b.cost),dxBud:sum(dx,b=>b.bud),dxInv:sum(dx,b=>b.inv),lotCost:sum(lots,d=>d.total),cost:invCost+budCost};
 }
@@ -2808,6 +2809,7 @@ function summaryRows(x){
   R('Trotuarlar',m2(x.trot),pc(x.trot,x.land));
   if(x.velo)R("Velo yo'laklar",m2(x.velo),pc(x.velo,x.land));
   if(x.pool)R('Hovuz va basseynlar',m2(x.pool),pc(x.pool,x.land));
+  if(x.outside)R("Hudud chegarasidan tashqaridagi yo'l, trotuar va velo yo'laklar (tashqi ulanish, balansga kirmaydi)",m2(x.outside));
   if(x.taktil)R("Taktil yo'laklar (ko'zi ojizlar uchun), uzunligi",nUz(x.taktil,'#,##0')+' m');
   R('Lotlar soni',nUz(x.lots.length+x.dx.length),null,1);
   R('Investor investitsiya ulushi hisobidan quriladigan LOTlar',nUz(x.lots.length));
@@ -2852,9 +2854,9 @@ function chartCard(set){
 }
 function malumotPage(p){
   const x=info(),rows=summaryRows(x),half=Math.ceil(rows.length/2);
-  const out=[h('div',{class:'pagehead'},h('h2',null,p.title,icon(p.k)),h('p',null,"Hudud balansi, LOTlar, obyektlar, ishchi o'rinlari va moliyalashtirish ulushlari — barcha bo'limlardan o'zi yig'iladi. Ko'kalamzor hudud = umumiy maydon − qurilish osti − yo'llar − trotuarlar − velo yo'laklar − hovuzlar."))];
+  const out=[h('div',{class:'pagehead'},h('h2',null,p.title,icon(p.k)),h('p',null,"Hudud balansi, LOTlar, obyektlar, ishchi o'rinlari va moliyalashtirish ulushlari — barcha bo'limlardan o'zi yig'iladi. Ko'kalamzor hudud = umumiy maydon − qurilish osti − yo'llar − trotuarlar − velo yo'laklar − hovuzlar (yo'llarning hudud chegarasidan tashqaridagi qismi hisobga olinmaydi)."))];
   if(!x.landTyped)out.push(h('p',{class:'note'},icon('warn',1),"«Loyiha birlamchi ma'lumotlari» bo'limida hudud maydoni kiritilmagan — foizlar kiritilgan obyektlar maydonidan hisoblandi."));
-  if(x.over>0.5)out.push(h('p',{class:'note'},icon('warn',1),"Qurilish osti, yo'llar, trotuarlar, velo yo'laklar va hovuzlar maydoni yig'indisi umumiy yer maydonidan "+nUz(x.over,'#,##0')+" m² ga oshib ketdi — kiritilgan maydonlarni tekshiring."));
+  if(x.over>0.5)out.push(h('p',{class:'note'},icon('warn',1),"Qurilish osti, yo'llar, trotuarlar, velo yo'laklar va hovuzlar maydoni yig'indisi umumiy yer maydonidan "+nUz(x.over,'#,##0')+" m² ga oshib ketdi. Yo'llarning hudud tashqarisidagi qismi bo'lsa, «Yo'llar» bo'limida «Shundan hudud chegarasidan tashqarida» maydoniga yozing."));
   const tbl=part=>h('table',{class:'um'},h('colgroup',null,h('col',{style:'width:34px'}),h('col'),h('col',{style:'width:31%'}),h('col',{style:'width:52px'})),h('thead',null,h('tr',null,h('th',null,'№'),h('th',null,'Nomi'),h('th',{colspan:'2'},'Soni va miqdori'))),
     h('tbody',null,part.map(r=>h('tr',{class:r.bold?'b':null},h('td',null,String(r.n)),h('td',null,r.label),r.pct?[h('td',{class:'v'},r.val),h('td',{class:'p'},r.pct)]:h('td',{class:'v',colspan:'2'},r.val)))));
   out.push(h('div',{class:'two eq'},costsCard(),fundCard(x,true)));
