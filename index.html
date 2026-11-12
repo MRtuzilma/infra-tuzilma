@@ -17,6 +17,7 @@
   --brand:#1f3864; --on-brand:#ffffff; --on-brand-soft:#c5d3ec; --brand-ink:#1f3864; --brand-soft:#e9eef8;
   --field:#ffffff; --field-line:#bcc7da; --accent:#2460c7; --bar:#3a6fd6;
   --warn:#9a4a06; --warn-bg:#fdf1de; --bad:#b42318; --bad-bg:#fdeae8;
+  --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100; --c5:#e87ba4; --c6:#008300;
   --font-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --font-display:"Space Grotesk","Inter",system-ui,sans-serif;
 }
@@ -24,12 +25,12 @@
   --bg:#0d121b; --surface:#151c29; --ink:#e6ebf4; --muted:#93a0b8; --line:#263146;
   --brand:#1b3160; --on-brand:#ffffff; --on-brand-soft:#b9c9e8; --brand-ink:#a9c4f5; --brand-soft:#1c2943;
   --field:#0f1622; --field-line:#3a4963; --accent:#82b3ff; --bar:#5b8def;
-  --warn:#f0b266; --warn-bg:#35270f; --bad:#ff9d94; --bad-bg:#41201d; color-scheme:dark } }
+  --warn:#f0b266; --warn-bg:#35270f; --bad:#ff9d94; --bad-bg:#41201d; --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#008300; color-scheme:dark } }
 :root[data-theme="dark"]{
   --bg:#0d121b; --surface:#151c29; --ink:#e6ebf4; --muted:#93a0b8; --line:#263146;
   --brand:#1b3160; --on-brand:#ffffff; --on-brand-soft:#b9c9e8; --brand-ink:#a9c4f5; --brand-soft:#1c2943;
   --field:#0f1622; --field-line:#3a4963; --accent:#82b3ff; --bar:#5b8def;
-  --warn:#f0b266; --warn-bg:#35270f; --bad:#ff9d94; --bad-bg:#41201d; color-scheme:dark }
+  --warn:#f0b266; --warn-bg:#35270f; --bad:#ff9d94; --bad-bg:#41201d; --c1:#3987e5; --c2:#d95926; --c3:#199e70; --c4:#c98500; --c5:#d55181; --c6:#008300; color-scheme:dark }
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:14px;line-height:1.45}
@@ -264,6 +265,97 @@ body.home .shell{padding-bottom:32px}
 .empty{color:var(--muted);padding:14px 0}
 .newp{margin-top:14px;width:100%;justify-content:center;display:flex;align-items:center;padding:12px;font-size:15px;background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
 .newp .ic{color:currentColor}
+
+/* LOT cards */
+.lot{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;background:var(--surface)}
+.lot[open]{box-shadow:0 2px 12px rgba(20,40,80,.07)}
+.lot>summary{list-style:none;display:flex;gap:12px;align-items:center;padding:12px 14px;cursor:pointer}
+.lot>summary::-webkit-details-marker{display:none}
+.lot>summary>.ic{color:var(--muted);transition:transform .25s}
+.lot[open]>summary>.ic{transform:rotate(180deg)}
+.lotno{flex:none;display:flex;flex-direction:column;align-items:center;justify-content:center;width:52px;height:46px;border-radius:10px;background:var(--brand);color:var(--on-brand);font-size:10px;font-weight:700;letter-spacing:.08em}
+.lotno b{font-family:var(--font-display);font-size:18px;letter-spacing:0;line-height:1}
+.lotno.bad{background:var(--bad)}
+.lotnm{flex:1;min-width:0;display:flex;flex-direction:column}
+.lotnm b{font-size:15px;overflow-wrap:anywhere}
+.lotnm small{color:var(--muted);font-size:12px}
+.lotsum{font-family:var(--font-display);font-weight:700;color:var(--brand-ink);display:flex;flex-direction:column;align-items:flex-end;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lotsum small{font-family:var(--font-body);font-weight:400;font-size:11px;color:var(--muted)}
+.lot>.og,.lot>.qh,.lot>.rowx,.lot>.btn,.lot>.errmsg,.lot>.lotcost,.lot>.lotact{margin-left:14px;margin-right:14px}
+.lot>.og{padding-top:12px;border-top:1px solid var(--line)}
+.of.wide{grid-column:span 2}
+.lab2{font-size:12.5px;font-weight:600;display:flex;align-items:center}
+.lab2 .ic{color:var(--accent)}
+.of .hint{font-size:12px;color:var(--muted)}
+.of .errmsg{font-size:12px;color:var(--bad);font-weight:500}
+.rowx{display:grid;grid-template-columns:minmax(0,1fr) 120px 150px 130px 36px;gap:8px;align-items:center;padding:6px 0}
+.rowx.head{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;padding-bottom:0}
+.rowx .xs{text-align:right;font-variant-numeric:tabular-nums}
+.lot>.btn{margin-top:8px}
+.lotcost{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--brand-soft)}
+.lotact{display:flex;justify-content:flex-end;padding:12px 0 14px}
+.pr2>summary{cursor:pointer;font-weight:600;color:var(--accent);display:flex;align-items:center;list-style:none}
+.pr2>summary::-webkit-details-marker{display:none}
+.pr2[open]>summary{margin-bottom:12px}
+.umw{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+table.um{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13px}
+table.um th{background:var(--brand);color:var(--on-brand);font-weight:600;padding:8px;text-align:left;font-size:12px}
+table.um th:last-child{text-align:center}
+table.um td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.um td:first-child{color:var(--muted);width:30px}
+table.um td.v{text-align:right;white-space:nowrap}
+table.um td.v[colspan]{text-align:center}
+table.um td.p{text-align:right;color:var(--muted);white-space:nowrap;width:56px}
+table.um tr.b td{background:var(--brand-soft);font-weight:700;color:var(--brand-ink)}
+table.um tbody tr:hover td{background:var(--brand-soft)}
+.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+.chart h4{margin:0 0 10px;font-size:13px;font-weight:700;color:var(--brand-ink)}
+.cw{display:flex;gap:16px;align-items:center}
+.dn{flex:none;width:170px;max-width:45%}
+.dn svg{width:100%;height:auto;display:block}
+.sg{stroke:var(--surface);stroke-width:2;transform-origin:50% 50%;transform-box:view-box}
+.s1{fill:var(--c1);background:var(--c1)}.s2{fill:var(--c2);background:var(--c2)}.s3{fill:var(--c3);background:var(--c3)}.s4{fill:var(--c4);background:var(--c4)}.s5{fill:var(--c5);background:var(--c5)}.s6{fill:var(--c6);background:var(--c6)}
+.dc{fill:var(--ink);font-family:var(--font-display)}.ds2{fill:var(--muted)}
+.lg{list-style:none;margin:0;padding:0;flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;font-size:12.5px}
+.lg li{display:grid;grid-template-columns:12px minmax(0,1fr) auto 44px;gap:8px;align-items:center}
+.lg .lgs{width:12px;height:12px;border-radius:3px;display:block}
+.lg b{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lg em{font-style:normal;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.pricedate{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding:12px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.pricedate b{font-family:var(--font-display);color:var(--brand-ink)}
+.pricedate .ic{color:var(--accent)}
+.pricedate .old{color:var(--warn);font-weight:600;display:flex;align-items:center}
+.pricedate .old .ic{color:currentColor}
+.grp h4{display:flex;align-items:center}
+.grp h4 .ic{color:var(--accent)}
+@media (prefers-reduced-motion:no-preference){
+  .pagehead h2 .ic path{stroke-dasharray:120;stroke-dashoffset:120;animation:draw 1.1s ease forwards}
+  .pagehead h2 .ic{animation:bob 3.2s ease-in-out 1.2s infinite}
+  .card>h3 .ic path,.pr2>summary .ic path{stroke-dasharray:90;stroke-dashoffset:90;animation:draw .9s ease .1s forwards}
+  .nav a .ic{transition:transform .25s}
+  .nav a:hover .ic{transform:translateY(-2px) rotate(-10deg) scale(1.15)}
+  .nav a[aria-current="page"] .ic{animation:pop .5s ease}
+  .q:hover .qi{animation:wiggle .5s ease}
+  .stat .ic,.pricedate>.ic{animation:bob 3s ease-in-out infinite}
+  .savebtn.dirty{animation:glow 1.8s ease-in-out infinite}
+  .savebtn:disabled .ic{animation:spin 1s linear infinite}
+  .btn:hover .ic,.pdfbtn:hover .ic{animation:wiggle .45s ease}
+  .newp .ic{animation:pulse 2.4s ease-in-out infinite}
+  .lotno{transition:transform .25s}
+  .lot>summary:hover .lotno{transform:rotate(-4deg) scale(1.05)}
+  .chart .sg{animation:grow .8s cubic-bezier(.2,.8,.2,1) both;transition:transform .2s}
+  .chart .sg:hover{transform:scale(1.04)}
+  .chart .sg:nth-child(2){animation-delay:.08s}.chart .sg:nth-child(3){animation-delay:.16s}.chart .sg:nth-child(4){animation-delay:.24s}.chart .sg:nth-child(5){animation-delay:.32s}.chart .sg:nth-child(6){animation-delay:.4s}
+  .po:hover .qi .ic{animation:wiggle .5s ease}
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(10deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(242,182,50,.55)}50%{box-shadow:0 0 0 7px rgba(242,182,50,0)}}
+@keyframes grow{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
 .pr{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
 .pr summary{cursor:pointer;font-weight:600;color:var(--accent);display:flex;align-items:center;list-style:none}
 .pr summary::-webkit-details-marker{display:none}
@@ -362,6 +454,16 @@ a.srch{text-decoration-style:dotted;color:var(--ink)}
   .rows.inq .nums>div:last-child,.row.xr .nums>div:last-child{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline}
   .rowp{grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:13px 0}
   .pe{padding:8px}
+  .umw{grid-template-columns:minmax(0,1fr)}
+  .charts{grid-template-columns:minmax(0,1fr)}
+  .cw{flex-direction:column;align-items:stretch}
+  .dn{width:170px;max-width:60%;align-self:center}
+  .rowx{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px}
+  .rowx>.in[type=text]:first-child{grid-column:1/-1}
+  .rowx .xs{grid-column:1/3;text-align:left}
+  .rowx.head{display:none}
+  .of.wide{grid-column:1/-1}
+  .lotsum{display:none}
   .mast .side{gap:10px;flex-wrap:wrap}
   .savebtn{min-height:42px}
   .ps{display:none}
@@ -417,14 +519,14 @@ a.srch{text-decoration-style:dotted;color:var(--ink)}
   </div>
   <div class="side">
     <button class="savebtn" id="save" type="button">Saqlash</button>
-    <details class="dlm" id="pdfs" hidden><summary class="pdfbtn"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Yuklab olish</summary><div class="menu"><button type="button" data-kind="pdf" data-full="0"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>PDF — umumiy varaq</button><button type="button" data-kind="pdf" data-full="1"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>PDF — to'liq hisobot</button><button type="button" data-kind="docx" data-full="0"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Word — umumiy varaq</button><button type="button" data-kind="docx" data-full="1"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Word — to'liq hisobot</button></div></details>
+    <details class="dlm" id="pdfs" hidden><summary class="pdfbtn"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Yuklab olish</summary><div class="menu"><button type="button" data-kind="pdf" data-full="0"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>PDF — umumiy varaq</button><button type="button" data-kind="pdf" data-full="1"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>PDF — to'liq hisobot</button><button type="button" data-kind="docx" data-full="0"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Word — umumiy varaq</button><button type="button" data-kind="docx" data-full="1"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Word — to'liq hisobot</button><button type="button" data-kind="pdf" data-full="lots"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>PDF — LOTlar va umumiy ma'lumot</button><button type="button" data-kind="docx" data-full="lots"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Word — LOTlar va umumiy ma'lumot</button></div></details>
     <div class="total"><b id="grand">—</b><span>mln so'm · jami, QQS bilan</span></div>
   </div>
   <div class="pdfmsg" id="pdfmsg" role="status" hidden></div>
 </div></header>
 <div class="leave gut" id="leave" hidden><div class="inner">
   <span><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z M12 10v5 M12 18h.01"/></svg>Loyihada saqlanmagan o'zgarishlar bor.</span>
-  <span class="acts"><button class="btn primary" id="leave-save" type="button">Saqlash va chiqish</button><button class="btn" id="leave-drop" type="button">Saqlamasdan chiqish</button><button class="btn" id="leave-no" type="button">Bekor qilish</button></span>
+  <span class="acts"><button class="btn primary" id="leave-save" type="button"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h11l3 3v15H5z M8 3v6h8V3 M8 21v-7h8v7"/></svg>Saqlash va chiqish</button><button class="btn" id="leave-drop" type="button">Saqlamasdan chiqish</button><button class="btn" id="leave-no" type="button">Bekor qilish</button></span>
 </div></div>
 
 <div class="shell gut"><div class="inner">
@@ -21807,6 +21909,38 @@ function extendModel(M){
 const $=id=>document.getElementById(id);
 const M=JSON.parse($('model').textContent);
 extendModel(M);
+/* LOT categories: recognised from the lot's name. rate = so'm per m² of floor area (with finishing, VAT included),
+   cap = m² of floor per visitor at one time, job = m² of floor per workplace, sec = sector for the jobs summary. Estimates. */
+const LOTCAT=[
+  {k:'savdo',t:"Savdo (do'kon, market)",rate:3800000,cap:5,job:40,sec:'x',re:/market|do'kon|do‘kon|savdo pavil|pavilyon|butik|kiosk|magazin|univermag|gul do|kitob do|ko'rgazma|bozor/i},
+  {k:'giper',t:'Supermarket va savdo markazi',rate:4200000,cap:5,job:50,sec:'x',re:/giper|super|savdo markaz|savdo-ko'ngil|mall|univers/i},
+  {k:'ovqat',t:'Ovqatlanish (kafe, choyxona, restoran)',rate:4500000,cap:2.5,job:25,sec:'x',re:/kafe|choyxona|restoran|oshxona|fast|qahva|pitsa|kabob|taom|muzqaymoq|nonvoy|lavash|shirinlik|qandolat|choy|bar\b|lounge|somsa|osh markaz|to'yxona|banket/i},
+  {k:'mehmon',t:'Mehmonxona va dam olish uylari',rate:5500000,cap:25,job:60,sec:'x',re:/mehmonxona|hotel|hostel|dam olish|kottej|villa|motel|sanator|pansionat|apart|guest|mehmon uy/i},
+  {k:'yengil',t:"Yengil inshootlar (o'tov, ayvon, kapsula)",rate:2500000,cap:8,job:80,sec:'x',re:/o'tov|o‘tov|ayvon|shiypon|qamish|kapsula|glemping|chodir|yurta|bekat|navbatchi|soyabon/i},
+  {k:'sport',t:"Sport va ko'ngilochar",rate:4200000,cap:6,job:60,sec:'x',re:/sport|fitnes|basseyn|futbol|tennis|bouling|akvapark|ko'ngilochar|o'yin|kinoteatr|amfiteatr|kamon|bilyard|karting|tir\b|yoga|kurash|zal\b|stadion|velo|park attraksion|attraksion|lazer/i},
+  {k:'ishlab',t:"Ishlab chiqarish va ombor",rate:3000000,cap:30,job:30,sec:'i',re:/sex\b|ishlab|zavod|fabrika|ombor|sklad|logist|sovutgich|tikuv|mebel|qadoqlash|tsex|issiqxona|parranda|chorva|baliqchilik|qayta ishlash|yig'uv|presslash|bosmaxona/i},
+  {k:'avto',t:'Avtomobil xizmati',rate:3800000,cap:10,job:60,sec:'x',re:/yoqilg'i|ayoqsh|metan|propan|benzin|avtoservis|avtoyuvish|moyka|shinomontaj|avtosalon|avtoturargoh|parkovka|zaryadlash|ehtiyot qism/i},
+  {k:'tibbiy',t:"Tibbiyot va salomatlik",rate:4200000,cap:10,job:25,sec:'x',re:/klinika|stomatolog|apteka|dorixona|tibbiy|laborator|massaj|spa\b|sauna|hammom|reabilitatsiya|diagnostika|optika|veterinar/i},
+  {k:'talim',t:"Ta'lim",rate:4000000,cap:5,job:15,sec:'t',re:/o'quv|ta'lim|maktab|bog'cha|bog‘cha|kurs|akademiya|kutubxona|ijodiyot|litsey|kollej|robototexnika|til markaz|it markaz|it park/i},
+  {k:'xizmat',t:'Xizmat va ofis',rate:3800000,cap:10,job:25,sec:'x',re:/./}
+];
+/* site works around a LOT building, per m² (or per kW) */
+const LOTSITE=[
+  {k:'yashil',t:"Yashil hudud (ko'kalamzorlashtirish), 1 m²",rate:80000},
+  {k:'hovuz',t:'Hovuz yoki basseyn, 1 m²',rate:4500000},
+  {k:'yol',t:"Yo'l va avtoturargoh (asfalt), 1 m²",rate:350000},
+  {k:'trot',t:"Trotuar (plitka), 1 m²",rate:250000},
+  {k:'quyosh',t:'Quyosh elektr stansiyasi, 1 kW',rate:8000000}
+];
+const LOTNAMES=["Mini market", "Supermarket", "Gipermarket", "Savdo markazi", "Savdo-ko'ngilochar markazi", "Oziq-ovqat do'koni", "Sabzavot va meva do'koni", "Go'sht do'koni", "Non do'koni", "Sut mahsulotlari do'koni", "Qurilish mollari do'koni", "Xo'jalik mollari do'koni", "Kiyim-kechak do'koni", "Poyabzal do'koni", "Bolalar mollari do'koni", "Maishiy texnika do'koni", "Mebel do'koni", "Gul do'koni", "Kitob do'koni", "Suvenir do'koni", "Hunarmandchilik do'koni", "Zargarlik do'koni", "Hunarmandchilik va zargarlik do'konlari", "Yengil tipdagi savdo pavilyonlari", "Savdo pavilyoni", "Savdo kioski", "Dehqon bozori", "Mini bozor", "Ulgurji savdo ombori", "Avtomobil ehtiyot qismlari do'koni", "Telefon va aksessuarlar do'koni", "Kosmetika do'koni", "Sport anjomlari do'koni", "Uy-ro'zg'or buyumlari do'koni", "Optika saloni", "Dorixona", "Veterinariya dorixonasi", "Ko'rgazma-savdo zali", "Gilam do'koni", "Atlas va adras do'koni", "Kafe", "Yengil tipdagi muzqaymoq kafelari", "Muzqaymoq kafesi", "Qahvaxona", "Choyxona", "Restoran", "Milliy taomlar restorani", "Baliq taomlari kafesi", "Kabobxona", "Osh markazi", "Fast-fud", "Pitsa xona", "Lavash va burger nuqtasi", "Shirinliklar va qandolat do'koni", "Nonvoyxona (tandir)", "Somsaxona", "Oshxona (stolovaya)", "To'yxona", "Banket zali", "Yozgi kafe", "Lounge-kafe", "Choy uyi", "Sharbat va kokteyl bari", "Oilaviy restoran", "Panorama restoran", "Food-kort", "Qandolat sexi", "Kulinariya", "Milliy non sexi", "Bolalar kafesi", "Mehmonxona", "Butik-mehmonxona", "Hostel", "Motel", "Apart-mehmonxona", "Mehmon uyi (guest house)", "Dam olish uylari", "O'tov ko'rinishidagi dam olish uylari", "Kapsula tipidagi dam olish uylari", "Kottej", "Villa", "Glemping", "Sanatoriy", "Pansionat", "Dam olish maskani", "Bolalar oromgohi", "Baliqchilar uyi", "Ovchilar uyi", "Yengil tipdagi (qamish) ayvonchalar", "Shiypon", "Ayvon", "O'tovlar", "Yurta", "Soyabonli dam olish joyi", "Piknik maydoni", "Kemping", "Bekat", "Avtobus bekati", "Navbatchi posti", "Ko'rinish maydonchasi", "Sport majmuasi", "Fitnes markazi", "Sport zali", "Basseyn", "Akvapark", "Futbol maydoni", "Mini-futbol maydoni", "Tennis korti", "Padel korti", "Voleybol maydoni", "Basketbol maydoni", "Sport maydonlari", "Bouling markazi", "Bilyard klubi", "Karting treki", "Velosiped ijarasi nuqtasi", "Kamon otish maydoni", "Tir", "Yoga studiyasi", "Kurash va boks zali", "Ko'ngilochar o'yinlar pavilyoni", "Bolalar o'yin maydoni", "Bolalar o'yin markazi", "Attraksionlar parki", "Amfiteatr", "Amfiteatr (relyefda)", "Kinoteatr", "Yozgi kinoteatr", "Lazer-teg arenasi", "Kvest-xona", "Ishlab chiqarish sexi", "Tikuv sexi", "Mebel sexi", "Non zavodi", "Qadoqlash sexi", "Oziq-ovqat ishlab chiqarish sexi", "Sut qayta ishlash sexi", "Go'sht qayta ishlash sexi", "Meva-sabzavotni qayta ishlash", "Qurilish materiallari ishlab chiqarish", "Beton qorishma zavodi", "Plastmassa mahsulotlari sexi", "Metall konstruksiyalar sexi", "Bosmaxona", "Yig'uv sexi", "Ombor", "Sovutgichli ombor", "Logistika markazi", "Issiqxona", "Parrandachilik fermasi", "Chorvachilik fermasi", "Baliqchilik xo'jaligi", "Asalarichilik markazi", "Elektronika yig'uv sexi", "To'qimachilik sexi", "Charm mahsulotlari sexi", "Poyabzal sexi", "Kimyoviy mahsulotlar ishlab chiqarish", "Qog'oz mahsulotlari sexi", "Duradgorlik ustaxonasi", "Yoqilg'i quyish shoxobchasi (AYOQSH)", "Metan to'ldirish shoxobchasi", "Propan to'ldirish shoxobchasi", "Elektromobil zaryadlash stansiyasi", "Avtoservis", "Avtoyuvish (moyka)", "Shinomontaj", "Avtosalon", "Avtoturargoh", "Ko'p qavatli avtoturargoh", "Yuk mashinalari turargohi", "Texnik ko'rik markazi", "Avtomobil ijarasi", "Taksi xizmati bazasi", "Haydovchilar dam olish joyi", "Klinika", "Oilaviy poliklinika (xususiy)", "Stomatologiya", "Diagnostika markazi", "Laboratoriya", "Reabilitatsiya markazi", "Massaj saloni", "SPA markazi", "Sauna", "Hammom", "Veterinariya klinikasi", "Tibbiy ko'rik punkti", "Xususiy bog'cha", "Xususiy maktab", "O'quv markazi", "Til o'rgatish markazi", "IT markazi", "Robototexnika markazi", "Kasb-hunar o'quv markazi", "Ijodiyot markazi", "Musiqa studiyasi", "Raqs studiyasi", "Rassomlik studiyasi", "Kutubxona va kofe", "Bolalar rivojlanish markazi", "Ofis binosi", "Biznes-markaz", "Kovorking", "Bank filiali", "Bankomat va to'lov nuqtasi", "Davlat xizmatlari punkti", "Pochta bo'limi", "Kuryerlik xizmati", "Go'zallik saloni", "Sartaroshxona", "Kimyoviy tozalash", "Kir yuvish xizmati", "Tikuvchilik ustaxonasi", "Poyabzal ta'mirlash", "Telefon ta'mirlash ustaxonasi", "Foto studiya", "Ko'rgazma zali", "Muzey", "Galereya", "Turistik axborot markazi", "Kirish darvozasi", "Qo'riqlash posti (KPP)", "Turistik politsiya posti", "Tibbiyot punkti", "Hojatxona bloki", "Kamon otish klubi", "Otda sayr qilish klubi", "Qayiq ijarasi", "Baliq ovlash maskani", "Sayr yo'lagi", "Favvora maydoni", "Bayram maydoni", "Ochiq sahna", "Bozor rastalari", "Hunarmandlar ko'chasi", "Etnoqishloq", "Milliy hunarmandchilik markazi", "Choy plantatsiyasi", "Uzumzor va vinoteka", "Fermer bozori"];
+const LOTSTYLE=['Hi-tech','Milliy (o\'zbek milliy uslubi)','Neoklassika','Klassika','Zamonaviy (modern)','Minimalizm','Sharqona (islomiy me\'morchilik)','Loft','Skandinaviya uslubi','Eko-uslub (yashil arxitektura)','Art-deko','Industrial','Parametrik','Kontekstual (tarixiy muhitga mos)','Brutalizm','Dekonstruktivizm','Etno-uslub','Prerija uslubi'];
+const LOTTRADE=['E-auksion','K-savdo','Ijara savdo','Investitsiya tanlovi',"To'g'ridan-to'g'ri shartnoma",'Davlat aktivlarini xususiylashtirish'];
+/* extra objects inside a LOT, with a default unit price (so'm, VAT included); estimates */
+const LOTEXTRA=[["Avtoturargoh (1 joy)",'joy',4500000],["Kirish darvozasi",'dona',35000000],["Qo'riqlash posti (KPP)",'dona',45000000],["Transformator podstansiyasi (KTP)",'dona',46000000],["Dizel generator",'dona',120000000],
+ ["Suv minorasi",'dona',130000000],["Septik (mahalliy tozalash)",'dona',40000000],["Bolalar o'yin maydonchasi",'dona',80000000],["Sport maydonchasi",'dona',150000000],["Shiypon / ayvon",'dona',60000000],
+ ["Hojatxona bloki",'dona',70000000],["Chiqindi yig'ish maydonchasi",'dona',25000000],["Videokuzatuv tizimi",'komplekt',30000000],["Panjara / devor",'m',600000],["Yoritish ustuni",'dona',4400000],
+ ["Favvora",'dona',120000000],["Reklama stendi",'dona',25000000],["Ko'cha Wi-Fi nuqtasi",'dona',6000000],["Elektromobil zaryadlash stansiyasi",'dona',45000000],["Yong'in suv havzasi",'dona',90000000]];
+
 /* Obodonlashtirish: a sheet that is not in the workbook. Rows 3-22 ground types (name, so'm per m2, note), rows 30-59 parts of the site (type, m2, rate, sum, label). */
 (function(){
   const c={};
@@ -21836,7 +21970,20 @@ extendModel(M);
   M.sheets.push({name:'Obod',rows:59,cols:13,show:6,cells:c,merges:[],dv:[],cf:[],widths:{},hidden:[]});
   const H=M.sheets.find(s=>s.name==='Hisobot');H.cells.G15[0]='=SUM(G7:G14)+Obod!F3';
 })();
+/* LOTs: investor plots. Sheet "Lot" only stores what is typed (rows 5-104); costs and summaries are worked out in the page.
+   "LotNom" keeps names added by users, "LotNarx" the editable rates; both are shared by all projects. */
+(function(){
+  M.sheets.push({name:'Lot',rows:104,cols:26,show:26,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
+  M.sheets.push({name:'LotNom',rows:2,cols:2,show:2,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
+  const c={};LOTCAT.forEach((k,i)=>{c['B'+(1+i)]=[k.rate,6]});
+  LOTSITE.forEach((k,i)=>{c['B'+(30+i)]=[k.rate,6]});
+  M.sheets.push({name:'LotNarx',rows:40,cols:2,show:2,cells:c,merges:[],dv:[],cf:[],widths:{},hidden:[]});
+  /* number of lots: investor LOTs plus DXSH objects that carry a LOT number; typed by hand only when there are none */
+  const J=M.sheets.find(s=>s.name==='Jamlama');J.cells.F12=[null,6];
+  J.cells.C8=['=IF(COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79)>0,COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79),IF(F12="",0,F12))',6];
+})();
 const SH={};M.sheets.forEach(s=>SH[s.name]=s);
+const LOTROWS_ED=Array.from({length:100},(_,i)=>5+i);
 const KINDS=[['sanoat zonasi','sanoat zonasiga'],['kichik sanoat zonasi','kichik sanoat zonasiga'],['turar joy massivi','turar joy massiviga'],['yangi mahalla','yangi mahallaga'],['turizm zonasi','turizm zonasiga'],['hudud','hududga']];
 /* key, sheet, short name, page title, intro, total cell */
 const PAGES=[
@@ -21850,12 +21997,13 @@ const PAGES=[
  {hr:12,k:'yol',sheet:'Yol',name:"Yo'llar",title:"Yo'llar va trotuar",tot:'G36'},
  {hr:13,k:'yoritish',sheet:'Yoritish',name:'Yoritish',title:"Ko'cha yoritish",tot:'G31'},
  {hr:14,k:'qoshimcha',sheet:'Byudjet',name:"Qo'shimcha",title:"Qo'shimcha materiallar",tot:'G117',pdfTitle:"Hududda byudjet hisobidan amalga oshiriladigan kichik obyektlar"},
- {k:'obyektlar',sheet:'Bino',name:'Obyektlar',title:'Byudjet hisobidan quriladigan obyektlar',otot:'S4'},
+ {k:'obyektlar',sheet:'Bino',name:'Obyektlar',title:'Obyektlar va LOTlar',otot:'S4'},
+ {k:'malumot',name:"Umumiy ma'lumot",title:"Umumiy ma'lumot"},
  {k:'narxlar',name:'Narxlar bazasi'}
 ];
 const LS_KEY='infra-hisob-v2';
 let hf=null,over={},dirty=false,page=PAGES[0];
-const ui={zones:1,setup:false,showAll:{},q:'',cat:'',old:false,areas:1,pipes:{},pe:null,objs:{b:1,p:0}};
+const ui={lotOpen:{},lots:0,zones:1,setup:false,showAll:{},q:'',cat:'',old:false,areas:1,pipes:{},pe:null,objs:{b:1,p:0}};
 
 const ICON={umumiy:'M4 4h6v6H4z M14 4h6v6h-6z M14 14h6v6h-6z M4 14h6v6H4z',obodonlashtirish:'M12 3l4 5h-2l3 4h-2l3 4H6l3-4H7l3-4H8z M12 16v5',elektr:'M13 2L4 14h7l-1 8 9-12h-7z',suv:'M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z',kanalizatsiya:'M3 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0 M3 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0 M3 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0','yomgir-suvi':'M7 15a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.6 1.5A3.3 3.3 0 0 1 17.5 15z M8 18v3 M12 18v3 M16 18v3',gaz:'M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-8.5z',yol:'M6 21L9 3 M18 21L15 3 M12 5v3 M12 11v3 M12 17v3',yoritish:'M9 18h6 M10 21h4 M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z',qoshimcha:'M4 4h16v16H4z M12 8v8 M8 12h8',narxlar:'M3 12V4h8l10 10-8 8z M7.5 8h.01',save:'M5 3h11l3 3v15H5z M8 3v6h8V3 M8 21v-7h8v7',check:'M5 12l5 5L20 7',obyektlar:'M5 21V5l7-2v18 M12 9l7 2v10 M3 21h18 M8 9h1 M8 13h1 M8 17h1 M15 14h1 M15 17h1',
   params:'M4 6h9 M17 6h3 M4 12h3 M11 12h9 M4 18h11 M19 18h1 M15 4v4 M9 10v4 M17 16v4',result:'M6 3h12v18H6z M9 7h6 M9 12h.01 M12 12h.01 M15 12h.01 M9 16h.01 M12 16h.01 M15 16h.01',list:'M3 8l9-5 9 5v8l-9 5-9-5z M3 8l9 5 9-5 M12 13v8',
@@ -21863,7 +22011,7 @@ const ICON={umumiy:'M4 4h6v6H4z M14 4h6v6h-6z M14 14h6v6h-6z M4 14h6v6H4z',obodo
   warn:'M12 3l10 18H2z M12 10v5 M12 18h.01',pencil:'M4 20l1-4L16 5l3 3L8 19z M14 7l3 3',image:'M3 5h18v14H3z M3 16l5-5 4 4 3-3 6 6 M8.5 9h.01',ext:'M14 4h6v6 M20 4l-9 9 M18 14v6H4V6h6',
   money:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M15 9.5c-.5-.9-1.5-1.4-2.8-1.4-1.8 0-3 .9-3 2.2 0 3 6 1.4 6 4.4 0 1.400-1.300 2.200-3 2.200-1.400 0-2.500-.5-3-1.500 M12 6v2 M12 17v1.500',
   area:'M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z M9 4v14 M15 6v14',lot:'M4 4h16v16H4z M4 12h16 M12 4v16',calendar:'M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4',search:'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z M20 20l-4-4',
-  project:'M9 4h6v3H9z M7 5H5v16h14V5h-2 M9 12h6 M9 16h6',pin:'M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z M12 11.5a2.5 2.500 0 1 0 0-5 2.500 2.500 0 0 0 0 5z',layers:'M12 3l9 5-9 5-9-5z M3 12l9 5 9-5 M3 16l9 5 9-5',
+  project:'M9 4h6v3H9z M7 5H5v16h14V5h-2 M9 12h6 M9 16h6',pin:'M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z M12 11.5a2.5 2.500 0 1 0 0-5 2.500 2.500 0 0 0 0 5z',layers:'M12 3l9 5-9 5-9-5z M3 12l9 5 9-5 M3 16l9 5 9-5',malumot:'M4 5h16v14H4z M4 10h16 M10 10v9 M4 14.5h16',pie:'M12 3a9 9 0 1 0 9 9h-9z M14 2.5V10h7.5A8 8 0 0 0 14 2.5z',
   ruler:'M3 15L15 3l6 6L9 21z M7 13l2 2 M10 10l2 2 M13 7l2 2',hash:'M5 9h14 M5 15h14 M10 4L8 20 M16 4l-2 16',down:'M12 4v16 M6 14l6 6 6-6',pipe:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z',
   help:'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7 M12 17h.01',percent:'M7.5 5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z M16.5 14a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z M5 19L19 5',type:'M8 6h12 M8 12h12 M8 18h12 M4 6h.01 M4 12h.01 M4 18h.01'};
 function qIcon(lab,auto){
@@ -21893,11 +22041,14 @@ function expand(r){const [a,b]=r.split(':');const p=parseAddr(a),q=parseAddr(b||
 function isFormula(sh,a){const c=sh.cells[a];return !!(c&&typeof c[0]==='string'&&c[0][0]==='=')}
 M.sheets.forEach(sh=>{sh.ed={};sh.dv.forEach(dv=>dv.ranges.forEach(r=>expand(r).forEach(a=>{if(!isFormula(sh,a))sh.ed[a]=dv})))});
 (function(){
-  const J=SH.Jamlama;J.ed.C5={t:'text'};J.ed.F10={t:'text'};J.ed.F11={t:'list',v:KINDS.map(x=>x[0])};for(let r=6;r<=12;r++)if(r!==7)J.ed['C'+r]={t:'num'};['F6','F7','F8'].forEach(a=>{J.ed[a]={t:'num'}});
+  const J=SH.Jamlama;J.ed.C5={t:'text'};J.ed.F10={t:'text'};J.ed.F11={t:'list',v:KINDS.map(x=>x[0])};J.ed.F12={t:'num'};for(let r=6;r<=12;r++)if(r!==7&&r!==8)J.ed['C'+r]={t:'num'};['F6','F7','F8'].forEach(a=>{J.ed[a]={t:'num'}});
   M.sheets.forEach(sh=>{if(sh.autoE)for(const r in sh.autoE)sh.ed['P'+r]={t:'num'}});
   const Z=SH.Oz;for(let r=3;r<=22;r++){Z.ed['A'+r]={t:'text'};Z.ed['B'+r]={t:'text'}}
   const BN=SH.Bino;for(let r=3;r<=22;r++){BN.ed['A'+r]={t:'text'};BN.ed['B'+r]={t:'num'}}BN.ed.P1={t:'num'};BN.ed.P2={t:'num'};
   [[30,49],[60,79]].forEach(x=>{for(let r=x[0];r<=x[1];r++){BN.ed['A'+r]={t:'range',s:'Bino',r:'A3:A22'};BN.ed['B'+r]={t:'text'};'CDEFGJN'.split('').forEach(c=>{BN.ed[c+r]={t:'num'}})}});
+  const LT=SH.Lot;LOTROWS_ED.forEach(r=>{'ACDEFGIKLNPQ'.split('').forEach(c=>{LT.ed[c+r]={t:'num'}});LT.ed['B'+r]={t:'text'};LT.ed['T'+r]={t:'text'};LT.ed['O'+r]={t:'list',v:LOTSTYLE};LT.ed['S'+r]={t:'list',v:LOTTRADE}});
+  SH.LotNom.ed.A1={t:'text'};for(let i=1;i<=11;i++)SH.LotNarx.ed['B'+i]={t:'num'};for(let i=30;i<=34;i++)SH.LotNarx.ed['B'+i]={t:'num'};
+  for(let r=60;r<=79;r++){BN.ed['R'+r]={t:'num'};BN.ed['T'+r]={t:'num'}}for(let r=30;r<=49;r++)BN.ed['T'+r]={t:'num'};
   const B=SH.Baza,kinds={E:{t:'num'},H:{t:'date'},F:{t:'list',v:['Sayt narxi','≈ Taxminiy']}};
   for(let r=5;r<=304;r++)for(const c of 'BCDEFGHJKLM'){const a=c+r;if(!isFormula(B,a))B.ed[a]=kinds[c]||{t:'text'}}
   const H=SH.Hisobot;H.ed.D21={t:'date'};H.ed.D26={t:'text'};
@@ -22144,7 +22295,7 @@ function sectionPage(p){
       rows.push(x.el);
     });
     if(!rows.length&&!hidden)return;
-    list.append(h('div',{class:'grp'},h('h4',null,g.extra?"QO'SHIMCHA MATERIAL":g.title),g.extra?h('p',null,"Ro'yxatda yo'q narsa kerak bo'lsa, shu yerdan tanlab miqdorini yozing."):(g.hint&&rows.length?h('p',null,cap(g.hint)):null)));
+    list.append(h('div',{class:'grp'},h('h4',null,icon(g.extra?'plus':'layers',1),g.extra?"QO'SHIMCHA MATERIAL":g.title),g.extra?h('p',null,"Ro'yxatda yo'q narsa kerak bo'lsa, shu yerdan tanlab miqdorini yozing."):(g.hint&&rows.length?h('p',null,cap(g.hint)):null)));
     rows.forEach(x=>list.append(x));
     if(hidden)list.append(h('div',{class:'skipped'},rows.length?hidden+" ta material hisobga olinmagan.":"Bu qism hozir hisobga olinmayapti ("+hidden+" ta material)."));
   });
@@ -22240,7 +22391,9 @@ function overviewPage(){
   {const cells=['C6','F6','F7','F8'];let shown=Math.max(1,ui.areas);cells.forEach((a,i)=>{if(N(J,a)!==null)shown=Math.max(shown,i+1)});
     for(let i=0;i<shown;i++)pf.push(qrow(shown>1?(i+1)+'-hudud maydoni (ga)':'Hudud maydoni (ga)',numIn(J,cells[i],{ph:'0'}),{for:'f-'+J+'-'+cells[i],icon:'area',hint:'Gektarda.'}));
     if(shown<4)pf.push(h('div',{class:'q addq'},h('span'),h('div',{class:'qc'},h('button',{class:'btn',type:'button',id:'addarea',onclick:()=>{ui.areas=shown+1;render();const e=$('f-'+J+'-'+cells[shown]);if(e)e.focus()}},icon('plus',1),"Yana hudud qo'shish"))))}
-  pf.push(qrow('Lotlar soni',numIn(J,'C8',{whole:true,ph:'0'}),{for:'f-'+J+'-C8',icon:'lot',hint:'Hamma lotlar soni.'}));
+  {const nl=LOTROWS.filter(r=>V('Lot','B'+r)!==null).length+lotNumbers().filter(x=>x.k.startsWith('Bino')).length;
+    pf.push(nl?qrow('Lotlar soni',h('div',{class:'ro'},h('span',null,nUz(nl)),h('a',{href:'#obyektlar'},"LOTlar ro'yxatidan")),{icon:'lot'})
+      :qrow('Lotlar soni',numIn(J,'F12',{whole:true,ph:'0'}),{for:'f-'+J+'-F12',icon:'lot',hint:"«Obyektlar» bo'limida LOT kiritsangiz, o'zi hisoblanadi."}))}
   pf.push(h('div',{class:'qh'},'Foizlar'));
   for(let r=9;r<=12;r++){const lab=String(V(J,'B'+r)).replace(/\s*\(% materialdan\)/,'');
     pf.push(qrow(lab,h('div',{class:'sfx'},numIn(J,'C'+r,{pct:true}),h('i',null,'%')),{for:'f-'+J+'-C'+r,icon:'percent',hint:r>9?'Material narxiga nisbatan.':null}))}
@@ -22341,29 +22494,32 @@ function binoPage(p){
   const fld=(lab,ic,id,ctl)=>h('div',{class:'of'},h('label',{for:id},icon(ic,1),lab),ctl);
   const card=(r,ppp)=>{
     const tp=V(B,'A'+r),tot=N(B,'M'+r)||0,area=N(B,'H'+r)||0,vol=N(B,'Q'+r)||0,cap=N(B,'G'+r),bud=N(B,'O'+r)||0,rate=tp?N(B,'I'+r):null,sh=N(B,'N'+r),id=c=>'f-'+B+'-'+c+r;
-    const used='ABCDEFGJN'.split('').some(c=>V(B,c+r)!==null);
+    const used='ABCDEFGJNRT'.split('').some(c=>V(B,c+r)!==null),est=binoData(r),dup=ppp&&lotDup(N(B,'R'+r),'Bino!'+r);
     return h('div',{class:'obj'},
       h('div',{class:'oh'},selIn(B,'A'+r,{empty:tp?'Tanlanmagan':'Obyekt turini tanlang',label:'Obyekt turi'}),textIn(B,'B'+r,{label:'Obyekt nomi',ph:'Nomi (masalan: 12-maktab)'}),
-        used?h('button',{class:'xbtn',type:'button',title:"Obyektni o'chirish",'aria-label':"Obyektni o'chirish",onclick:()=>'ABCDEFGJN'.split('').forEach(c=>{if(V(B,c+r)!==null)commit(B,c+r,null)})},'×'):h('span')),
+        used?h('button',{class:'xbtn',type:'button',title:"Obyektni o'chirish",'aria-label':"Obyektni o'chirish",onclick:()=>'ABCDEFGJNRT'.split('').forEach(c=>{if(V(B,c+r)!==null)commit(B,c+r,null)})},'×'):h('span')),
       h('div',{class:'og'},
         fld('Ajratilgan yer maydoni, m²','area',id('C'),numIn(B,'C'+r,{ph:'0'})),
         fld('Qurilish osti maydoni, m²','lot',id('D'),numIn(B,'D'+r,{ph:'0'})),
         fld('Qavatlar soni','hash',id('E'),numIn(B,'E'+r,{whole:true,ph:'0'})),
         fld('Qavat balandligi, m','ruler',id('F'),numIn(B,'F'+r,{ph:fmtNum(N(B,'P2'),'0.0#')})),
-        fld("Sig'imi, o'rin (ixtiyoriy)",'hash',id('G'),numIn(B,'G'+r,{whole:true,ph:'—'})),
+        fld("Sig'imi, o'rin",'hash',id('G'),numIn(B,'G'+r,{whole:true,ph:est&&est.capEst?'taxmin: '+est.capEst:'—'})),
+        fld("Ishchi o'rinlari",'project',id('T'),numIn(B,'T'+r,{whole:true,ph:est&&est.jobsEst?'taxmin: '+est.jobsEst:'—'})),
+        ppp?h('div',{class:'of'},h('label',{for:id('R')},icon('hash',1),'LOT raqami (DXSH)'),numIn(B,'R'+r,{whole:true,ph:String(nextLotNo())}),dup?h('span',{class:'errmsg'},'Bu raqam boshqa LOTda bor.'):null):null,
         fld("1 m² qurilish narxi, so'm",'money',id('J'),numIn(B,'J'+r,{ph:rate?som(rate):"turiga qarab"})),
         ppp?fld('Byudjet ulushi, %','percent',id('N'),h('div',{class:'sfx'},numIn(B,'N'+r,{pct:true,ph:'0'}),h('i',null,'%'))):null),
       h('div',{class:'ores'},
         h('div',{class:'om'},tot?["Umumiy maydon "+fmtNum(area,'#,##0.#')+' m² · hajmi '+fmtNum(vol,'#,##0')+' m³ · bino '+mln(N(B,'K'+r))+' mln · hovli '+mln(N(B,'L'+r))+' mln',cap?' · 1 o\'ringa '+mln(tot/cap)+' mln':'']:"Turini, qurilish osti maydonini va qavatlar sonini kiriting."),
         h('div',{class:'ot'},ppp?[h('span',null,'Umumiy qiymati '+mln(tot)+' mln'),h('b',null,'Byudjetdan'+(sh!==null?' ('+fmtNum(sh,'0.#%')+')':'')+': '+mln(bud)+' mln so\'m')]:h('b',null,mln(tot)+" mln so'm"))));
   };
-  const block=(a,b,ppp,key,addLabel)=>{const els=[];let last=a-1;for(let r=a;r<=b;r++)if('ABCDEFGJN'.split('').some(c=>V(B,c+r)!==null))last=r;
+  const block=(a,b,ppp,key,addLabel)=>{const els=[];let last=a-1;for(let r=a;r<=b;r++)if('ABCDEFGJNRT'.split('').some(c=>V(B,c+r)!==null))last=r;
     const n=Math.max(last-a+1,ui.objs[key]);for(let i=0;i<n&&a+i<=b;i++)els.push(card(a+i,ppp));
     if(a+n<=b)els.push(h('button',{class:'btn addo',type:'button',onclick:()=>{ui.objs[key]=n+1;render();const e=$('f-'+B+'-A'+(a+n));if(e)e.focus()}},icon('plus',1),addLabel));
     return els};
   out.push(h('section',{class:'card'},h('h3',null,icon('obyektlar',1),'Byudjet hisobidan quriladigan obyektlar'),block(30,49,false,'b',"Yangi obyekt qo'shish")));
   out.push(h('section',{class:'card'},h('h3',null,icon('lot',1),'Xususiy sheriklik asosidagi obyektlar'),
-    h('p',{class:'fine'},"Bino xususiy sherik bilan birga qurilsa, shu yerga kiriting va byudjet qoplaydigan ulushni foizda yozing."),block(60,79,true,'p',"Xususiy sheriklik obyektini qo'shish")));
+    h('p',{class:'fine'},"Bino xususiy sherik bilan birga qurilsa, shu yerga kiriting va byudjet qoplaydigan ulushni foizda yozing. LOT raqami berilsa, u LOTlar ro'yxatiga «DXSH» bo'lib qo'shiladi."),block(60,79,true,'p',"Xususiy sheriklik obyektini qo'shish")));
+  out.push(lotsSection());
   const s1=N(B,'S1')||0,s2=N(B,'S2')||0,s3=N(B,'S3')||0,s4=N(B,'S4')||0;
   out.push(h('section',{class:'card'},h('h3',null,icon('result',1),'Natija'),h('div',{class:'sum'},
     h('div',{class:'ln'},h('span',null,'Byudjet obyektlari'),h('span',null,som(s1))),
@@ -22380,6 +22536,7 @@ function binoPage(p){
       qrow("Hovlini obodonlashtirish, 1 m² (so'm)",numIn(B,'P1',{ph:'0'}),{for:'f-Bino-P1',icon:'obodonlashtirish',hint:"Ajratilgan yerdan qurilish osti maydoni ayirilib, qolgan hovliga shu narx qo'llanadi."}),
       qrow("Me'yoriy qavat balandligi (m)",numIn(B,'P2',{ph:'3.3'}),{for:'f-Bino-P2',icon:'ruler',hint:"1 m² narxi shu balandlik uchun. Qavat undan baland bo'lsa, narx shunga mos oshadi."}))));
   out.push(h('p',{class:'fine'},"Hisob: umumiy maydon (qurilish osti maydoni × qavatlar soni) × 1 m² narxi × balandlik koeffitsiyenti + hovli obodonlashtirish. Sig'imini kiritsangiz, 1 o'ringa to'g'ri keladigan summa ham chiqadi — e'lon qilingan loyihalarda maktabda 1 o'ringa 11–22 mln, bog'chada 22–30 mln so'm."));
+  out.push(lotRatesCard());
   return out;
 }
 
@@ -22424,6 +22581,258 @@ function pricesPage(){
     h('div',{class:'rowp new head'},h('span',null,'Nomi'),h('span',null,'Birlik'),h('span',null,"Narx, so'm")),
     add.map(r=>h('div',{class:'rowp new'},h('div',{class:'nmc'},textIn(B,'C'+r,{label:'Material nomi',ph:'Yangi material nomi'})),textIn(B,'D'+r,{label:'Birlik',ph:'dona, m, t…'}),numIn(B,'E'+r,{label:'Narx',ph:'0',after:()=>commit(B,'H'+r,today)})))));
   return out;
+}
+
+/* ---------- LOTs, DXSH numbers, the "Umumiy ma'lumot" summary and its charts ---------- */
+const LOTROWS=Array.from({length:100},(_,i)=>5+i);
+const LOTCOLS='ABCDEFGIKLNOPQST';
+function lotCat(name){name=String(name||'');return LOTCAT.find(c=>c.re.test(name))||LOTCAT[LOTCAT.length-1]}
+function catRate(k){const i=LOTCAT.findIndex(c=>c.k===k);const v=N('LotNarx','B'+(1+i));return v===null?LOTCAT[i].rate:v}
+function siteRate(k){const i=LOTSITE.findIndex(c=>c.k===k);const v=N('LotNarx','B'+(30+i));return v===null?LOTSITE[i].rate:v}
+function lotUsed(r){return LOTCOLS.split('').some(c=>V('Lot',c+r)!==null)}
+function lotExtras(r){try{const x=JSON.parse(V('Lot','T'+r)||'[]');return Array.isArray(x)?x:[]}catch(e){return []}}
+function lotData(r){
+  const g=c=>N('Lot',c+r),s=c=>V('Lot',c+r),P2=N('Bino','P2')||3.3;
+  const name=s('B')?String(s('B')):'',cat=lotCat(name),area=g('C')||0,fp=g('D')||0,fl=g('E')||0,fh=g('F')||P2,par=g('G')===null?1.2:g('G');
+  const floor=fp*fl,vol=fp*(fl*fh+par),gp=g('I')||0,green=area*gp,pool=g('K')||0,road=g('L')||0,trot=Math.max(0,area-fp-green-pool-road),solar=g('N')||0;
+  const capEst=floor?Math.round(floor/cat.cap):0,jobsEst=floor?Math.max(1,Math.round(floor/cat.job)):0;
+  const ex=lotExtras(r).map(e=>{const d=LOTEXTRA.find(x=>x[0]===e.n);const p=e.p===null||e.p===undefined||e.p===''?(d?d[2]:0):+e.p;return {n:e.n||'',q:+e.q||0,u:d?d[1]:'dona',p,s:(+e.q||0)*p}});
+  const c={build:floor*catRate(cat.k)*(fh/P2),green:green*siteRate('yashil'),pool:pool*siteRate('hovuz'),road:road*siteRate('yol'),trot:trot*siteRate('trot'),solar:solar*siteRate('quyosh'),extra:ex.reduce((a,e)=>a+e.s,0)};
+  const total=Object.values(c).reduce((a,b)=>a+b,0);
+  return {r,num:g('A'),name,cat,area,fp,fl,fh,par,floor,vol,gp,green,pool,road,trot,solar,style:s('O'),jobs:g('P')===null?jobsEst:g('P'),jobsEst,cap:g('Q')===null?capEst:g('Q'),capEst,trade:s('S'),ex,c,total,
+    over:fp+green+pool+road>area+0.001&&area>0};
+}
+/* budget objects and DXSH objects: capacity and jobs, estimated from the type and floor area unless typed */
+const BINOEST=[[/maktab|umumta/i,5,o=>o.cap/12,'t'],[/bog'cha|maktabgacha/i,9,o=>o.cap/6,'t'],[/musiqa|san'at/i,6,o=>o.cap/10,'t'],[/kutubxona/i,6,o=>o.area/100,'t'],
+  [/poliklinika|tibbiyot/i,15,o=>o.area/40,'x'],[/sport/i,8,o=>o.area/100,'x'],[/madaniyat/i,5,o=>o.area/80,'x'],[/mahalla|ma'muriy/i,10,o=>o.area/60,'x'],[/davlat xizmat/i,8,o=>o.area/30,'x'],
+  [/yong'in/i,30,o=>o.area/40,'x'],[/ichki ishlar/i,20,o=>o.area/30,'x'],[/bozor|savdo/i,4,o=>o.area/30,'x'],[/mehmonxona/i,25,o=>o.area/60,'x'],[/avtoturargoh/i,25,o=>o.area/500,'x'],[/./,10,o=>o.area/50,'x']];
+function binoData(r){
+  const B='Bino',type=V(B,'A'+r);if(!type)return null;
+  const area=N(B,'H'+r)||0,e=BINOEST.find(x=>x[0].test(String(type)));
+  const capEst=area?Math.round(area/e[1]):0,cap=N(B,'G'+r)===null?capEst:N(B,'G'+r);
+  const jobsEst=area?Math.max(1,Math.round(e[2]({area,cap}))):0,jobs=N(B,'T'+r)===null?jobsEst:N(B,'T'+r);
+  const cost=N(B,'M'+r)||0,share=r>=60?(N(B,'N'+r)||0):1;
+  return {r,type:String(type),name:V(B,'B'+r),land:N(B,'C'+r)||0,fp:N(B,'D'+r)||0,fl:N(B,'E'+r)||0,area,cap,capEst,jobs,jobsEst,sec:e[3],cost,share,bud:cost*share,inv:cost*(1-share),num:r>=60?N(B,'R'+r):null};
+}
+function lotNumbers(){const o=[];LOTROWS.forEach(r=>{const n=N('Lot','A'+r);if(n!==null&&lotUsed(r))o.push({n,k:'Lot!'+r})});
+  for(let r=60;r<=79;r++){const n=N('Bino','R'+r);if(n!==null&&V('Bino','A'+r))o.push({n,k:'Bino!'+r})}return o}
+function lotDup(n,key){return n!==null&&lotNumbers().some(x=>x.n===n&&x.k!==key)}
+function nextLotNo(){return lotNumbers().reduce((m,x)=>Math.max(m,x.n),0)+1}
+function customNames(){try{const x=JSON.parse(V('LotNom','A1')||'[]');return Array.isArray(x)?x:[]}catch(e){return []}}
+function rememberName(nm){nm=String(nm||'').trim();if(!nm||LOTNAMES.includes(nm))return;const c=customNames();if(c.includes(nm))return;c.push(nm);commit('LotNom','A1',JSON.stringify(c))}
+function datalists(){
+  let d=$('lotnames');if(!d){d=h('datalist',{id:'lotnames'});document.body.appendChild(d)}
+  const all=LOTNAMES.concat(customNames()),sig=all.length;if(d._sig!==sig){d._sig=sig;d.replaceChildren(...all.map(x=>h('option',{value:x})))}
+  if(!$('lotextras'))document.body.appendChild(h('datalist',{id:'lotextras'},LOTEXTRA.map(x=>h('option',{value:x[0]}))));
+}
+
+function lotCard(r){
+  const L='Lot',d=lotData(r),id=c=>'f-Lot-'+c+r,open=ui.lotOpen[r]!==undefined?ui.lotOpen[r]:!d.name;
+  const fld=(lab,ic,c,ctl,hint)=>h('div',{class:'of'},h('label',{for:id(c)},icon(ic,1),lab),ctl,hint?h('span',{class:'hint'},hint):null);
+  const ro=(lab,ic,val)=>h('div',{class:'of'},h('span',{class:'lab2'},icon(ic,1),lab),h('div',{class:'ro'},h('span',null,val),h('small',null,"o'zi hisoblanadi")));
+  const dup=lotDup(d.num,'Lot!'+r);
+  const nameIn=h('input',{type:'text',class:'in',id:id('B'),list:'lotnames',value:d.name,placeholder:"Bosing yoki yozing: masalan, Mini market",autocomplete:'off','aria-label':'LOT nomi'});
+  nameIn.addEventListener('keydown',e=>{if(e.key==='Enter')nameIn.blur()});
+  nameIn.addEventListener('change',()=>{const v=nameIn.value.trim();rememberName(v);commit(L,'B'+r,v||null)});
+  const ex=d.ex,exRows=ex.map((e,i)=>{
+    const upd=(k,v)=>{const a=lotExtras(r);a[i]=Object.assign({},a[i],{[k]:v});if(k==='n'){const df=LOTEXTRA.find(x=>x[0]===v);if(df)a[i].p=null}commit(L,'T'+r,JSON.stringify(a))};
+    const n=h('input',{type:'text',class:'in',list:'lotextras',value:e.n,placeholder:'Obyekt nomi','aria-label':"Qo'shimcha obyekt nomi",id:'x-'+r+'-'+i});
+    n.addEventListener('change',()=>upd('n',n.value.trim()));
+    const q=h('input',{type:'text',class:'in num',inputmode:'decimal',value:e.q?String(e.q):'','aria-label':'Soni',placeholder:'Soni',id:'xq-'+r+'-'+i});q.addEventListener('change',()=>{const v=parseNum(q.value);upd('q',v===null?0:v)});
+    const p=h('input',{type:'text',class:'in num',inputmode:'decimal',value:e.p?fmtNum(e.p,'#,##0'):'','aria-label':"Narxi, so'm",placeholder:"Narxi, so'm",id:'xp-'+r+'-'+i});
+    p.addEventListener('focus',()=>{p.value=p.value.replace(/,/g,'')});p.addEventListener('change',()=>{const v=parseNum(p.value);upd('p',v)});
+    return h('div',{class:'rowx'},n,h('div',{class:'qtyin'},q,h('span',{class:'unit'},e.u)),p,h('b',{class:'xs'},som(e.s)),
+      h('button',{class:'xbtn',type:'button',title:"O'chirish",'aria-label':"Qo'shimcha obyektni o'chirish",onclick:()=>{const a=lotExtras(r);a.splice(i,1);commit(L,'T'+r,a.length?JSON.stringify(a):null)}},'×'));
+  });
+  const cost=[['Bino (qurilish va pardozlash)',d.c.build],['Yashil hudud',d.c.green],['Hovuz / basseyn',d.c.pool],["Yo'l va avtoturargoh",d.c.road],['Trotuar',d.c.trot],['Quyosh elektr stansiyasi',d.c.solar],["Qo'shimcha obyektlar",d.c.extra]].filter(x=>x[1]);
+  const det=h('details',{class:'lot',open:open},
+    h('summary',null,h('span',{class:'lotno'+(dup?' bad':'')},'LOT',h('b',null,d.num===null?'?':nUz(d.num))),
+      h('span',{class:'lotnm'},h('b',null,d.name||'Nomsiz LOT'),h('small',null,[d.area?nUz(d.area)+' m²':null,d.floor?nUz(d.floor,'#,##0')+' m² bino':null,d.trade].filter(Boolean).join(' · ')||"ma'lumot kiritilmagan")),
+      h('span',{class:'lotsum'},mln(d.total),h('small',null,"mln so'm")),icon('down')),
+    h('div',{class:'og'},
+      fld('LOT raqami','hash','A',numIn(L,'A'+r,{whole:true,ph:String(nextLotNo())}),dup?h('span',{class:'errmsg'},"Bu raqam boshqa LOTda (yoki DXSH obyektida) bor."):null),
+      h('div',{class:'of wide'},h('label',{for:id('B')},icon('lot',1),"LOT nomi (asosiy yo'nalishi)"),nameIn),
+      fld('LOT umumiy maydoni, m²','area','C',numIn(L,'C'+r,{ph:'0'})),
+      fld('Qurilish osti maydoni, m²','obyektlar','D',numIn(L,'D'+r,{ph:'0'}),d.fp>d.area&&d.area?h('span',{class:'errmsg'},'LOT maydonidan katta.'):null),
+      fld('Qavatlar soni','layers','E',numIn(L,'E'+r,{whole:true,ph:'0'})),
+      fld('Qavat balandligi, m','ruler','F',numIn(L,'F'+r,{ph:fmtNum(N('Bino','P2')||3.3,'0.0#')})),
+      fld('Tom yoki parapet balandligi, m','ruler','G',numIn(L,'G'+r,{ph:'1.2'})),
+      ro('Bino hajmi','list',nUz(d.vol,'#,##0')+' m³'),
+      fld('Yashil hudud, LOT maydonidan %','obodonlashtirish','I',h('div',{class:'sfx'},numIn(L,'I'+r,{pct:true,ph:'0'}),h('i',null,'%')),d.green?nUz(d.green,'#,##0')+' m²':null),
+      fld('Hovuz / basseyn maydoni, m²','suv','K',numIn(L,'K'+r,{ph:"yo'q"})),
+      fld("Yo'l maydoni, m²",'yol','L',numIn(L,'L'+r,{ph:'0'})),
+      ro('Trotuarlar (qolgan maydon)','yol',nUz(d.trot,'#,##0')+' m²'),
+      fld('Quyosh panellari, kW (ixtiyoriy)','yoritish','N',numIn(L,'N'+r,{ph:"yo'q"})),
+      fld("Arxitektura uslubi",'obyektlar','O',selIn(L,'O'+r,{empty:'Tanlang'})),
+      fld("Yangi ishchi o'rinlari",'project','P',numIn(L,'P'+r,{whole:true,val:N(L,'P'+r),ph:d.jobsEst?'taxmin: '+d.jobsEst:'0'})),
+      fld('Bir vaqtda foydalanuvchilar','hash','Q',numIn(L,'Q'+r,{whole:true,val:N(L,'Q'+r),ph:d.capEst?'taxmin: '+d.capEst:'0'}),"Bo'sh qolsa, taxmin olinadi."),
+      fld("Savdoga chiqarilishi",'money','S',selIn(L,'S'+r,{empty:'Tanlang'}))),
+    d.over?h('p',{class:'errmsg'},"Bino, yashil hudud, hovuz va yo'l maydonlari yig'indisi LOT maydonidan oshib ketdi."):null,
+    h('div',{class:'qh'},"Qo'shimcha obyektlar"),
+    exRows.length?h('div',{class:'rowx head'},h('span',null,'Nomi'),h('span',null,'Soni'),h('span',null,"1 birlik narxi"),h('span',null,'Summa'),h('span')):null,exRows,
+    h('button',{class:'btn',type:'button',onclick:()=>{const a=lotExtras(r);a.push({n:'',q:1,p:null});ui.lotOpen[r]=true;commit(L,'T'+r,JSON.stringify(a));setTimeout(()=>{const e=$('x-'+r+'-'+(a.length-1));if(e)e.focus()},30)}},icon('plus',1),"Qo'shimcha obyekt"),
+    h('div',{class:'lotcost'},h('div',{class:'sum'},cost.map(x=>h('div',{class:'ln'},h('span',null,x[0]),h('span',null,som(x[1])))),
+      h('div',{class:'grand'},h('span',null,'LOT taxminiy qiymati (investor mablag\'i)'),h('b',null,mln(d.total)+' mln'),h('small',null,som(d.total)+" so'm · "+d.cat.t)))),
+    h('div',{class:'lotact'},h('button',{class:'btn danger',type:'button',onclick:()=>{LOTCOLS.split('').forEach(c=>{if(V(L,c+r)!==null)commit(L,c+r,null)});delete ui.lotOpen[r]}},"LOTni o'chirish")));
+  det.addEventListener('toggle',()=>{ui.lotOpen[r]=det.open});
+  return det;
+}
+function lotsSection(){
+  datalists();
+  let last=4;LOTROWS.forEach(r=>{if(lotUsed(r))last=r});
+  const n=Math.max(last-4,ui.lots||0),cards=[];for(let i=0;i<n;i++)cards.push(lotCard(5+i));
+  const all=LOTROWS.filter(lotUsed).map(lotData),tot=all.reduce((a,d)=>a+d.total,0);
+  return h('section',{class:'card'},h('h3',null,icon('lot',1),'Investor ulushi hisobidan loyihalanadigan LOTlar'),
+    h('p',{class:'fine'},"Har bir LOT uchun maydon, qavatlar va qo'shimcha obyektlarni kiriting — taxminiy qiymat o'zi hisoblanadi. LOT nomini ro'yxatdan tanlang yoki o'zingiz yozing: yangi nom keyingi loyihalarda ham ro'yxatda chiqadi."),
+    cards,
+    n<100?h('button',{class:'btn newp',type:'button',id:'newlot',onclick:()=>{const r=5+n;ui.lots=n+1;ui.lotOpen[r]=true;render();const e=$('f-Lot-A'+r);if(e)e.focus()}},icon('plus',1),'Yangi LOT'):null,
+    all.length?h('div',{class:'areasum'},h('span',null,'LOTlar: ',h('b',null,all.length+' ta')),h('span',null,'Investor mablag\'i jami: ',h('b',null,mln(tot)+" mln so'm"))):null);
+}
+function lotRatesCard(){
+  const rows=LOTCAT.map((c,i)=>qrow(c.t,h('div',{class:'qtyin'},numIn('LotNarx','B'+(1+i),{ph:som(c.rate)}),h('span',{class:'unit'},"so'm/m²")),{for:'f-LotNarx-B'+(1+i),icon:'money'}))
+    .concat(LOTSITE.map((c,i)=>qrow(c.t,h('div',{class:'qtyin'},numIn('LotNarx','B'+(30+i),{ph:som(c.rate)}),h('span',{class:'unit'},"so'm")),{for:'f-LotNarx-B'+(30+i),icon:'money'})));
+  return h('details',{class:'card pr2'},h('summary',null,icon('money',1),"LOT qiymati uchun narxlar (taxminiy — o'zgartirish mumkin)"),
+    h('p',{class:'note'},icon('warn',1),"Bu narxlar taxminiy: byudjet obyektlarining e'lon qilingan qiymati (maktab ~3 mln so'm/m²) asosida tijorat binolari uchun chamalangan, manbasi yo'q. Loyiha-smeta yoki pudratchi narxi bilan almashtiring."),
+    h('div',{class:'qs'},rows));
+}
+
+/* ---------- summary of the whole area ---------- */
+function info(){
+  const J='Jamlama',land=((N(J,'C6')||0)+(N(J,'C7')||0))*10000;
+  const lots=LOTROWS.filter(lotUsed).map(lotData);
+  const bud=[],dx=[];for(let r=30;r<=49;r++){const b=binoData(r);if(b)bud.push(b)}for(let r=60;r<=79;r++){const b=binoData(r);if(b)dx.push(b)}
+  const sum=(a,f)=>a.reduce((s,x)=>s+(f(x)||0),0);
+  const fp=sum(lots,d=>d.fp)+sum(bud,b=>b.fp)+sum(dx,b=>b.fp);
+  const green=sum(lots,d=>d.green),pool=sum(lots,d=>d.pool),road=sum(lots,d=>d.road)+(N('Yol','C7')||0),trot=sum(lots,d=>d.trot)+(N('Yol','C11')||0);
+  const trades={};lots.forEach(d=>{const t=d.trade||'Belgilanmagan';trades[t]=(trades[t]||0)+1});if(dx.length)trades['DXSH']=dx.length;
+  const objs={},addObj=(n,q)=>{n=String(n||'').trim();if(!n||!q)return;objs[n]=(objs[n]||0)+q};
+  lots.forEach(d=>{addObj(d.name||'Nomsiz LOT',1);d.ex.forEach(e=>addObj(e.n,e.u==='dona'||e.u==='komplekt'?Math.round(e.q):1))});
+  dx.concat(bud).forEach(b=>addObj(b.type,1));
+  scan('Byudjet').groups.forEach(g=>g.items.forEach(it=>{const q=N('Byudjet','E'+it.r);if(q&&N('Byudjet','G'+it.r)&&V('Byudjet','D'+it.r)==='dona')addObj(String(V('Byudjet','B'+it.r)).replace(/\s*\(.*\)/,''),Math.round(q))}));
+  const jobs={t:0,i:0,x:0};lots.forEach(d=>{jobs[d.cat.sec]+=d.jobs||0});dx.concat(bud).forEach(b=>{jobs[b.sec]+=b.jobs||0});
+  const cap=sum(lots,d=>d.cap)+sum(dx,b=>b.cap)+sum(bud,b=>b.cap);
+  const invArea=sum(lots,d=>d.area)+sum(dx,b=>b.land*(1-b.share)),total=land||invArea+sum(dx,b=>b.land*b.share)+sum(bud,b=>b.land);
+  const infra=N('Hisobot','G15')||0,invCost=sum(lots,d=>d.total)+sum(dx,b=>b.inv),budCost=infra+sum(bud,b=>b.cost)+sum(dx,b=>b.bud);
+  return {land:total,landTyped:!!land,lots,bud,dx,fp,green,pool,road,trot,other:Math.max(0,total-fp-green-pool-road-trot),trades,objs,jobs,jobsAll:jobs.t+jobs.i+jobs.x,cap,
+    invArea,budArea:Math.max(0,total-invArea),invCost,budCost,infra,cost:invCost+budCost};
+}
+function summaryRows(x){
+  const pc=(v,t)=>t?fmtNum(v/t,'0.0%'):'—',m2=v=>nUz(v,'#,##0')+' m²',rows=[];
+  const R=(label,val,pct,bold)=>rows.push({label,val,pct,bold});
+  R('Umumiy yer maydoni',m2(x.land),'100%',1);
+  R('Qurilish osti maydoni (loyihalanayotgan)',m2(x.fp),pc(x.fp,x.land));
+  R('Yashil hudud',m2(x.green),pc(x.green,x.land));
+  R("Yo'llar va avtoturargohlar",m2(x.road),pc(x.road,x.land));
+  R('Trotuarlar',m2(x.trot),pc(x.trot,x.land));
+  if(x.pool)R('Hovuz va basseynlar',m2(x.pool),pc(x.pool,x.land));
+  R('Lotlar soni',nUz(x.lots.length+x.dx.length),null,1);
+  R('Investor investitsiya ulushi hisobidan quriladigan LOTlar',nUz(x.lots.length));
+  R("Davlat-xususiy sheriklik (DXSH) asosidagi LOTlar",nUz(x.dx.length));
+  const tr=Object.entries(x.trades);R('Savdo turiga ajratilishi',nUz(tr.reduce((a,t)=>a+t[1],0)),null,1);tr.forEach(t=>R(t[0],nUz(t[1])));
+  const ob=Object.entries(x.objs).sort((a,b)=>b[1]-a[1]);R('Loyihalangan obyektlar',nUz(ob.reduce((a,t)=>a+t[1],0)),null,1);ob.forEach(t=>R(t[0],nUz(t[1])));
+  R("Byudjet hisobidan quriladigan obyektlar",nUz(x.bud.length));
+  R("Ishchi o'rinlari soni",nUz(x.jobsAll),null,1);R("Ta'lim sohasida",nUz(x.jobs.t));R('Ishlab chiqarish va sanoat sohasida',nUz(x.jobs.i));R("Xizmat ko'rsatish sohasida",nUz(x.jobs.x));
+  R('Bir vaqtda foydalanuvchilar (umumiy sig\'im)',nUz(x.cap),null,1);
+  R('Ulushlarni taqsimlanishi',m2(x.land),'100%',1);
+  R('Investor investitsiya ulushi hisobidan quriladigan obyektlar umumiy maydoni',m2(x.invArea),pc(x.invArea,x.land));
+  R('Byudjet investitsiya ulushi hisobidan quriladigan obyektlar umumiy maydoni',m2(x.budArea),pc(x.budArea,x.land));
+  R('Qurilishning umumiy taqribiy qiymati',nUz(Math.round(x.cost),'#,##0')+" so'm",'100%',1);
+  R('Investor investitsiya ulushi hisobidan quriladigan obyektlar umumiy qiymati',nUz(Math.round(x.invCost),'#,##0')+" so'm",pc(x.invCost,x.cost));
+  R('Byudjet investitsiya ulushi hisobidan quriladigan obyektlar umumiy qiymati',nUz(Math.round(x.budCost),'#,##0')+" so'm",pc(x.budCost,x.cost));
+  rows.forEach((r,i)=>r.n=i+1);return rows;
+}
+/* charts: part-to-whole of one area or one sum, at most six parts, each labelled in the legend with its value and share */
+const PAL={light:['#2a78d6','#eb6834','#1baf7a','#eda100','#e87ba4','#008300'],dark:['#3987e5','#d95926','#199e70','#c98500','#d55181','#008300']};
+function chartSets(x){
+  const fold=(arr)=>{arr=arr.filter(a=>a[1]>0).sort((a,b)=>b[1]-a[1]);if(arr.length<=6)return arr;const rest=arr.slice(5).reduce((s,a)=>s+a[1],0);return arr.slice(0,5).concat([['Boshqalar',rest]])};
+  return [
+    {t:'Hudud balansi',u:'m²',parts:fold([['Qurilish osti',x.fp],['Yashil hudud',x.green],["Yo'llar",x.road],['Trotuarlar',x.trot],['Hovuz va basseyn',x.pool],["Boshqa (bo'sh) maydon",x.other]]),fmt:v=>nUz(v,'#,##0')+' m²'},
+    {t:'Qiymat ulushi',u:"mln so'm",parts:fold([['Byudjet',x.budCost],['Investor',x.invCost]]),fmt:v=>mln(v)+" mln so'm"},
+    {t:'Savdo turlari',u:'ta',parts:fold(Object.entries(x.trades)),fmt:v=>nUz(v)+' ta LOT'},
+    {t:"Ishchi o'rinlari",u:'ta',parts:fold([["Ta'lim",x.jobs.t],['Ishlab chiqarish va sanoat',x.jobs.i],["Xizmat ko'rsatish",x.jobs.x]]),fmt:v=>nUz(v)+' ta'}
+  ].filter(s=>s.parts.length);
+}
+function donutSVG(parts,o){
+  o=o||{};const S=o.size||180,R=S/2-4,r0=R*0.6,cx=S/2,cy=S/2,tot=parts.reduce((a,p)=>a+p[1],0)||1;let a0=-Math.PI/2;const segs=[];
+  parts.forEach((p,i)=>{let a1=a0+p[1]/tot*Math.PI*2;if(parts.length===1)a1=a0+Math.PI*2-0.0001;const lg=a1-a0>Math.PI?1:0,pt=(rr,a)=>(cx+rr*Math.cos(a)).toFixed(2)+' '+(cy+rr*Math.sin(a)).toFixed(2);
+    const d='M'+pt(R,a0)+' A'+R+' '+R+' 0 '+lg+' 1 '+pt(R,a1)+' L'+pt(r0,a1)+' A'+r0+' '+r0+' 0 '+lg+' 0 '+pt(r0,a0)+' Z';
+    segs.push(o.pdf?'<path d="'+d+'" fill="'+PAL.light[i]+'" stroke="#ffffff" stroke-width="2"/>':'<path class="sg s'+(i+1)+'" d="'+d+'"><title>'+esc(p[0])+'</title></path>');a0=a1});
+  const mid=o.center?'<text x="'+cx+'" y="'+(cy+2)+'" text-anchor="middle" font-size="'+(S/9).toFixed(0)+'" font-weight="700" '+(o.pdf?'fill="#1f3864" font-family="Roboto"':'class="dc"')+'>'+esc(o.center)+'</text>'+(o.sub?'<text x="'+cx+'" y="'+(cy+S/9).toFixed(0)+'" text-anchor="middle" font-size="'+(S/16).toFixed(0)+'" '+(o.pdf?'fill="#5d6a82" font-family="Roboto"':'class="ds2"')+'>'+esc(o.sub)+'</text>':''):'';
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+S+' '+S+'" width="'+S+'" height="'+S+'" role="img" aria-label="'+esc(o.label||'')+'">'+segs.join('')+mid+'</svg>';
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+function chartCard(set){
+  const tot=set.parts.reduce((a,p)=>a+p[1],0);const box=h('div',{class:'dn'});box.innerHTML=donutSVG(set.parts,{label:set.t,center:set.u==="mln so'm"?mln(tot):set.u==='m²'?nUz(tot/10000,'#,##0.##'):nUz(tot),sub:set.u==='m²'?'ga':set.u});
+  return h('div',{class:'chart'},h('h4',null,set.t),h('div',{class:'cw'},box,
+    h('ul',{class:'lg'},set.parts.map((p,i)=>h('li',null,h('i',{class:'lgs s'+(i+1)}),h('span',null,p[0]),h('b',null,set.fmt(p[1])),h('em',null,fmtNum(p[1]/tot,'0.#%')))))));
+}
+function malumotPage(p){
+  const x=info(),rows=summaryRows(x),half=Math.ceil(rows.length/2);
+  const out=[h('div',{class:'pagehead'},h('h2',null,p.title,icon(p.k)),h('p',null,"Hudud balansi, LOTlar, obyektlar, ishchi o'rinlari va investitsiya ulushlari — kiritilgan barcha bo'limlardan o'zi yig'iladi."))];
+  if(!x.landTyped)out.push(h('p',{class:'note'},icon('warn',1),"«Umumiy» bo'limida hudud maydoni kiritilmagan — foizlar kiritilgan obyektlar maydonidan hisoblandi."));
+  const tbl=part=>h('table',{class:'um'},h('thead',null,h('tr',null,h('th',null,'№'),h('th',null,'Nomi'),h('th',{colspan:'2'},'Soni va miqdori'))),
+    h('tbody',null,part.map(r=>h('tr',{class:r.bold?'b':null},h('td',null,String(r.n)),h('td',null,r.label),r.pct?[h('td',{class:'v'},r.val),h('td',{class:'p'},r.pct)]:h('td',{class:'v',colspan:'2'},r.val)))));
+  out.push(h('section',{class:'card'},h('h3',null,icon('malumot',1),"Umumiy ma'lumot"),h('div',{class:'umw'},tbl(rows.slice(0,half)),tbl(rows.slice(half)))));
+  const sets=chartSets(x);
+  if(sets.length)out.push(h('section',{class:'card'},h('h3',null,icon('pie',1),'Diagrammalar'),h('div',{class:'charts'},sets.map(chartCard))));
+  return out;
+}
+
+/* ---------- LOT list + summary report (PDF / Word) ---------- */
+function lotsDoc(){
+  const x=info(),NAVY='#1f3864',SOFT='#e9eef8',MUT='#5d6a82',LINE='#d5dce8',proj=String(V('Jamlama','C5')||'Yangi loyiha');
+  const d=new Date(),p2=n=>String(n).padStart(2,'0'),today=p2(d.getDate())+'.'+p2(d.getMonth()+1)+'.'+d.getFullYear();
+  const lay={hLineWidth:(i,n)=>i===0||i===n.table.body.length?0:.5,vLineWidth:()=>0,hLineColor:()=>LINE,paddingTop:()=>3,paddingBottom:()=>3,paddingLeft:()=>5,paddingRight:()=>5};
+  const th=(t,al)=>({text:t,bold:true,color:'#ffffff',fillColor:NAVY,alignment:al||'left',fontSize:7.5});
+  const r=t=>({text:t,alignment:'right'}),c=[];
+  c.push({text:'INFRATUZILMA XARAJATLARI HISOBI',fontSize:8,bold:true,color:MUT,characterSpacing:1});
+  c.push({text:proj,fontSize:18,bold:true,color:NAVY,margin:[0,3,0,2]});
+  {const pl=placeText();c.push({text:(V('Jamlama','F10')?cap(pl)+'. ':'')+'Sana: '+today,color:MUT,margin:[0,0,0,12]})}
+  c.push({text:"LOTlar ro'yxati",fontSize:12,bold:true,color:NAVY,margin:[0,0,0,6]});
+  const all=x.lots.map(l=>({no:l.num,name:l.name||'Nomsiz LOT',area:l.area,fp:l.fp,jobs:l.jobs,cap:l.cap,dx:false,inv:l.total,trade:l.trade||'—'}))
+    .concat(x.dx.map(b=>({no:b.num,name:b.type+(b.name?' — '+b.name:''),area:b.land,fp:b.fp,jobs:b.jobs,cap:b.cap,dx:true,inv:b.inv,share:b.share,trade:'DXSH'})))
+    .sort((a,b)=>(a.no===null?1e9:a.no)-(b.no===null?1e9:b.no));
+  if(all.length){
+    const b=[[th('LOT №'),th('Nomi'),th('Umumiy maydoni, m²','right'),th('Qurilish maydoni, m²','right'),th("Ishchi o'rni",'right'),th("Sig'imi",'right'),th('Turi'),th("Investor mablag'i, mln so'm",'right'),th('Savdoga chiqarilishi')]];
+    all.forEach(l=>b.push([{text:l.no===null?'—':(l.dx?'DXSH-':'')+nUz(l.no),bold:true},l.name,r(nUz(l.area,'#,##0')),r(nUz(l.fp,'#,##0')),r(nUz(l.jobs)),r(nUz(l.cap)),
+      l.dx?{text:'DXSH (byudjet '+fmtNum(l.share||0,'0.#%')+')',color:'#8a4406'}:'Investor',r(mln(l.inv)),l.trade]));
+    const S=k=>all.reduce((a,l)=>a+(l[k]||0),0);
+    b.push([{text:'JAMI',bold:true,fillColor:SOFT},{text:all.length+' ta LOT',bold:true,fillColor:SOFT},Object.assign(r(nUz(S('area'),'#,##0')),{bold:true,fillColor:SOFT}),Object.assign(r(nUz(S('fp'),'#,##0')),{bold:true,fillColor:SOFT}),
+      Object.assign(r(nUz(S('jobs'))),{bold:true,fillColor:SOFT}),Object.assign(r(nUz(S('cap'))),{bold:true,fillColor:SOFT}),{text:'',fillColor:SOFT},Object.assign(r(mln(S('inv'))),{bold:true,fillColor:SOFT}),{text:'',fillColor:SOFT}]);
+    c.push({table:{headerRows:1,widths:[40,'*',62,62,44,40,82,70,80],body:b,dontBreakRows:true},layout:lay,fontSize:8});
+  }else c.push({text:"LOTlar hali kiritilmagan.",color:MUT});
+  /* summary in two halves, like the printed form */
+  const rows=summaryRows(x),half=Math.ceil(rows.length/2);
+  const part=a=>{const b=[[th('№'),th('Nomi'),Object.assign(th('Soni va miqdori','center'),{colSpan:2}),{}]];
+    a.forEach(rw=>{const f=rw.bold?{bold:true,color:NAVY,fillColor:SOFT}:{};b.push(rw.pct?[Object.assign({text:String(rw.n),color:MUT},f),Object.assign({text:rw.label},f),Object.assign(r(rw.val),f),Object.assign(r(rw.pct),f)]:[Object.assign({text:String(rw.n),color:MUT},f),Object.assign({text:rw.label},f),Object.assign({text:rw.val,alignment:'center',colSpan:2},f),{}])});
+    return {table:{headerRows:1,widths:[24,'*',92,38],body:b,dontBreakRows:true},layout:lay,fontSize:7.5}};
+  c.push({text:"UMUMIY MA'LUMOT",fontSize:14,bold:true,color:NAVY,alignment:'center',pageBreak:'before',margin:[0,0,0,8]});
+  c.push({columns:[Object.assign({width:'*'},part(rows.slice(0,half))),Object.assign({width:'*'},part(rows.slice(half)))],columnGap:14});
+  const sets=chartSets(x);
+  if(sets.length){
+    c.push({text:'Diagrammalar',fontSize:12,bold:true,color:NAVY,margin:[0,14,0,6],pageBreak:'before'});
+    const cell=s=>{const tot=s.parts.reduce((a,p)=>a+p[1],0);return {width:'*',stack:[{text:s.t,bold:true,color:NAVY,margin:[0,0,0,4]},
+      {svg:donutSVG(s.parts,{pdf:true,size:150,center:s.u==="mln so'm"?mln(tot):s.u==='m²'?nUz(tot/10000,'#,##0.##'):nUz(tot),sub:s.u==='m²'?'ga':s.u}),width:130,margin:[0,0,0,6]},
+      {table:{widths:[8,'*',62,32],body:s.parts.map((p,i)=>[{text:'',fillColor:PAL.light[i]},{text:p[0],fontSize:7.5},{text:s.fmt(p[1]),fontSize:7.5,alignment:'right'},{text:fmtNum(p[1]/tot,'0.#%'),fontSize:7.5,alignment:'right',color:MUT}])},layout:'noBorders'}]}};
+    for(let i=0;i<sets.length;i+=4)c.push({columns:sets.slice(i,i+4).map(cell),columnGap:16});
+  }
+  c.push({table:{widths:['*'],body:[[{text:"Diqqat: barcha summalar taxminiy hisob. Ularni loyihaga to'g'ridan-to'g'ri qo'llab bo'lmaydi — aniq summa loyiha-smeta hujjatlari ishlab chiqilganda aniqlanadi.",bold:true,color:'#8a4406',fillColor:'#fdf1de',margin:[6,5,6,5]}]]},layout:'noBorders',margin:[0,14,0,0]});
+  return {proj,pageSize:'A4',pageOrientation:'landscape',pageMargins:[34,36,34,40],content:c,info:{title:proj+" — LOTlar va umumiy ma'lumot"},
+    defaultStyle:{font:'Roboto',fontSize:8.5,color:'#152033',lineHeight:1.12},
+    footer:(page,count)=>({margin:[34,12,34,0],fontSize:8,color:MUT,columns:[{text:proj},{text:today+'   ·   '+page+' / '+count,alignment:'right'}]})};
+}
+window.infraLots=lotsDoc;window.infraRaster=rasterize;
+/* Word cannot draw SVG: turn each chart into a picture first */
+async function svgToPng(svg,w){
+  return new Promise((ok,no)=>{const img=new Image(),sc=3;img.onload=()=>{const cv=document.createElement('canvas');cv.width=w*sc;cv.height=w*sc;const g=cv.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,cv.width,cv.height);g.drawImage(img,0,0,cv.width,cv.height);
+    cv.toBlob(b=>b?b.arrayBuffer().then(a=>ok(new Uint8Array(a))):no(new Error('png')),'image/png')};img.onerror=()=>no(new Error('svg'));img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});
+}
+async function rasterize(n){
+  if(!n||typeof n!=='object')return;
+  if(Array.isArray(n)){for(const x of n)await rasterize(x);return}
+  if(n.svg){n.image=await svgToPng(n.svg,n.width||150);n.height=n.width||150;delete n.svg;return}
+  for(const k of ['stack','columns','content'])if(n[k])await rasterize(n[k]);
+  if(n.table)for(const row of n.table.body)await rasterize(row);
 }
 
 /* ---------- PDF report ---------- */
@@ -22556,7 +22965,7 @@ function pdfMsg(t){const e=$('pdfmsg');e.textContent=t;e.hidden=!t}
 const DOCXLIB='https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js';
 /* the same report definition is rendered either by pdfmake or, through this converter, as a Word file */
 function toDocx(dd){
-  const D=docx,W=10300,hex=c=>c?String(c).replace('#',''):undefined;
+  const D=docx,W=dd.pageOrientation==='landscape'?15000:10300,hex=c=>c?String(c).replace('#',''):undefined;
   const AL={right:D.AlignmentType.RIGHT,center:D.AlignmentType.CENTER,left:D.AlignmentType.LEFT};
   const none={style:D.BorderStyle.NONE,size:0,color:'FFFFFF'},line={style:D.BorderStyle.SINGLE,size:4,color:'D5DCE8'};
   const para=n=>{const o=typeof n==='string'?{text:n}:n,st=o.style==='h2'?{fontSize:11,bold:true,color:'#1f3864',margin:[0,16,0,6]}:{},g=k=>o[k]!==undefined?o[k]:st[k],m=o.margin||st.margin||[0,0,0,0];
@@ -22587,10 +22996,11 @@ function toDocx(dd){
     }
     if(n.columns){const ws=widths(n.columns.map(c=>typeof c.width==='number'?c.width:'*'),total),m=n.margin,out=[];if(m&&m[1])out.push(gap(m[1]));
       out.push(table([new D.TableRow({children:n.columns.map((c,i)=>new D.TableCell({children:kids(c,ws[i]-160),width:{size:ws[i],type:D.WidthType.DXA}}))})],ws,total,true));return out}
+    if(n.image)return [new D.Paragraph({children:[new D.ImageRun({data:n.image,transformation:{width:n.width,height:n.height}})]})];
     if(n.text!==undefined)return [para(n)];
     return [];
   }
-  return new D.Document({styles:{default:{document:{run:{font:'Calibri'}}}},sections:[{properties:{page:{margin:{top:900,bottom:900,left:800,right:800}}},
+  return new D.Document({styles:{default:{document:{run:{font:'Calibri'}}}},sections:[{properties:{page:Object.assign({margin:{top:800,bottom:800,left:700,right:700}},dd.pageOrientation==='landscape'?{size:{orientation:D.PageOrientation.LANDSCAPE}}:{})},
     footers:{default:new D.Footer({children:[new D.Paragraph({alignment:D.AlignmentType.RIGHT,children:[new D.TextRun({children:[(dd.proj||'')+'   ·   ',D.PageNumber.CURRENT,' / ',D.PageNumber.TOTAL_PAGES],size:16,color:'5D6A82'})]})]})},
     children:walk(dd.content)}]});
 }
@@ -22601,12 +23011,12 @@ async function makeFile(kind,full,b){
     let blob;
     if(kind==='pdf'){
       if(typeof pdfMake==='undefined'){await loadScript(PDFLIB[0]);await loadScript(PDFLIB[1])}
-      blob=await new Promise((ok,no)=>{try{pdfMake.createPdf(reportDoc(full)).getBlob(ok)}catch(e){no(e)}});
+      blob=await new Promise((ok,no)=>{try{pdfMake.createPdf(full==='lots'?lotsDoc():reportDoc(full)).getBlob(ok)}catch(e){no(e)}});
     }else{
       if(typeof docx==='undefined')await loadScript(DOCXLIB);
-      blob=await docx.Packer.toBlob(toDocx(reportDoc(full)));
+      const dd=full==='lots'?lotsDoc():reportDoc(full);await rasterize(dd.content);blob=await docx.Packer.toBlob(toDocx(dd));
     }
-    const d=new Date(),name='Infratuzilma-'+(full?'toliq':'umumiy')+'-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.'+kind;
+    const d=new Date(),name='Infratuzilma-'+(full==='lots'?'LOTlar':full?'toliq':'umumiy')+'-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.'+kind;
     await dl.save({filename:name,data:blob});
     pdfMsg('Fayl saqlashga berildi.');$('pdfs').open=false;
   }catch(e){
@@ -22618,7 +23028,7 @@ async function makeFile(kind,full,b){
   }
   b.disabled=false;b.replaceChildren(...keep);
 }
-document.querySelectorAll('#pdfs .menu button').forEach(b=>b.addEventListener('click',()=>makeFile(b.dataset.kind,b.dataset.full==='1',b)));
+document.querySelectorAll('#pdfs .menu button').forEach(b=>b.addEventListener('click',()=>makeFile(b.dataset.kind,b.dataset.full==='lots'?'lots':b.dataset.full==='1',b)));
 async function connectDownloads(){try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){dl=null}
   /* opened as a plain file (not inside Claude): save through the browser's own download */
   if(!dl&&!(window.claude&&window.claude.use))dl={save:async o=>{const u=URL.createObjectURL(o.data),a=document.createElement('a');a.href=u;a.download=o.filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}};
@@ -22636,7 +23046,7 @@ function summary(){
 function render(){
   const act=document.activeElement,id=act&&act.id&&$('main').contains(act)?act.id:'',y=window.scrollY;
   if(!cur){$('proj').textContent='Loyihalar';$('main').replaceChildren(...homePage().filter(Boolean));if(id){const e=$(id);if(e)e.focus({preventScroll:true})}window.scrollTo(0,y);return}
-  const body=page.k==='umumiy'?overviewPage():page.k==='narxlar'?pricesPage():page.k==='obodonlashtirish'?obodPage(page):page.k==='obyektlar'?binoPage(page):sectionPage(page);
+  const body=page.k==='umumiy'?overviewPage():page.k==='narxlar'?pricesPage():page.k==='obodonlashtirish'?obodPage(page):page.k==='obyektlar'?binoPage(page):page.k==='malumot'?malumotPage(page):sectionPage(page);
   const i=PAGES.indexOf(page),pv=PAGES[i-1],nx=PAGES[i+1];
   body.push(h('nav',{class:'pager','aria-label':"Oldingi va keyingi bo'lim"},
     pv?h('a',{href:'#'+pv.k},h('small',null,'← Oldingi'),h('b',null,pv.name)):h('span'),
@@ -22683,7 +23093,7 @@ async function ghPut(path,text,sha,msg){const r=await fetch(ghApi('/contents/'+p
    Price base edits are shared by all projects. Kept in GitHub (stand-alone site), in Claude (inside Claude) or in this browser. ---------- */
 const LS_PROJ='infra-projects-v3',LS_DRAFT='infra-draft-v3';
 let backend='local',projects={},globalP={},cur=null,saving=false,loaded=false,loadErr='',statusText='',db=null,listTimer=null;
-const isGlobal=k=>/^Baza!/.test(k)||/^(Obod|Bino)![AB]([3-9]|1\d|2[0-2])$/.test(k)||/^Bino!P[12]$/.test(k)||/^Obod!K[3-8]$/.test(k);
+const isGlobal=k=>/^Baza!/.test(k)||/^Lot(Nom|Narx)!/.test(k)||/^(Obod|Bino)![AB]([3-9]|1\d|2[0-2])$/.test(k)||/^Bino!P[12]$/.test(k)||/^Obod!K[3-8]$/.test(k);
 const empty=()=>({projects:{},global:{}});
 const STORE={
   local:{async load(){try{return JSON.parse(localStorage.getItem(LS_PROJ)||'null')||empty()}catch(e){return empty()}},
@@ -22720,10 +23130,11 @@ async function refresh(){
   catch(e){loadErr=e&&(e.status===401||e.status===403)?"Loyihalarni yuklab bo'lmadi: kirish kaliti yaroqsiz yoki muddati tugagan.":"Loyihalarni yuklab bo'lmadi. Internetni tekshirib, qayta urinib ko'ring."}
   loaded=true;if(!cur)render();
 }
-function resetUiState(){Object.assign(ui,{areas:1,pipes:{},objs:{b:1,p:0},zones:1,showAll:{},q:'',cat:'',old:false,pe:null,leave:false,del:null})}
+function resetUiState(){Object.assign(ui,{lotOpen:{},lots:0,areas:1,pipes:{},objs:{b:1,p:0},zones:1,showAll:{},q:'',cat:'',old:false,pe:null,leave:false,del:null})}
 function openProject(id,cells,isDirty){
   cur=id;resetUiState();const p=projects[id];
-  applyOver(Object.assign({},globalP,cells||(p?p.cells:{})));dirty=!!isDirty;
+  const cl=Object.assign({},cells||(p?p.cells:{}));if('Jamlama!C8' in cl){if(!('Jamlama!F12' in cl))cl['Jamlama!F12']=cl['Jamlama!C8'];delete cl['Jamlama!C8']}
+  applyOver(Object.assign({},globalP,cl));dirty=!!isDirty;
   if(dirty)saveDraft();else clearDraft();
   document.body.classList.remove('home');saveBtn();status('');
   if(location.hash==='#umumiy')go();else location.hash='umumiy';
@@ -22747,9 +23158,14 @@ function goHome(force){
   render();window.scrollTo(0,0);refresh();
 }
 function leaveBar(){const b=$('leave');if(b)b.hidden=!ui.leave}
+function priceDate(){let m=0;for(const a in SH.Baza.cells){if(/^H\d+$/.test(a)){const v=SH.Baza.cells[a][0];if(typeof v==='number'&&v>m)m=v}}
+  for(const k in globalP)if(/^Baza!H\d+$/.test(k)&&typeof globalP[k]==='number'&&globalP[k]>m)m=globalP[k];return m}
 function homePage(){
   const out=[h('div',{class:'pagehead'},h('h2',null,'Loyihalar',icon('project')),h('p',null,"Saqlangan loyihani oching yoki yangisini boshlang. Ishni tugatgach, tepadagi «Saqlash» tugmasini bosing."))];
   if(!loaded){out.push(h('p',{class:'loading'},'Loyihalar yuklanmoqda…'));return out}
+  {const pd=priceDate(),age=pd?todaySerial()-pd:0;
+    out.push(h('div',{class:'pricedate'},icon('calendar',1),h('span',null,'Narxlar bazasi oxirgi yangilangan: ',h('b',null,pd?fmtNum(pd,'dd.mm.yyyy'):'—')),
+      age>31?h('span',{class:'old'},icon('warn',1),'Bir oydan oshdi — narxlarni yangilash vaqti keldi'):null))}
   if(loadErr)out.push(h('p',{class:'note'},icon('warn',1),loadErr,' ',h('button',{class:'btn',type:'button',onclick:()=>{loaded=false;render();refresh()}},'Qayta urinish')));
   const list=Object.keys(projects).map(id=>Object.assign({id},projects[id])).sort((a,b)=>(b.at||0)-(a.at||0));
   const rows=list.map(p=>h('div',{class:'prj'},
