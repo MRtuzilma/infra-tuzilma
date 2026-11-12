@@ -2112,7 +2112,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794520105';
+const BUILD_ID='1794520488';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
     if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
@@ -3111,7 +3111,8 @@ const MAP=(function(){
     const pxPerKm=P.pxPerDegLat/111.32,km=niceKm((mb.w*0.18)/pxPerKm),len=km*pxPerKm,sx=mb.x+20*U,sy=H-46*U;
     ctx.fillStyle='#222';ctx.fillRect(sx,sy,len/2,8*U);ctx.strokeStyle='#222';ctx.lineWidth=1.5*U;ctx.strokeRect(sx,sy,len,8*U);
     ctx.font=(16*U)+'px '+FONT;ctx.textBaseline='bottom';ctx.textAlign='left';ctx.fillText('0',sx-4*U,sy-4*U);ctx.textAlign='center';ctx.fillText((km>=1?km:km*1000)+' '+(km>=1?'km':'m'),sx+len,sy-4*U)}
-  function frame(ctx,W,H,U,title,sub){
+  let NOSUB=false;
+  function frame(ctx,W,H,U,title,sub){if(NOSUB)sub=String(sub).replace(/^\d-rasm( · )?/,'');
     ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.fillStyle='#1a1a1a';ctx.textAlign='left';ctx.textBaseline='alphabetic';
     let fs=34*U;ctx.font='700 '+fs+'px '+FONT;while(ctx.measureText(title).width>W-72*U&&fs>18*U){fs-=1*U;ctx.font='700 '+fs+'px '+FONT}ctx.fillText(title,36*U,58*U);
     ctx.fillStyle='#555';ctx.font=(22*U)+'px '+FONT;ctx.fillText(sub,36*U,92*U);
@@ -3136,7 +3137,7 @@ const MAP=(function(){
     k.forEach(g=>{if(g.type==='Polygon')draw(ctx,g,P,{fill:COL.projFill,stroke:COL.fillStroke,width:1.8*U});else if(g.type==='LineString')draw(ctx,g,P,{stroke:COL.fillStroke,width:3.5*U});else draw(ctx,g,P,{pt:8*U,fill:'#e53935',stroke:'#7f0000',width:2*U})});
     const bb=bboxOf(k),a=P([bb[0],bb[3]]),b=P([bb[2],bb[1]]),sz=Math.max(b[0]-a[0],b[1]-a[1]);
     if(sz<26*U){ctx.beginPath();ctx.arc((a[0]+b[0])/2,(a[1]+b[1])/2,Math.max(16*U,sz),0,7);ctx.strokeStyle=COL.fillStroke;ctx.lineWidth=2.5*U;ctx.stroke()}
-    placeLabel(ctx,lb,k,P,24*U,W,H,box,U);decorations(ctx,P,W,H,U,box)}
+    placeLabel(ctx,'Loyiha hududi',k,P,24*U,W,H,box,U);decorations(ctx,P,W,H,U,box)}
   const RAD=Math.PI/180,WA=6378137,WE2=0.00669437999014;
   function localScale(lat){const s=Math.sin(lat*RAD),w=1-WE2*s*s,Nn=WA/Math.sqrt(w),Mm=WA*(1-WE2)/(w*Math.sqrt(w));return [Nn*Math.cos(lat*RAD)*RAD,Mm*RAD]}
   function hav(a,b){const [kx,ky]=localScale((a[1]+b[1])/2);return Math.hypot((b[0]-a[0])*kx,(b[1]-a[1])*ky)}
@@ -3160,7 +3161,7 @@ const MAP=(function(){
     decorations(ctx,P,W,H,U,box)}
   const RENDER=[render1,render2,render3,render4];
   /* the four sheets as JPEG pictures for the PDF (A4 landscape) */
-  function images(w){w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);return RENDER.map(fn=>{fn(big);return big.toDataURL('image/jpeg',0.9)})}
+  function images(w,thumb){w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);NOSUB=!!thumb;try{return RENDER.map(fn=>{fn(big);return big.toDataURL('image/jpeg',0.9)})}finally{NOSUB=false}}
   return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region()};
 })();
 
@@ -3284,9 +3285,9 @@ function reportDoc(full,only){
       for(let i=0;i<sets.length;i+=2)c.push({columns:sets.slice(i,i+2).map(cell).concat(sets.length-i<2?[{width:'*',text:''}]:[]),columnGap:18,margin:[0,0,0,14]});
     }}
   /* 4b. the four maps in one row under the charts */
-  if(MAP.ready()){const ims=MAP.images(1200);
+  if(MAP.ready()){const ims=MAP.images(1200,true);
     c.push({unbreakable:true,margin:[0,4,0,0],stack:[{text:'Xaritada joylashuv',style:'h2',margin:[0,4,0,6]},
-      {columns:ims.map((im,i)=>({width:'*',stack:[{image:im,width:122,alignment:'center'},{text:(i+1)+'-rasm · '+['Respublika','Viloyat','Tuman','Loyiha hududi'][i],fontSize:7,color:MUT,alignment:'center',margin:[0,2,0,0]}]})),columnGap:6}]})}
+      {columns:ims.map((im,i)=>({width:'*',stack:[{image:im,width:122,alignment:'center'},{text:''}]})),columnGap:6}]})}
   /* 5. full report: each section, then each object and LOT */
   const head=(t,am)=>({columns:[{text:t,fontSize:13,bold:true,color:NAVY},{text:am===null?'':mln(am)+" mln so'm",fontSize:13,bold:true,color:NAVY,alignment:'right',width:150}],margin:[0,22,0,6],headlineLevel:1});
   let firstSec=true;
