@@ -239,6 +239,34 @@ main{min-width:0;display:flex;flex-direction:column;gap:18px}
 .dlm .menu button:hover{background:var(--brand-soft)}
 .dlm .menu button:disabled{opacity:.6;cursor:progress}
 .dlm .menu .ic{color:var(--accent)}
+.backb{font:inherit;font-size:12.5px;font-weight:600;border:0;background:none;color:var(--on-brand-soft);cursor:pointer;padding:0 0 4px;display:inline-flex;align-items:center}
+.backb:hover{color:var(--on-brand)}
+.savebtn{font:inherit;font-weight:700;padding:9px 16px;border-radius:8px;border:1px solid var(--on-brand);background:var(--on-brand);color:var(--brand);cursor:pointer;display:inline-flex;align-items:center;white-space:nowrap}
+.savebtn.dirty{background:#f2b632;border-color:#f2b632;color:#1f2a44}
+.savebtn:disabled{opacity:.7;cursor:progress}
+.savebtn .ic{color:currentColor}
+body.home .nav,body.home .dock,body.home #pdfs,body.home #save,body.home .total,body.home #back,body.home .pager{display:none!important}
+body.home .shell .inner{grid-template-columns:minmax(0,860px);justify-content:center}
+body.home .shell{padding-bottom:32px}
+.leave{background:var(--warn-bg);color:var(--warn);padding-block:10px}
+.leave .inner{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;font-weight:600}
+.leave .acts{display:flex;flex-wrap:wrap;gap:8px}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.prj{display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--line)}
+.po{flex:1;min-width:0;display:flex;gap:12px;align-items:center;padding:12px 4px;border:0;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer;border-radius:8px}
+.po:hover{background:var(--brand-soft)}
+.pn{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.pn b{font-size:15px;overflow-wrap:anywhere}
+.pn small{color:var(--muted);font-size:12px;display:flex;align-items:center}
+.ps{font-family:var(--font-display);font-weight:700;color:var(--brand-ink);text-align:right;font-variant-numeric:tabular-nums;display:flex;flex-direction:column;white-space:nowrap}
+.ps small{font-family:var(--font-body);font-weight:400;color:var(--muted);font-size:11px}
+.pd{display:flex;gap:6px;flex-wrap:wrap}
+.empty{color:var(--muted);padding:14px 0}
+.newp{margin-top:14px;width:100%;justify-content:center;display:flex;align-items:center;padding:12px;font-size:15px;background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.newp .ic{color:currentColor}
+.pr{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+.pr summary{cursor:pointer;font-weight:600;color:var(--accent);display:flex;align-items:center;list-style:none}
+.pr summary::-webkit-details-marker{display:none}
 .obj{border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px;display:flex;flex-direction:column;gap:12px}
 .oh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 36px;gap:10px;align-items:center}
 .og{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 14px}
@@ -334,6 +362,9 @@ a.srch{text-decoration-style:dotted;color:var(--ink)}
   .rows.inq .nums>div:last-child,.row.xr .nums>div:last-child{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline}
   .rowp{grid-template-columns:minmax(0,1fr) minmax(0,1fr);padding:13px 0}
   .pe{padding:8px}
+  .mast .side{gap:10px;flex-wrap:wrap}
+  .savebtn{min-height:42px}
+  .ps{display:none}
   .og{grid-template-columns:repeat(2,minmax(0,1fr))}
   .oh{grid-template-columns:minmax(0,1fr) 44px}
   .oh .in[type=text]{grid-column:1/-1;grid-row:2}
@@ -380,15 +411,21 @@ a.srch{text-decoration-style:dotted;color:var(--ink)}
 <div id="app" hidden>
 <header class="mast gut"><div class="inner">
   <div class="who">
+    <button class="backb" id="back" type="button"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Loyihalar</button>
     <div class="eyebrow">Infratuzilma xarajatlari hisobi</div>
     <h1 id="proj">Loyiha</h1>
   </div>
   <div class="side">
+    <button class="savebtn" id="save" type="button">Saqlash</button>
     <details class="dlm" id="pdfs" hidden><summary class="pdfbtn"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Yuklab olish</summary><div class="menu"><button type="button" data-kind="pdf" data-full="0"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>PDF — umumiy varaq</button><button type="button" data-kind="pdf" data-full="1"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>PDF — to'liq hisobot</button><button type="button" data-kind="docx" data-full="0"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Word — umumiy varaq</button><button type="button" data-kind="docx" data-full="1"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Word — to'liq hisobot</button></div></details>
     <div class="total"><b id="grand">—</b><span>mln so'm · jami, QQS bilan</span></div>
   </div>
   <div class="pdfmsg" id="pdfmsg" role="status" hidden></div>
 </div></header>
+<div class="leave gut" id="leave" hidden><div class="inner">
+  <span><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l10 18H2z M12 10v5 M12 18h.01"/></svg>Loyihada saqlanmagan o'zgarishlar bor.</span>
+  <span class="acts"><button class="btn primary" id="leave-save" type="button">Saqlash va chiqish</button><button class="btn" id="leave-drop" type="button">Saqlamasdan chiqish</button><button class="btn" id="leave-no" type="button">Bekor qilish</button></span>
+</div></div>
 
 <div class="shell gut"><div class="inner">
   <nav class="nav" id="nav" aria-label="Bo'limlar"></nav>
@@ -21786,11 +21823,21 @@ extendModel(M);
     c['C'+r]=['=IF(A'+r+'="","",IFERROR(INDEX($B$3:$B$22,MATCH(A'+r+',$A$3:$A$22,0)),0))',6];
     c['D'+r]=['=IF(OR(A'+r+'="",B'+r+'="",C'+r+'=""),0,B'+r+'*C'+r+')',6];
   }
-  c.F1=['=SUM(D30:D59)',6];c.F2=['=F1*Jamlama!C9',6];c.F3=['=F1+F2',6];c.F4=['=SUM(B30:B59)',6];
-  M.sheets.push({name:'Obod',rows:59,cols:6,show:6,cells:c,merges:[],dv:[],cf:[],widths:{},hidden:[]});
+  /* earthworks: H1 area, H2 design level (lowest point = 0 m), H10:H17 height of a part, I10:I17 its share of the area; prices K3:K8 */
+  [['Qazish (ekskavator bilan), m³',30000],['Qazilgan tuproqni joyida ko\'chirib to\'kish va zichlash, m³',25000],['Ortiqcha tuproqni yuklab olib ketish, m³',45000],['Tuproq keltirish (sotib olish va tashish), m³',85000],['Keltirilgan tuproqni to\'kish va zichlash, m³',20000],['Yuzani tekislash (planirovka), m²',6000]]
+    .forEach((x,i)=>{c['J'+(3+i)]=[x[0],6];c['K'+(3+i)]=[x[1],6]});
+  for(let r=10;r<=17;r++){
+    c['L'+r]=['=IF(OR(H'+r+'="",I'+r+'="",$H$1=""),0,MAX(0,H'+r+'-IF($H$2="",0,$H$2))*I'+r+'*$H$1)',6];
+    c['M'+r]=['=IF(OR(H'+r+'="",I'+r+'="",$H$1=""),0,MAX(0,IF($H$2="",0,$H$2)-H'+r+')*I'+r+'*$H$1)',6];
+  }
+  c.L1=['=SUM(L10:L17)',6];c.L2=['=SUM(M10:M17)',6];c.L3=['=MIN(L1,L2)',6];c.L4=['=L1-L3',6];c.L5=['=L2-L3',6];
+  c.L6=['=L1*K3+L3*K4+L4*K5+L5*K6+L5*K7+IF(OR(L1>0,L2>0),IF($H$1="",0,$H$1)*K8,0)',6];c.L7=['=SUM(I10:I17)',6];
+  c.F1=['=SUM(D30:D59)+L6',6];c.F2=['=F1*Jamlama!C9',6];c.F3=['=F1+F2',6];c.F4=['=SUM(B30:B59)',6];c.F5=['=SUM(D30:D59)',6];
+  M.sheets.push({name:'Obod',rows:59,cols:13,show:6,cells:c,merges:[],dv:[],cf:[],widths:{},hidden:[]});
   const H=M.sheets.find(s=>s.name==='Hisobot');H.cells.G15[0]='=SUM(G7:G14)+Obod!F3';
 })();
 const SH={};M.sheets.forEach(s=>SH[s.name]=s);
+const KINDS=[['sanoat zonasi','sanoat zonasiga'],['kichik sanoat zonasi','kichik sanoat zonasiga'],['turar joy massivi','turar joy massiviga'],['yangi mahalla','yangi mahallaga'],['turizm zonasi','turizm zonasiga'],['hudud','hududga']];
 /* key, sheet, short name, page title, intro, total cell */
 const PAGES=[
  {k:'umumiy',name:'Umumiy'},
@@ -21808,9 +21855,9 @@ const PAGES=[
 ];
 const LS_KEY='infra-hisob-v2';
 let hf=null,over={},dirty=false,page=PAGES[0];
-const ui={setup:false,showAll:{},q:'',cat:'',old:false,areas:1,pipes:{},pe:null,objs:{b:1,p:0}};
+const ui={zones:1,setup:false,showAll:{},q:'',cat:'',old:false,areas:1,pipes:{},pe:null,objs:{b:1,p:0}};
 
-const ICON={umumiy:'M4 4h6v6H4z M14 4h6v6h-6z M14 14h6v6h-6z M4 14h6v6H4z',obodonlashtirish:'M12 3l4 5h-2l3 4h-2l3 4H6l3-4H7l3-4H8z M12 16v5',elektr:'M13 2L4 14h7l-1 8 9-12h-7z',suv:'M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z',kanalizatsiya:'M3 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0 M3 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0 M3 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0','yomgir-suvi':'M7 15a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.6 1.5A3.3 3.3 0 0 1 17.5 15z M8 18v3 M12 18v3 M16 18v3',gaz:'M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-8.5z',yol:'M6 21L9 3 M18 21L15 3 M12 5v3 M12 11v3 M12 17v3',yoritish:'M9 18h6 M10 21h4 M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z',qoshimcha:'M4 4h16v16H4z M12 8v8 M8 12h8',narxlar:'M3 12V4h8l10 10-8 8z M7.5 8h.01',obyektlar:'M5 21V5l7-2v18 M12 9l7 2v10 M3 21h18 M8 9h1 M8 13h1 M8 17h1 M15 14h1 M15 17h1',
+const ICON={umumiy:'M4 4h6v6H4z M14 4h6v6h-6z M14 14h6v6h-6z M4 14h6v6H4z',obodonlashtirish:'M12 3l4 5h-2l3 4h-2l3 4H6l3-4H7l3-4H8z M12 16v5',elektr:'M13 2L4 14h7l-1 8 9-12h-7z',suv:'M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z',kanalizatsiya:'M3 7c2-2 4-2 6 0s4 2 6 0 4-2 6 0 M3 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0 M3 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0','yomgir-suvi':'M7 15a4 4 0 0 1 .5-8 5.5 5.5 0 0 1 10.6 1.5A3.3 3.3 0 0 1 17.5 15z M8 18v3 M12 18v3 M16 18v3',gaz:'M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-8.5z',yol:'M6 21L9 3 M18 21L15 3 M12 5v3 M12 11v3 M12 17v3',yoritish:'M9 18h6 M10 21h4 M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z',qoshimcha:'M4 4h16v16H4z M12 8v8 M8 12h8',narxlar:'M3 12V4h8l10 10-8 8z M7.5 8h.01',save:'M5 3h11l3 3v15H5z M8 3v6h8V3 M8 21v-7h8v7',check:'M5 12l5 5L20 7',obyektlar:'M5 21V5l7-2v18 M12 9l7 2v10 M3 21h18 M8 9h1 M8 13h1 M8 17h1 M15 14h1 M15 17h1',
   params:'M4 6h9 M17 6h3 M4 12h3 M11 12h9 M4 18h11 M19 18h1 M15 4v4 M9 10v4 M17 16v4',result:'M6 3h12v18H6z M9 7h6 M9 12h.01 M12 12h.01 M15 12h.01 M9 16h.01 M12 16h.01 M15 16h.01',list:'M3 8l9-5 9 5v8l-9 5-9-5z M3 8l9 5 9-5 M12 13v8',
   pdf:'M12 3v12 M7 10l5 5 5-5 M5 21h14',lock:'M6 11h12v9H6z M8 11V8a4 4 0 0 1 8 0v3',plus:'M12 5v14 M5 12h14',refresh:'M4 11a8 8 0 0 1 14-4l2 2 M20 4v5h-5 M20 13a8 8 0 0 1-14 4l-2-2 M4 20v-5h5',
   warn:'M12 3l10 18H2z M12 10v5 M12 18h.01',pencil:'M4 20l1-4L16 5l3 3L8 19z M14 7l3 3',image:'M3 5h18v14H3z M3 16l5-5 4 4 3-3 6 6 M8.5 9h.01',ext:'M14 4h6v6 M20 4l-9 9 M18 14v6H4V6h6',
@@ -21846,7 +21893,7 @@ function expand(r){const [a,b]=r.split(':');const p=parseAddr(a),q=parseAddr(b||
 function isFormula(sh,a){const c=sh.cells[a];return !!(c&&typeof c[0]==='string'&&c[0][0]==='=')}
 M.sheets.forEach(sh=>{sh.ed={};sh.dv.forEach(dv=>dv.ranges.forEach(r=>expand(r).forEach(a=>{if(!isFormula(sh,a))sh.ed[a]=dv})))});
 (function(){
-  const J=SH.Jamlama;J.ed.C5={t:'text'};for(let r=6;r<=12;r++)if(r!==7)J.ed['C'+r]={t:'num'};['F6','F7','F8'].forEach(a=>{J.ed[a]={t:'num'}});
+  const J=SH.Jamlama;J.ed.C5={t:'text'};J.ed.F10={t:'text'};J.ed.F11={t:'list',v:KINDS.map(x=>x[0])};for(let r=6;r<=12;r++)if(r!==7)J.ed['C'+r]={t:'num'};['F6','F7','F8'].forEach(a=>{J.ed[a]={t:'num'}});
   M.sheets.forEach(sh=>{if(sh.autoE)for(const r in sh.autoE)sh.ed['P'+r]={t:'num'}});
   const Z=SH.Oz;for(let r=3;r<=22;r++){Z.ed['A'+r]={t:'text'};Z.ed['B'+r]={t:'text'}}
   const BN=SH.Bino;for(let r=3;r<=22;r++){BN.ed['A'+r]={t:'text'};BN.ed['B'+r]={t:'num'}}BN.ed.P1={t:'num'};BN.ed.P2={t:'num'};
@@ -21857,6 +21904,7 @@ M.sheets.forEach(sh=>{sh.ed={};sh.dv.forEach(dv=>dv.ranges.forEach(r=>expand(r).
   const O=SH.Obod;
   for(let r=3;r<=22;r++){O.ed['A'+r]={t:'text'};O.ed['B'+r]={t:'num'}}
   for(let r=30;r<=59;r++){O.ed['A'+r]={t:'range',s:'Obod',r:'A3:A22'};O.ed['B'+r]={t:'num'}}
+  ['H1','H2'].forEach(a=>{O.ed[a]={t:'num'}});for(let r=10;r<=17;r++){O.ed['H'+r]={t:'num'};O.ed['I'+r]={t:'num'}}for(let r=3;r<=8;r++)O.ed['K'+r]={t:'num'};
   const Y=SH.Byudjet;Object.keys(Y.ed).forEach(a=>{if(a[0]==='E'&&!isFormula(Y,'I'+a.slice(1)))Y.ed['I'+a.slice(1)]={t:'num'}});
 })();
 
@@ -22130,6 +22178,44 @@ function secInfo(s){
   if(s.sheet==='Byudjet'){let n=0;scan('Byudjet').groups.forEach(g=>g.items.forEach(it=>{if(N('Byudjet','G'+it.r))n++}));for(let r=3;r<=22;r++)if(N('Oz','E'+r))n++;return {am,ds:n+' xil material'}}
   const txt=String(V(H,'C'+s.hr)||''),k=txt.indexOf(': ');return {am,ds:(k>=0?txt.slice(k+2):'').replace(/,\s*$/,'')};
 }
+const km=v=>nUz(v,'#,##0.###');
+function joinUz(a){a=a.filter(Boolean);return a.length<2?(a[0]||''):a.slice(0,-1).join(', ')+' va '+a[a.length-1]}
+function pipesOf(sh,list){const o=[];list.forEach(([c,l])=>{const d=V(sh,c),len=N(sh,l);if(d&&d!=='—'&&len)o.push(km(len)+' km '+d)});return o}
+const pipePairs=(first,u)=>[['C5','D5'],['C6','D6'],['C7','D7']].slice(0,first).concat(u);
+const uRange=(a,n)=>Array.from({length:n},(_,i)=>['U'+(a+i),'V'+(a+i)]);
+/* official wording of each section's works, e.g. "1 ta suv olish inshootini (50 m³) qurish va 0,58 km d160 asosiy ichki suv tarmog'ini tortish" */
+function workText(s){
+  const p=[];
+  if(s.sheet==='Elektr'){const t=V('Elektr','C5'),l=N('Elektr','C6'),tr=V('Elektr','C7'),n=N('Elektr','C8');
+    if(t&&t!=='Kerak emas'&&l){const kab=/kabel/i.test(t);p.push(km(l)+' km '+String(t).replace(/\s*\(.*\)/,'').replace(/ liniyasi$/,'')+(kab?' elektr kabel liniyasini yotqizish':' elektr uzatish liniyasini tortish'))}
+    if(tr&&n)p.push(nUz(n)+' ta '+String(tr).replace(/\s*\(.*\)$/,'')+' transformator podstansiyasini o\'rnatish')}
+  else if(s.sheet==='Suv'){const st=V('Suv','S5'),n=N('Suv','C10'),vol=N('Suv','C9');
+    if(st==='Suv minorasi (bashnya)'&&n)p.push(nUz(n)+' ta suv minorasini ('+V('Suv','S6')+') o\'rnatish');
+    else if(st!=='Kerak emas'&&n)p.push(nUz(n)+' ta suv olish inshootini'+(vol?' ('+nUz(vol)+' m³)':'')+' qurish');
+    if(V('Suv','S7')==='Skvajina (quduq) qazish'&&N('Suv','S8'))p.push(nUz(N('Suv','S9')||1)+' ta '+nUz(N('Suv','S8'))+' m chuqurlikdagi skvajina qazish');
+    const pp=pipesOf('Suv',pipePairs(3,uRange(6,12)));if(pp.length)p.push(joinUz(pp)+' asosiy ichki suv tarmog\'ini tortish')}
+  else if(s.sheet==='Kanalizatsiya'){const K='Kanalizatsiya';
+    const g=pipesOf(K,[['C6','D6'],['C7','D7'],['C8','D8']].concat(uRange(6,12)));if(g.length)p.push(joinUz(g)+' bosimsiz kanalizatsiya tarmog\'ini tortish');
+    const n=N(K,'C11');if(n){p.push(nUz(n)+' ta kanalizatsiya nasos stansiyasini qurish');const pr=pipesOf(K,[['S6','S7'],['S8','S9']].concat(uRange(20,13)));if(pr.length)p.push(joinUz(pr)+' bosimli kanalizatsiya quvurini yotqizish')}
+    const tz=V(K,'C10');if(tz&&tz!=='Kerak emas')p.push(nUz(N(K,'S10')||1)+' ta oqova suv tozalash inshootini ('+tz+') qurish')}
+  else if(s.sheet==='Yomgir_suvi'){const l=N('Yomgir_suvi','C5');if(l)p.push(km(l)+' km '+(V('Yomgir_suvi','C6')||'')+' yomg\'ir suvi kanalizatsiyasi tarmog\'ini tortish')}
+  else if(s.sheet==='Gaz'){const pp=pipesOf('Gaz',pipePairs(3,uRange(6,12)));if(pp.length)p.push(joinUz(pp)+' gaz quvurini tortish');
+    const g=V('Gaz','C9');if(g&&g!=='Kerak emas')p.push(nUz(N('Gaz','C10')||1)+' ta gaz rostlash punktini ('+g+') o\'rnatish')}
+  else if(s.sheet==='Yol'){const l=N('Yol','C5'),w=N('Yol','C6');if(l)p.push(nUz(l)+' m uzunlikdagi'+(w?', '+nUz(w)+' m enli':'')+' avtomobil yo\'lini qurish');
+    if(V('Yol','C8')==='Ha'&&N('Yol','C11'))p.push(nUz(N('Yol','C9'))+' m '+(V('Yol','S5')==='Beton (quyma)'?'beton':'plitkali')+' trotuar barpo etish');
+    if(V('Yol','S6')==='Ha')p.push('taktil yo\'lak yotqizish');
+    if(V('Yol','S8')==='Ha')p.push(nUz((N('Yol','S10')||l||0)*(V('Yol','S9')==='Ikki tomonda'?2:1))+' m yo\'l chetidagi ariq (beton lotok) qurish')}
+  else if(s.sheet==='Yoritish'){const l=N('Yoritish','C5');if(l)p.push(km(l)+' km ko\'chani '+(V('Yoritish','S5')==='Quyosh panelli (avtonom)'?'quyosh panelli':V('Yoritish','C6')+' LED')+' chiroqlar bilan yoritish')}
+  else if(s.sheet==='Obod'){const a=N('Obod','F4');if(a)p.push(nUz(a)+' m² hududni obodonlashtirish');
+    const e=N('Obod','H1');if(e&&N('Obod','L6'))p.push(nUz(e)+' m² maydonda yer tekislash ishlarini bajarish ('+nUz(N('Obod','L1'),'#,##0')+' m³ qazish, '+nUz(N('Obod','L2'),'#,##0')+' m³ to\'kish)')}
+  else if(s.sheet==='Byudjet'){const nm=[];scan('Byudjet').groups.forEach(g=>g.items.forEach(it=>{if(N('Byudjet','G'+it.r))nm.push(String(V('Byudjet','B'+it.r)).replace(/\s*\(.*\)/,'').toLowerCase())}));
+    for(let r=3;r<=22;r++)if(N('Oz','E'+r))nm.push(String(V('Oz','A'+r)).toLowerCase());
+    if(nm.length)p.push((nm.length>4?nm.slice(0,4).join(', ')+' va boshqa':joinUz(nm))+' kichik obyektlarni o\'rnatish')}
+  return joinUz(p);
+}
+function placeText(){const J='Jamlama',loc=V(J,'F10'),nm=V(J,'C5'),k=KINDS.find(x=>x[0]===V(J,'F11'))||KINDS[0];
+  return (loc?String(loc).trim()+' hududidagi ':'')+(nm?'«'+String(nm).trim()+'» ':'')+k[1]}
+function workSentence(s){const w=workText(s);if(!w)return '';const t=placeText()+' '+w+'.';return t[0].toUpperCase()+t.slice(1)}
 function overviewPage(){
   const J='Jamlama',H='Hisobot';
   const total=N(H,'G15'),area=(N(J,'C6')||0)+(N(J,'C7')||0),lots=N(J,'C8')||0;
@@ -22148,7 +22234,9 @@ function overviewPage(){
       h('span',{class:'ds'},cap(ds)),h('span',{class:'track'},h('i',{style:'width:'+(max?Math.max(sh/max*100,sh>0?1.5:0):0).toFixed(1)+'%'})));
   }));
   const pf=[];
-  pf.push(qrow('Loyiha nomi',textIn(J,'C5',{ph:'Masalan: sanoat zonasi nomi'}),{for:'f-'+J+'-C5',icon:'pencil'}));
+  pf.push(qrow('Loyiha nomi',textIn(J,'C5',{ph:'Masalan: Elektrotexnika'}),{for:'f-'+J+'-C5',icon:'pencil',hint:"Qo'shtirnoqsiz yozing."}));
+  pf.push(qrow('Hudud turi',selIn(J,'F11',{empty:'sanoat zonasi'}),{for:'f-'+J+'-F11',icon:'type'}));
+  pf.push(qrow('Joylashuvi',textIn(J,'F10',{ph:"Masalan: Kattaqo'rg'on tuman Melixo'ja MFY"}),{for:'f-'+J+'-F10',icon:'pin',hint:'PDFdagi ish nomlarida ishlatiladi.'}));
   {const cells=['C6','F6','F7','F8'];let shown=Math.max(1,ui.areas);cells.forEach((a,i)=>{if(N(J,a)!==null)shown=Math.max(shown,i+1)});
     for(let i=0;i<shown;i++)pf.push(qrow(shown>1?(i+1)+'-hudud maydoni (ga)':'Hudud maydoni (ga)',numIn(J,cells[i],{ph:'0'}),{for:'f-'+J+'-'+cells[i],icon:'area',hint:'Gektarda.'}));
     if(shown<4)pf.push(h('div',{class:'q addq'},h('span'),h('div',{class:'qc'},h('button',{class:'btn',type:'button',id:'addarea',onclick:()=>{ui.areas=shown+1;render();const e=$('f-'+J+'-'+cells[shown]);if(e)e.focus()}},icon('plus',1),"Yana hudud qo'shish"))))}
@@ -22165,20 +22253,41 @@ function overviewPage(){
       h('div',{class:'ln'},h('a',{href:'#obyektlar'},'Byudjet hisobidan quriladigan obyektlar'),h('span',null,mln(s1)+' mln')),
       h('div',{class:'ln'},h('span',null,'Xususiy sheriklik obyektlari (byudjet ulushi)'),h('span',null,mln(s2)+' mln')),
       h('div',{class:'grand'},h('span',null,'Jami, QQS bilan'),h('b',null,mln(total+s4)+' mln'),h('small',null,som(total+s4)+" so'm")))))}
-  {const g=ghCard();if(g)out.push(g)}
   out.push(h('p',{class:'note'},icon('warn',1),"Diqqat: barcha summalar taxminiy hisob. Ularni loyihaga to'g'ridan-to'g'ri qo'llab bo'lmaydi — aniq summa loyiha-smeta hujjatlari ishlab chiqilganda aniqlanadi."));
-  out.push(h('div',{class:'foot'},
-    h('span',{id:'status',role:'status'},statusText),
-    h('span',{class:'acts'},
-      h('button',{class:'btn',id:'lock',type:'button',onclick:lock},icon('lock',1),"Chiqish (qulflash)"),
-      h('button',{class:'btn',id:'reset',type:'button',onclick:()=>resetUI(true)},icon('refresh',1),"Yangi ish boshlash"),
-      h('button',{class:'btn danger',id:'reset-yes',type:'button',hidden:true,onclick:()=>{const keep={};for(const k in over)if(/^Baza!/.test(k)||/^(Obod|Bino)![AB]([3-9]|1\d|2[0-2])$/.test(k)||/^Bino!P[12]$/.test(k))keep[k]=over[k];ui.objs={b:1,p:0};ui.areas=1;ui.pipes={};applyOver(keep);saveSoon();render();window.scrollTo(0,0)}},"Ha, kiritilganlarni tozalash (narxlar qoladi)"),
-      h('button',{class:'btn',id:'reset-no',type:'button',hidden:true,onclick:()=>resetUI(false)},'Bekor qilish'))));
 
   return out;
 }
 function resetUI(on){$('reset').hidden=on;$('reset-yes').hidden=!on;$('reset-no').hidden=!on}
 
+const nUz=(v,f)=>v===null||v===undefined?'—':fmtNum(v,f||'#,##0.##').replace(/,/g,' ').replace('.',',');
+function earthCard(){
+  const O='Obod',lvl=N(O,'H2'),zr=[];let shown=Math.max(1,ui.zones||1);
+  for(let r=10;r<=17;r++)if(N(O,'H'+r)!==null||N(O,'I'+r)!==null)shown=Math.max(shown,r-9);
+  for(let i=0;i<shown&&i<8;i++){const r=10+i;
+    zr.push(qrow((i+1)+'-joy',h('div',{class:'pair'},
+      h('div',null,h('small',null,'Balandligi, m'),numIn(O,'H'+r,{label:(i+1)+'-joy balandligi',ph:'0'})),
+      h('div',null,h('small',null,'Ulushi, %'),h('div',{class:'sfx'},numIn(O,'I'+r,{pct:true,label:(i+1)+'-joy ulushi',ph:'0'}),h('i',null,'%')))),{icon:'down'}))}
+  if(shown<8)zr.push(h('div',{class:'q addq'},h('span'),h('div',{class:'qc'},h('button',{class:'btn',type:'button',onclick:()=>{ui.zones=shown+1;render();const e=$('f-Obod-H'+(10+shown));if(e)e.focus()}},icon('plus',1),"Yana joy qo'shish"))));
+  const share=N(O,'L7')||0,rest=1-share;
+  const cut=N(O,'L1')||0,fill=N(O,'L2')||0,reuse=N(O,'L3')||0,exp=N(O,'L4')||0,imp=N(O,'L5')||0;
+  const ln=(a,b,cls)=>h('div',{class:'ln'+(cls?' '+cls:'')},h('span',null,a),h('span',null,b));
+  const prices=[];for(let r=3;r<=8;r++)prices.push(qrow(String(V(O,'J'+r)),h('div',{class:'qtyin'},numIn(O,'K'+r,{ph:'0'}),h('span',{class:'unit'},"so'm")),{for:'f-Obod-K'+r,icon:'money'}));
+  return h('section',{class:'card'},h('h3',null,icon('area',1),'Yer tekislash ishlari'),
+    h('p',{class:'fine'},"Eng past joy 0 m deb olinadi. Notekis joylarning balandligini va maydonning necha foizi shu balandlikda ekanini kiriting; qolgan maydon loyiha balandligida deb hisoblanadi."),
+    h('div',{class:'two',style:'margin-top:10px'},
+      h('div',{class:'qs'},
+        qrow('Tekislanadigan maydon (m²)',numIn(O,'H1',{ph:'0'}),{for:'f-Obod-H1',icon:'area'}),
+        qrow('Loyiha (tekislash) balandligi (m)',numIn(O,'H2',{ph:'0'}),{for:'f-Obod-H2',icon:'ruler',hint:"Qolgan tekis maydonning balandligi. Masalan: 1 m."}),
+        h('div',{class:'qh'},'Balandligi boshqacha joylar'),zr,
+        share>1.0001?h('p',{class:'errmsg'},"Ulushlar yig'indisi 100% dan oshib ketdi — tekshiring."):h('p',{class:'hint'},'Qolgan maydon: '+fmtNum(Math.max(0,rest),'0.#%')+(lvl!==null?' — '+nUz(lvl)+' m balandlikda':''))),
+      h('div',{class:'sum'},
+        ln('Qaziladigan tuproq',nUz(cut,'#,##0')+' m³'),ln("To'kiladigan tuproq",nUz(fill,'#,##0')+' m³'),
+        ln("Joyida ko'chiriladi",nUz(reuse,'#,##0')+' m³'),
+        exp>0?ln('Ortiqcha — olib ketiladi',nUz(exp,'#,##0')+' m³','sub'):null,
+        imp>0?ln('Yetishmaydi — keltiriladi',nUz(imp,'#,##0')+' m³','sub'):null,
+        h('div',{class:'grand'},h('span',null,'Yer tekislash narxi, QQSsiz'),h('b',null,mln(N(O,'L6'))+' mln'),h('small',null,som(N(O,'L6'))+" so'm")))),
+    h('details',{class:'pr'},h('summary',null,icon('money',1),"Yer ishlari narxlari (taxminiy — o'zgartirish mumkin)"),h('div',{class:'qs'},prices)));
+}
 function obodPage(p){
   const O='Obod',J='Jamlama';
   const out=[h('div',{class:'pagehead'},h('h2',null,p.title,icon(p.k)),h('p',null,"Hududni yer turiga qarab qismlarga bo'ling. Har qism uchun yer turini tanlang va maydonini yozing — narx yer turiga qarab o'zi hisoblanadi."))];
@@ -22202,10 +22311,13 @@ function obodPage(p){
     area>proj&&proj?h('p',{class:'field'},h('span',{class:'errmsg'},"Kiritilgan maydon loyiha maydonidan katta — tekshiring.")):null);
   const f1=N(O,'F1')||0,f2=N(O,'F2')||0,f3=N(O,'F3')||0,vat=N(J,'C9');
   const res=h('section',{class:'card'},h('h3',null,icon('result',1),'Natija'),h('div',{class:'sum'},
+    h('div',{class:'ln'},h('span',null,'Hudud qismlari'),h('span',null,som(N(O,'F5')))),
+    h('div',{class:'ln'},h('span',null,'Yer tekislash ishlari'),h('span',null,som(N(O,'L6')))),
     h('div',{class:'ln sub'},h('span',null,'Ishlar jami'),h('span',null,som(f1))),
     h('div',{class:'ln'},h('span',null,'QQS',vat!==null?h('em',null,fmtNum(vat,'0.#%')):null),h('span',null,som(f2))),
     h('div',{class:'grand'},h('span',null,'Jami, QQS bilan'),h('b',null,mln(f3)+' mln'),h('small',null,som(f3)+" so'm"))));
   out.push(h('div',{class:'two'},partsCard,res));
+  out.push(earthCard());
   const types=[];let emptyT=false;
   for(let r=3;r<=22;r++){
     const nm=V(O,'A'+r);
@@ -22332,15 +22444,15 @@ function reportDoc(full,only){
   /* summary by section */
   c.push({text:"Byudjet hisobidan amalga oshiriladigan infratuzilma obyektlari va obodonlashtirish ishlari",style:'h2'});
   const secs=PAGES.filter(x=>x.tot);
-  const sb=[[th('№'),th("Bo'lim"),th('Tarkibi'),th("Summa, mln so'm",'right'),th('Ulushi','right')]];
+  const sb=[[th('№'),th('Obyekt va ishlar nomi'),th("Summa, mln so'm",'right'),th('Ulushi','right')]];
   let sn=0;
   secs.forEach(s=>{
     const x=secInfo(s),ds=x.ds,am=x.am;
     if(!am)return;
-    sb.push([String(++sn),{text:s.pdfTitle||s.title,bold:true},{text:cap(ds),color:MUT},r(mln(am)),r(total?fmtNum(am/total,'0.0%'):'—')]);
+    const ws=workSentence(s);sb.push([String(++sn),{stack:[{text:s.pdfTitle||s.title,bold:true},ws?{text:ws,margin:[0,2,0,0]}:{text:cap(ds),color:MUT}]},r(mln(am)),r(total?fmtNum(am/total,'0.0%'):'—')]);
   });
-  sb.push([{text:'',fillColor:SOFT},{text:'JAMI, QQS bilan',bold:true,fillColor:SOFT},{text:'',fillColor:SOFT},{text:mln(total),bold:true,alignment:'right',fillColor:SOFT},{text:'100.0%',bold:true,alignment:'right',fillColor:SOFT}]);
-  if(sn)c.push({table:{headerRows:1,widths:[16,120,'*',78,42],body:sb,dontBreakRows:true},layout:lay});
+  sb.push([{text:'',fillColor:SOFT},{text:'JAMI, QQS bilan',bold:true,fillColor:SOFT},{text:mln(total),bold:true,alignment:'right',fillColor:SOFT},{text:'100.0%',bold:true,alignment:'right',fillColor:SOFT}]);
+  if(sn)c.push({table:{headerRows:1,widths:[16,'*',72,42],body:sb,dontBreakRows:true},layout:lay});
   else c.push({text:"Hozircha hech bir bo'lim bo'yicha ma'lumot kiritilmagan.",color:MUT});
   /* buildings come first, then the small objects, then the overall total */
   const BN='Bino',objs=(a,b)=>{const o=[];for(let k=a;k<=b;k++)if(V(BN,'A'+k)&&N(BN,'M'+k))o.push(k);return o},bud=objs(30,49),ppp=objs(60,79);
@@ -22368,24 +22480,29 @@ function reportDoc(full,only){
   if(bud.length||ppp.length)c.push(totals([['Infratuzilma va obodonlashtirish',mln(total)+' mln'],['Byudjet hisobidan quriladigan obyektlar',mln(s1)+' mln'],['Xususiy sheriklik obyektlari (byudjet ulushi)',mln(s2)+' mln'],["Byudjetdan so'raladigan jami summa",mln(total+s1+s2)+" mln so'm"]]));
   c.push({table:{widths:['*'],body:[[{text:"Diqqat: barcha summalar taxminiy hisob. Ularni loyihaga to'g'ridan-to'g'ri qo'llab bo'lmaydi — aniq summa loyiha-smeta hujjatlari ishlab chiqilganda aniqlanadi.",bold:true,color:'#8a4406',fillColor:'#fdf1de',margin:[6,5,6,5]}]]},layout:'noBorders',margin:[0,10,0,0]});
   /* project data */
-  c.push({text:"Loyiha ma'lumotlari",style:'h2'});
+  if((['C6','F6','F7','F8'].some(a=>N(J,a)))||lots||V(J,'F10'))c.push({text:"Loyiha ma'lumotlari",style:'h2'});
   const pb=[];{const ar=['C6','F6','F7','F8'].map(a=>N(J,a)).filter(v=>v);ar.forEach((v,i)=>pb.push([{text:ar.length>1?(i+1)+'-hudud maydoni (ga)':'Hudud maydoni (ga)',color:MUT},r(qty(v))]));
     if(lots)pb.push([{text:'Lotlar soni',color:MUT},r(qty(lots))]);
-    for(let k=9;k<=12;k++)pb.push([{text:String(V(J,'B'+k)).replace(/\s*\(% materialdan\)/,''),color:MUT},r(fmtNum(N(J,'C'+k),'0.#%'))])}
-  c.push({table:{widths:[220,80],body:pb},layout:lay});
+    if(V(J,'F10'))pb.push([{text:'Joylashuvi',color:MUT},r(String(V(J,'F10')))])}
+  if(pb.length)c.push({table:{widths:[200,'*'],body:pb},layout:lay});
   /* sections */
   const head=(s,am)=>({columns:[{text:s.pdfTitle||s.title,fontSize:13,bold:true,color:NAVY},{text:mln(am)+" mln so'm",fontSize:13,bold:true,color:NAVY,alignment:'right',width:150}],margin:[0,22,0,6],headlineLevel:1});
   let firstSec=true;
   if(full)secs.forEach(s=>{
     const am=N(s.sheet,s.tot)||0;if(!am||(only&&only!==s.k))return;
     const hd=head(s,am);if(firstSec){firstSec=false;hd.pageBreak='before';hd.margin=[0,0,0,6]}
-    c.push(hd);
+    c.push(hd);{const ws=workSentence(s);if(ws)c.push({text:ws,italics:true,color:'#33415c',margin:[0,0,0,8]})}
     if(!s.hr){
       const b=[[th('№'),th('Yer turi'),th('Maydon, m²','right'),th("Narx, so'm/m²",'right'),th("Summa, so'm",'right')]];let n=0;
       for(let k=30;k<=59;k++){const tp=V(O,'A'+k),ar=N(O,'B'+k);if(!tp||!ar)continue;b.push([String(++n),String(tp),r(qty(ar)),r(som(N(O,'C'+k))),r(som(N(O,'D'+k)))])}
-      if(!n){c.push({text:'Hudud qismlari kiritilmagan.',color:MUT});return}
-      c.push({table:{headerRows:1,widths:[16,'*',70,80,90],body:b,dontBreakRows:true},layout:lay});
-      c.push(totals([['Ishlar jami',som(N(O,'F1'))],['QQS '+fmtNum(N(J,'C9'),'0.#%'),som(N(O,'F2'))],['Jami, QQS bilan',som(N(O,'F3'))]]));
+      if(n)c.push({table:{headerRows:1,widths:[16,'*',70,80,90],body:b,dontBreakRows:true},layout:lay});
+      if(N(O,'L6')){c.push({text:'Yer tekislash ishlari',bold:true,color:NAVY,margin:[0,10,0,4]});
+        const eb=[[{text:'Tekislanadigan maydon',color:MUT},r(nUz(N(O,'H1'))+' m²')],[{text:'Loyiha balandligi',color:MUT},r(nUz(N(O,'H2')||0)+' m')]];
+        for(let k=10;k<=17;k++){const hh=N(O,'H'+k),sh=N(O,'I'+k);if(hh===null||sh===null)continue;eb.push([{text:(k-9)+'-joy',color:MUT},r(nUz(hh)+' m · '+fmtNum(sh,'0.#%'))])}
+        [['Qaziladigan tuproq','L1'],["To'kiladigan tuproq",'L2'],["Joyida ko'chiriladi",'L3'],['Olib ketiladi','L4'],['Keltiriladi','L5']].forEach(x=>{const v=N(O,x[1]);if(v)eb.push([{text:x[0],color:MUT},r(nUz(v,'#,##0')+' m³')])});
+        eb.push([{text:'Yer tekislash narxi',bold:true},Object.assign(r(som(N(O,'L6'))),{bold:true})]);
+        c.push({table:{widths:['*',160],body:eb},layout:lay})}
+      c.push(totals([['Hudud qismlari',som(N(O,'F5'))],['Yer tekislash ishlari',som(N(O,'L6'))],['Ishlar jami',som(N(O,'F1'))],['QQS '+fmtNum(N(J,'C9'),'0.#%'),som(N(O,'F2'))],['Jami, QQS bilan',som(N(O,'F3'))]]));
       return;
     }
     const sc=scan(s.sheet),name=s.sheet;
@@ -22518,6 +22635,7 @@ function summary(){
 }
 function render(){
   const act=document.activeElement,id=act&&act.id&&$('main').contains(act)?act.id:'',y=window.scrollY;
+  if(!cur){$('proj').textContent='Loyihalar';$('main').replaceChildren(...homePage().filter(Boolean));if(id){const e=$(id);if(e)e.focus({preventScroll:true})}window.scrollTo(0,y);return}
   const body=page.k==='umumiy'?overviewPage():page.k==='narxlar'?pricesPage():page.k==='obodonlashtirish'?obodPage(page):page.k==='obyektlar'?binoPage(page):sectionPage(page);
   const i=PAGES.indexOf(page),pv=PAGES[i-1],nx=PAGES[i+1];
   body.push(h('nav',{class:'pager','aria-label':"Oldingi va keyingi bo'lim"},
@@ -22529,10 +22647,11 @@ function render(){
   window.scrollTo(0,y);
 }
 function go(){
+  if(!cur){if(location.hash)history.replaceState(null,'',location.pathname+location.search);render();return}
   const k=location.hash.replace('#','');page=PAGES.find(x=>x.k===k)||PAGES[0];ui.q='';
   document.querySelectorAll('#nav a').forEach(a=>{if(a.dataset.k===page.k)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
   render();window.scrollTo(0,0);
-  const cur=document.querySelector('#nav a[aria-current]');if(cur&&cur.scrollIntoView)cur.scrollIntoView({block:'nearest',inline:'nearest'});
+  const na=document.querySelector('#nav a[aria-current]');if(na&&na.scrollIntoView)na.scrollIntoView({block:'nearest',inline:'nearest'});
 }
 (function(){
   const nav=$('nav');
@@ -22560,33 +22679,100 @@ function ghSet(s){ghState=s;const e=$('ghs');if(e)e.textContent=s}
 async function ghGet(path){const r=await fetch(ghApi('/contents/'+path+'?ref=data&t='+Date.now()),{headers:ghHead(),cache:'no-store'});if(r.status===404)return null;if(!r.ok)throw Object.assign(new Error('gh'),{status:r.status});return r.json()}
 async function ghPut(path,text,sha,msg){const r=await fetch(ghApi('/contents/'+path),{method:'PUT',headers:ghHead(),body:JSON.stringify({message:msg,content:b64e(utf8e(text)),branch:'data',sha:sha||undefined})});
   if(!r.ok)throw Object.assign(new Error('gh'),{status:r.status});return (await r.json()).content.sha}
-async function ghLoad(){
-  const j=await ghGet('data.json');if(!j){ghSha=null;return}
-  ghSha=j.sha;let d;try{d=JSON.parse(utf8d(b64d(j.content)))}catch(e){return}
-  const cells=JSON.stringify(d.cells||{});if(cells===ghLast)return;
-  const act=document.activeElement;if(dirty||(act&&act.tagName==='INPUT'&&act.type==='text'&&$('main').contains(act)))return;
-  ghLast=cells;if(cells!==JSON.stringify(over)){applyOver(d.cells||{});saveLocal();render()}
+/* ---------- projects: a list of saved calculations; each one is opened, edited and saved with the Save button.
+   Price base edits are shared by all projects. Kept in GitHub (stand-alone site), in Claude (inside Claude) or in this browser. ---------- */
+const LS_PROJ='infra-projects-v3',LS_DRAFT='infra-draft-v3';
+let backend='local',projects={},globalP={},cur=null,saving=false,loaded=false,loadErr='',statusText='',db=null,listTimer=null;
+const isGlobal=k=>/^Baza!/.test(k)||/^(Obod|Bino)![AB]([3-9]|1\d|2[0-2])$/.test(k)||/^Bino!P[12]$/.test(k)||/^Obod!K[3-8]$/.test(k);
+const empty=()=>({projects:{},global:{}});
+const STORE={
+  local:{async load(){try{return JSON.parse(localStorage.getItem(LS_PROJ)||'null')||empty()}catch(e){return empty()}},
+    async save(fn){const d=await this.load();fn(d);localStorage.setItem(LS_PROJ,JSON.stringify(d));return d}},
+  claude:{ref:null,async load(){const s=await this.ref.get();const x=s.exists?s.data():null;try{return x&&typeof x.json==='string'?JSON.parse(x.json):empty()}catch(e){return empty()}},
+    async save(fn){const d=await this.load();fn(d);await this.ref.set({json:JSON.stringify(d),at:Date.now()});return d}},
+  gh:{sha:null,async load(){const j=await ghGet('loyihalar.json');if(!j){this.sha=null;return empty()}this.sha=j.sha;try{return JSON.parse(utf8d(b64d(j.content)))}catch(e){return empty()}},
+    async save(fn){for(let i=0;i<3;i++){const d=await this.load();fn(d);try{this.sha=await ghPut('loyihalar.json',JSON.stringify(d),this.sha,'Loyihalar saqlandi');return d}catch(e){if(e.status!==409&&e.status!==422)throw e}}throw new Error('conflict')}}
+};
+function status(t){statusText=t;const e=$('pdfmsg');if(e){e.textContent=t;e.hidden=!t}}
+function readDraft(){try{return JSON.parse(localStorage.getItem(LS_DRAFT)||'null')}catch(e){return null}}
+function saveDraft(){try{localStorage.setItem(LS_DRAFT,JSON.stringify({id:cur,cells:over,dirty,at:Date.now()}))}catch(e){}}
+function clearDraft(){try{localStorage.removeItem(LS_DRAFT)}catch(e){}}
+function splitOver(){const p={},g={};for(const k in over)(isGlobal(k)?g:p)[k]=over[k];return {p,g}}
+function saveSoon(){dirty=true;saveDraft();saveBtn()}
+function saveBtn(){const b=$('save');if(!b)return;b.disabled=saving;b.classList.toggle('dirty',dirty);
+  b.replaceChildren(icon(saving?'refresh':dirty?'save':'check',1),saving?'Saqlanmoqda…':dirty||!projects[cur]?'Saqlash':'Saqlangan')}
+const fmtWhen=ms=>{const d=new Date(ms),p=n=>String(n).padStart(2,'0');return p(d.getDate())+'.'+p(d.getMonth()+1)+'.'+d.getFullYear()+', '+p(d.getHours())+':'+p(d.getMinutes())};
+async function migrate(d){
+  if(Object.keys(d.projects||{}).length)return false;
+  let cells=null;
+  try{if(backend==='gh'){const j=await ghGet('data.json');if(j)cells=JSON.parse(utf8d(b64d(j.content))).cells}
+    if(backend==='claude'){const s=await db.doc('hisob/v2').get();const x=s.exists?s.data():null;if(x&&x.json)cells=JSON.parse(x.json)}}catch(e){}
+  if(!cells){try{const o=JSON.parse(localStorage.getItem('infra-hisob-v2')||'null');cells=o&&o.cells}catch(e){}}
+  let local=null;if(backend!=='local'){const l=await STORE.local.load();if(Object.keys(l.projects).length)local=l}
+  if(!local&&(!cells||!Object.keys(cells).some(k=>!isGlobal(k))))return false;
+  await STORE[backend].save(x=>{x.projects=x.projects||{};x.global=x.global||{};
+    if(local){Object.assign(x.projects,local.projects);Object.assign(x.global,local.global)}
+    else{const p={},g={};for(const k in cells)(isGlobal(k)?g:p)[k]=cells[k];x.projects['p'+Date.now().toString(36)]={name:p['Jamlama!C5']||'Loyiha 1',at:Date.now(),cells:p,sum:null};Object.assign(x.global,g)}});
+  return true;
 }
-async function ghSave(){
-  if(!ghTok)return;if(ghBusy){ghAgain=true;return}
-  ghBusy=true;const cells=JSON.stringify(over),body=JSON.stringify({v:1,at:Date.now(),cells:over});
-  try{
-    try{ghSha=await ghPut('data.json',body,ghSha,'Hisob yangilandi')}
-    catch(e){if(e.status!==409&&e.status!==422)throw e;const j=await ghGet('data.json');ghSha=await ghPut('data.json',body,j?j.sha:null,'Hisob yangilandi')}
-    ghLast=cells;dirty=false;saveLocal();status("O'zgarishlar saqlandi — hamma kirganlarga ko'rinadi");
-  }catch(e){status(e.status===401||e.status===403?"Saqlab bo'lmadi: kirish kaliti yaroqsiz yoki muddati tugagan":"Saqlab bo'lmadi — internetni tekshiring, o'zgarishlar shu qurilmada turibdi")}
-  ghBusy=false;if(ghAgain){ghAgain=false;ghSave()}
+async function refresh(){
+  try{let d=await STORE[backend].load();if(await migrate(d))d=await STORE[backend].load();projects=d.projects||{};globalP=d.global||{};loadErr=''}
+  catch(e){loadErr=e&&(e.status===401||e.status===403)?"Loyihalarni yuklab bo'lmadi: kirish kaliti yaroqsiz yoki muddati tugagan.":"Loyihalarni yuklab bo'lmadi. Internetni tekshirib, qayta urinib ko'ring."}
+  loaded=true;if(!cur)render();
+}
+function resetUiState(){Object.assign(ui,{areas:1,pipes:{},objs:{b:1,p:0},zones:1,showAll:{},q:'',cat:'',old:false,pe:null,leave:false,del:null})}
+function openProject(id,cells,isDirty){
+  cur=id;resetUiState();const p=projects[id];
+  applyOver(Object.assign({},globalP,cells||(p?p.cells:{})));dirty=!!isDirty;
+  if(dirty)saveDraft();else clearDraft();
+  document.body.classList.remove('home');saveBtn();status('');
+  if(location.hash==='#umumiy')go();else location.hash='umumiy';
+}
+function newProject(){openProject('p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),{},false)}
+async function saveProject(){
+  if(saving||!cur)return;saving=true;saveBtn();
+  const {p,g}=splitOver(),name=String(V('Jamlama','C5')||'').trim()||'Nomsiz loyiha',sum=(N('Hisobot','G15')||0)+(N('Bino','S4')||0),id=cur;
+  try{const d=await STORE[backend].save(x=>{x.projects=x.projects||{};x.projects[id]={name,at:Date.now(),sum,cells:p};x.global=g});
+    projects=d.projects;globalP=d.global;dirty=false;clearDraft();
+    status((backend==='local'?"Shu qurilmada saqlandi — ":"Saqlandi — ")+fmtWhen(Date.now()));}
+  catch(e){status(e&&(e.status===401||e.status===403)?"Saqlab bo'lmadi: kirish kaliti yaroqsiz yoki muddati tugagan.":"Saqlab bo'lmadi. Internetni tekshirib, qayta urinib ko'ring — o'zgarishlar shu qurilmada turibdi.")}
+  saving=false;saveBtn();
+  return !dirty;
+}
+function goHome(force){
+  if(dirty&&!force){ui.leave=true;leaveBar();return}
+  cur=null;dirty=false;clearDraft();ui.leave=false;leaveBar();status('');
+  document.body.classList.add('home');
+  if(location.hash)history.replaceState(null,'',location.pathname+location.search);
+  render();window.scrollTo(0,0);refresh();
+}
+function leaveBar(){const b=$('leave');if(b)b.hidden=!ui.leave}
+function homePage(){
+  const out=[h('div',{class:'pagehead'},h('h2',null,'Loyihalar',icon('project')),h('p',null,"Saqlangan loyihani oching yoki yangisini boshlang. Ishni tugatgach, tepadagi «Saqlash» tugmasini bosing."))];
+  if(!loaded){out.push(h('p',{class:'loading'},'Loyihalar yuklanmoqda…'));return out}
+  if(loadErr)out.push(h('p',{class:'note'},icon('warn',1),loadErr,' ',h('button',{class:'btn',type:'button',onclick:()=>{loaded=false;render();refresh()}},'Qayta urinish')));
+  const list=Object.keys(projects).map(id=>Object.assign({id},projects[id])).sort((a,b)=>(b.at||0)-(a.at||0));
+  const rows=list.map(p=>h('div',{class:'prj'},
+    h('button',{class:'po',type:'button',onclick:()=>openProject(p.id)},
+      h('span',{class:'qi'},icon('project')),
+      h('span',{class:'pn'},h('b',null,p.name||'Nomsiz loyiha'),h('small',null,icon('calendar',1),'Oxirgi o\'zgarish: '+(p.at?fmtWhen(p.at):'—'))),
+      p.sum?h('span',{class:'ps'},mln(p.sum),h('small',null,"mln so'm")):null),
+    ui.del===p.id?h('span',{class:'pd'},h('button',{class:'btn danger',type:'button',onclick:async()=>{ui.del=null;try{const d=await STORE[backend].save(x=>{delete x.projects[p.id]});projects=d.projects}catch(e){status("O'chirib bo'lmadi. Qayta urinib ko'ring.")}render()}},'Ha, o\'chirish'),h('button',{class:'btn',type:'button',onclick:()=>{ui.del=null;render()}},'Bekor'))
+      :h('button',{class:'xbtn',type:'button',title:"Loyihani o'chirish",'aria-label':(p.name||'Loyiha')+" — o'chirish",onclick:()=>{ui.del=p.id;render()}},'×')));
+  out.push(h('section',{class:'card'},h('h3',null,icon('list',1),'Saqlangan loyihalar'),
+    rows.length?rows:h('p',{class:'empty'},"Hali saqlangan loyiha yo'q. Pastdagi tugma bilan birinchisini boshlang."),
+    h('button',{class:'btn newp',type:'button',id:'newp',onclick:newProject},icon('plus',1),'Yangi loyiha')));
+  const g=ghCard();if(g)out.push(g);
+  out.push(h('p',{class:'fine'},backend==='gh'?"Loyihalar umumiy saqlanadi: parolni bilgan hamma ularni ko'radi va o'zgartira oladi. Narxlar bazasidagi o'zgarishlar barcha loyihalarga tegishli.":backend==='claude'?"Loyihalar Claude hisobingizda saqlanadi va siz kiradigan hamma qurilmada ko'rinadi.":"Loyihalar faqat shu kompyuter va shu brauzerda saqlanadi."));
+  out.push(h('div',{class:'foot'},h('span'),h('span',{class:'acts'},h('button',{class:'btn',id:'lock',type:'button',onclick:lock},icon('lock',1),"Chiqish (qulflash)"))));
+  return out;
 }
 async function ghInit(){
-  if(!GH||!window.crypto||!crypto.subtle)return;
-  try{
-    const r=await fetch('https://raw.githubusercontent.com/'+GH.owner+'/'+GH.repo+'/data/sync.json?t='+Date.now(),{cache:'no-store'});
-    if(!r.ok){ghSet('off');if(page.k==='umumiy')render();return}
-    ghTok=await unseal(await r.json());
-    await ghLoad();if(dirty)ghSave();
-    ghSet('on');status("Umumiy saqlash yoqilgan — kiritilganlar hamma kirganlarga ko'rinadi");if(page.k==='umumiy')render();
-    setInterval(()=>{if(!document.hidden&&!ghBusy)ghLoad().catch(()=>{})},20000);
-  }catch(e){ghTok=null;ghSet('off');if(page.k==='umumiy')render()}
+  if(!GH||!window.crypto||!crypto.subtle)return false;
+  try{const r=await fetch('https://raw.githubusercontent.com/'+GH.owner+'/'+GH.repo+'/data/sync.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok){ghSet('off');return false}
+    ghTok=await unseal(await r.json());ghSet('on');return true}
+  catch(e){ghTok=null;ghSet('off');return false}
 }
 async function ghSetup(token,msg){
   const say=t=>{msg.textContent=t};say('Tekshirilmoqda…');ghTok=token.trim();
@@ -22597,18 +22783,13 @@ async function ghSetup(token,msg){
     if(r.status===404){const b=await fetch(ghApi('/git/ref/heads/'+def),{headers:ghHead()});if(!b.ok)throw Object.assign(new Error('gh'),{status:b.status});
       const c=await fetch(ghApi('/git/refs'),{method:'POST',headers:ghHead(),body:JSON.stringify({ref:'refs/heads/data',sha:(await b.json()).object.sha})});if(!c.ok)throw Object.assign(new Error('gh'),{status:c.status})}
     const old=await ghGet('sync.json');await ghPut('sync.json',JSON.stringify(await seal(ghTok)),old?old.sha:null,'Umumiy saqlash sozlandi');
-    const d=await ghGet('data.json');ghSha=d?d.sha:null;
-    if(d&&!Object.keys(over).length){await ghLoad()}else{dirty=true;await ghSave()}
-    ghSet('on');ui.setup=false;render();
-    setInterval(()=>{if(!document.hidden&&!ghBusy)ghLoad().catch(()=>{})},20000);
+    backend='gh';ghSet('on');ui.setup=false;loaded=false;render();await refresh();startPolling();
   }catch(e){ghTok=null;say(e.status===401?"Kalit noto'g'ri yoki muddati tugagan.":e.status===403||e.status===404?"Kalitda bu repozitoriyga yozish ruxsati yo'q (Contents: Read and write kerak).":"Ulanib bo'lmadi. Internetni tekshirib, qayta urinib ko'ring.")}
 }
 function ghCard(){
-  if(!GH)return null;
-  if(ghTok)return h('p',{class:'fine'},icon('obyektlar',1),"Umumiy saqlash yoqilgan: bu saytda kiritilgan ma'lumotlar parolni bilgan hamma uchun bir xil ko'rinadi va saqlanadi.");
-  if(ghState!=='off')return null;
+  if(!GH||ghTok||ghState!=='off')return null;
   if(!ui.setup)return h('section',{class:'card'},h('h3',null,icon('refresh',1),'Umumiy saqlash'),
-    h('p',{class:'fine'},"Hozir ma'lumotlar faqat shu qurilmada saqlanyapti. Hamma kirganlar bir xil hisobni ko'rishi uchun umumiy saqlashni bir marta sozlang."),
+    h('p',{class:'fine'},"Hozir loyihalar faqat shu qurilmada saqlanyapti. Hamma kirganlar bir xil loyihalarni ko'rishi uchun umumiy saqlashni bir marta sozlang."),
     h('button',{class:'btn',type:'button',style:'margin-top:10px',onclick:()=>{ui.setup=true;render();const e=$('ghtok');if(e)e.focus()}},icon('plus',1),'Umumiy saqlashni sozlash'));
   const msg=h('span',{class:'hint',role:'status'});
   const inp=h('input',{type:'password',class:'in',id:'ghtok',placeholder:'github_pat_…','aria-label':'GitHub kirish kaliti',autocomplete:'off'});
@@ -22617,51 +22798,28 @@ function ghCard(){
     h('div',{class:'qs',style:'margin-top:8px'},qrow('GitHub kirish kaliti',inp,{for:'ghtok',icon:'lock'}),
       h('div',{class:'q addq'},h('span'),h('div',{class:'qc'},h('button',{class:'btn',type:'button',onclick:()=>{if(inp.value.trim())ghSetup(inp.value,msg)}},'Ulash'),msg))));
 }
-let db=null,docRef=null,writing=false,again=false,timer=null,canWrite=true,lastRemote=null,statusText='';
-function status(t){statusText=t;const e=$('status');if(e)e.textContent=t}
-function loadLocal(){try{const s=localStorage.getItem(LS_KEY);if(s){const o=JSON.parse(s);dirty=!!o.dirty;return o.cells||{}}}catch(e){}return {}}
-function saveLocal(){try{localStorage.setItem(LS_KEY,JSON.stringify({cells:over,dirty}))}catch(e){}}
-function saveSoon(){
-  dirty=true;saveLocal();
-  if(ghTok){status('Saqlanmoqda…');clearTimeout(ghTimer);ghTimer=setTimeout(ghSave,1500);return}
-  if(!docRef||!canWrite){status("O'zgarishlar shu qurilmada saqlandi");return}
-  status('Saqlanmoqda…');clearTimeout(timer);timer=setTimeout(push,700);
+function startPolling(){clearInterval(listTimer);if(backend==='local')return;listTimer=setInterval(()=>{if(!cur&&!document.hidden)refresh()},20000)}
+async function pickBackend(){
+  if(window.claude&&window.claude.use){try{db=await window.claude.use('db')}catch(e){db=null}
+    if(db){STORE.claude.ref=db.doc('hisob/loyihalar');backend='claude';return}}
+  if(GH&&await ghInit()){backend='gh';return}
+  backend='local';
 }
-async function push(){
-  if(writing){again=true;return}
-  writing=true;const json=JSON.stringify(over);
-  try{await docRef.set({json,at:Date.now()});lastRemote=json;dirty=false;saveLocal();status("O'zgarishlar saqlandi")}
-  catch(e){
-    if(e&&e.code==='invalid_argument'){canWrite=false;status("O'zgarishlar faqat shu qurilmada saqlandi")}
-    else status("Saqlab bo'lmadi — o'zgarishlar shu qurilmada turibdi");
-  }
-  writing=false;if(again){again=false;push()}
-}
-async function connect(){
-  let got=false;
-  try{db=window.claude&&window.claude.use?await window.claude.use('db'):null}catch(e){db=null}
-  if(!db){status(Object.keys(over).length?"O'zgarishlar shu qurilmada saqlangan":'');return}
-  docRef=db.doc('hisob/v2');
-  const wait=setTimeout(()=>{if(!got)status("Umumiy saqlash hozircha javob bermayapti — o'zgarishlar shu qurilmada saqlanadi")},10000);
-  docRef.onSnapshot(snap=>{
-    if(snap.metadata&&snap.metadata.hasPendingWrites)return;
-    if(!snap.metadata||!snap.metadata.fromCache){got=true;clearTimeout(wait)}
-    const d=snap.exists?snap.data():null,json=d&&typeof d.json==='string'?d.json:null;
-    if(dirty){if(got&&json!==JSON.stringify(over))push();return}
-    if(json===null){if(got)status('');return}
-    if(json===lastRemote||json===JSON.stringify(over)){lastRemote=json;if(got)status("O'zgarishlar saqlangan");return}
-    let next;try{next=JSON.parse(json)}catch(e){return}
-    const act=document.activeElement;
-    if(!next||typeof next!=='object'||(act&&act.tagName==='INPUT'&&act.type==='text'&&$('main').contains(act)))return;
-    lastRemote=json;applyOver(next);saveLocal();render();if(got)status("O'zgarishlar saqlangan");
-  },()=>{clearTimeout(wait);docRef=null;status("Umumiy saqlash uzildi — o'zgarishlar shu qurilmada saqlanadi")});
-}
-
-function start(){
+async function start(){
   if(typeof HyperFormula==='undefined'){$('main').replaceChildren(h('p',{class:'loading'},"Hisoblash kutubxonasi yuklanmadi. Internetni tekshirib, sahifani qayta oching."));return}
   hf=buildEngine(HyperFormula,M);
-  const local=loadLocal();if(Object.keys(local).length)applyOver(local);
-  window.addEventListener('hashchange',go);go();connect();connectDownloads();ghInit();
+  window.addEventListener('hashchange',go);connectDownloads();
+  $('back').addEventListener('click',()=>goHome(false));
+  $('save').addEventListener('click',saveProject);
+  $('leave-save').addEventListener('click',async()=>{if(await saveProject())goHome(true)});
+  $('leave-drop').addEventListener('click',()=>goHome(true));
+  $('leave-no').addEventListener('click',()=>{ui.leave=false;leaveBar()});
+  window.addEventListener('beforeunload',e=>{if(dirty){saveDraft();e.preventDefault();e.returnValue=''}});
+  document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'&&cur){e.preventDefault();saveProject()}});
+  document.body.classList.add('home');render();
+  await pickBackend();await refresh();startPolling();
+  const dr=readDraft();
+  if(dr&&dr.id&&dr.dirty&&dr.cells){openProject(dr.id,Object.assign({},dr.cells),true);status("Saqlanmagan o'zgarishlar tiklandi — «Saqlash» ni bosing")}
 }
 /* ---------- password screen (a simple lock, not real protection) ---------- */
 const PW=2249179244286472,UNLOCK='infra-pw-v2';let sitePw='';
