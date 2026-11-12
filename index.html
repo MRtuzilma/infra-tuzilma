@@ -17,7 +17,7 @@
   --brand:#1f3864; --on-brand:#ffffff; --on-brand-soft:#c5d3ec; --brand-ink:#1f3864; --brand-soft:#e9eef8;
   --field:#ffffff; --field-line:#bcc7da; --accent:#2460c7; --bar:#3a6fd6;
   --warn:#9a4a06; --warn-bg:#fdf1de; --bad:#b42318; --bad-bg:#fdeae8;
-  --tb-bud:#fde0de; --tb-inv:#d9f3e2; --tb-all:#fff1bf; --tb-ink:#1b2333;
+  --ok:#1a9a62; --tb-bud:#fde0de; --tb-inv:#d9f3e2; --tb-all:#fff1bf; --tb-ink:#1b2333;
   --c1:#2a78d6; --c2:#eb6834; --c3:#1baf7a; --c4:#eda100; --c5:#e87ba4; --c6:#008300;
   --font-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
   --font-display:"Space Grotesk","Inter",system-ui,sans-serif;
@@ -538,6 +538,40 @@ a.srch{text-decoration-style:dotted;color:var(--ink)}
 .two.eq{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 @media (max-width:900px){.two.eq{grid-template-columns:minmax(0,1fr)}}
 .card.one{max-width:820px}
+.nav .cap{display:flex;align-items:center;gap:8px;padding:14px 12px 5px;font-size:10.5px}
+.nav .cap:first-child{padding-top:2px}
+.nav .cap i{font-style:normal;display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--brand);color:var(--on-brand);font-size:10.5px;letter-spacing:0;font-weight:700}
+.nav a{align-items:center;border-left:3px solid transparent;padding-left:9px}
+.nav a[aria-current="page"]{border-left-color:var(--accent)}
+.nav a .nm{gap:0}
+.nav a .dot{flex:none;width:7px;height:7px;border-radius:50%;border:1.5px solid var(--field-line);margin-right:9px;transition:background .2s,border-color .2s}
+.nav a.done .dot{background:var(--ok);border-color:var(--ok)}
+.nav a.done .amt{color:var(--ink);font-weight:600}
+.idle{padding:12px 0 4px;color:var(--muted);font-size:12.5px;line-height:1.6}
+.idle b{color:var(--ink);font-weight:600}
+.lnk{font:inherit;border:0;background:none;color:var(--accent);text-decoration:underline;cursor:pointer;margin-left:8px;padding:0}
+.steps{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0;padding:0}
+.steps li{display:flex;gap:10px;align-items:flex-start;min-width:0}
+.steps li>i{flex:none;font-style:normal;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--brand-soft);color:var(--brand-ink);font-weight:700;font-size:13px}
+.steps b{display:block;font-size:13.5px}
+.steps span{display:block;color:var(--muted);font-size:12.5px;line-height:1.45;margin-top:2px}
+.card{box-shadow:0 1px 2px rgba(20,40,80,.04)}
+.pagehead h2{font-size:24px}
+.card.one+.stats{max-width:820px}
+table.um{table-layout:fixed;width:100%}
+table.um td,table.um th{overflow-wrap:break-word}
+@media (max-width:900px){
+  .nav a{border-left:0;padding-left:12px;flex-direction:row;align-items:center;gap:8px}
+  .nav a .dot{margin-right:7px}
+  .steps{grid-template-columns:minmax(0,1fr)}
+  .mast .eyebrow{display:none}
+  .nav .cap{display:none}
+  .pagehead h2>.ic{display:none}
+}
+@media (max-width:720px){
+  table.um{font-size:12.5px}
+  table.um td.v{white-space:normal;text-align:right}
+}
 </style>
 
 <div class="gate gut" id="gate">
@@ -2199,7 +2233,7 @@ function itemRow(name,it,sc,budget){
       h('div',{'data-l':"Narx, so'm"},priceCell(name,r,true)),
       h('div',{'data-l':"Summa, so'm",class:'tot'},som(g)));
   }
-  return {on,el:h('div',{class:'row'+(on?'':' out'),'data-q':nm.toLowerCase()},tog,name1,nums)};
+  return {on,zero:!budget&&on&&!e&&!g,el:h('div',{class:'row'+(on?'':' out'),'data-q':nm.toLowerCase()},tog,name1,nums)};
 }
 
 function visParams(name,sc){return sc.params.filter(p=>!p.show||hf.calculateFormula('='+p.show,hf.getSheetId(name))===true)}
@@ -2218,7 +2252,8 @@ function sectionPage(p){
   const out=[h('div',{class:'pagehead'},h('h2',null,p.title,icon(p.k)),
     h('p',null,budget?"Ro'yxatdan kerakli materialni toping va miqdorini yozing. Narx bazadan olinadi; o'z narxingiz bo'lsa, narx katagiga yozing.":"Avval savollarga javob bering. Materiallar ro'yxati va narxi o'zi hisoblanadi; chiqqan miqdorni qo'lda o'zgartirishingiz mumkin."))];
   const form=sc.params.length?h('section',{class:'card'},h('h3',null,icon('params',1),'Parametrlar'),h('div',{class:'qs'},formParams(name,sc).map(x=>[x.head?h('div',{class:'qh'},x.head):null,paramField(name,x,sc)]))):null;
-  out.push(form?h('div',{class:'two'},form,resultCard(name,sc)):resultCard(name,sc));
+  if(form)out.push(h('div',{class:'two'},form,resultCard(name,sc)));
+  const idle=[];
   const list=h('div',{class:'rows inq'+(sc.toggles?' tog':'')});
   list.append(h('div',{class:'rowhead'},sc.toggles?h('span'):null,h('span',null,'Material'),h('div',{class:'nums'},h('span',null,'Miqdor'),h('span',null,"Narx, so'm"),h('span',null,"Summa, so'm"))));
   sc.groups.forEach(g=>{
@@ -2226,18 +2261,21 @@ function sectionPage(p){
     g.items.forEach(it=>{
       const x=itemRow(name,it,sc,budget);if(!x)return;
       if(it.extra){if(x.filled)rows.push(x.el);else if(!emptyShown){emptyShown=true;rows.push(x.el)}return}
-      if(sc.toggles&&!x.on&&!showAll){hidden++;return}
+      if(sc.toggles&&(!x.on||x.zero)&&!showAll){hidden++;return}
       rows.push(x.el);
     });
     if(!rows.length&&!hidden)return;
+    if(!rows.length){idle.push(cap(String(g.title).toLowerCase()));return}
     list.append(h('div',{class:'grp'},h('h4',null,icon(g.extra?'plus':'layers',1),g.extra?"QO'SHIMCHA MATERIAL":g.title),g.extra?h('p',null,"Ro'yxatda yo'q narsa kerak bo'lsa, shu yerdan tanlab miqdorini yozing."):(g.hint&&rows.length?h('p',null,cap(g.hint)):null)));
     rows.forEach(x=>list.append(x));
-    if(hidden)list.append(h('div',{class:'skipped'},rows.length?hidden+" ta material hisobga olinmagan.":"Bu qism hozir hisobga olinmayapti ("+hidden+" ta material)."));
+    if(hidden)list.append(h('div',{class:'skipped'},hidden+" ta material hisobga olinmagan."));
   });
+  if(idle.length)list.append(h('div',{class:'idle'},h('b',null,"Hozir hisobga olinmagan qismlar: "),idle.join(' · '),h('button',{class:'lnk',type:'button',onclick:()=>{ui.showAll[name]=true;render()}},"ko'rsatish")));
   const tools=h('div',{class:'tools'},h('h3',null,icon('list',1),'Materiallar'),
     sc.toggles?h('label',{class:'chk'},h('input',{type:'checkbox',id:'showall',checked:showAll,onchange:e=>{ui.showAll[name]=e.target.checked;render()}}),"Hisobga olinmaganlarni ham ko'rsatish"):
     h('input',{type:'search',class:'in search',id:'q',placeholder:'Nomidan qidirish',value:ui.q,'aria-label':'Nomidan qidirish',oninput:e=>{ui.q=e.target.value;filterRows()}}));
   out.push(h('section',{class:'card'},tools,list));
+  if(!form&&!budget)out.push(resultCard(name,sc));
   if(budget){
     const rz=[];let emp=false;
     for(let r=3;r<=22;r++){const nm=V('Oz','A'+r);if(!nm){if(emp)continue;emp=true}
@@ -2248,6 +2286,7 @@ function sectionPage(p){
     out.push(h('section',{class:'card'},h('h3',null,icon('pencil',1),"O'zingiz yozadigan materiallar"),
       h('p',{class:'fine'},"Ro'yxatda yo'q narsani shu yerga yozing: nomi, birligi, miqdori va 1 birlik narxi. Summasi yuqoridagi natijaga qo'shiladi."),
       h('div',{class:'rowz head'},h('span',{class:'zn'},'Nomi'),h('span',null,'Birlik'),h('span',null,'Miqdor'),h('span',null,"Narx, so'm"),h('span',{class:'zs'},"Summa, so'm")),rz));
+    out.push(resultCard(name,sc));
   }
   if(sc.note)out.push(h('p',{class:'fine'},sc.note.replace(/\s*\(to'q sariq = taxminiy narx\)/,'').replace(/«O'z narxim» ustuniga/,'narx katagiga')));
   return out;
@@ -2322,14 +2361,14 @@ function costsCard(){
   let max=0;secs.forEach(x=>{max=Math.max(max,x.sh)});
   return h('section',{class:'card'},h('h3',null,icon('money',1),"Xarajatlar bo'limlar bo'yicha · mln so'm"),
     h('div',{class:'bd cmp'},secs.map(x=>h('a',{href:'#'+x.s.k,class:x.am?null:'nil'},h('span',{class:'nm'},x.s.name,icon(x.s.k)),h('span',{class:'am'},x.am?mln(x.am):'—'),h('span',{class:'sh'},x.am?fmtNum(x.sh,'0.0%'):''),
-      h('span',{class:'track'},h('i',{style:'width:'+(max?Math.max(x.sh/max*100,x.sh>0?1.5:0):0).toFixed(1)+'%'}))))),
+      x.am?h('span',{class:'track'},h('i',{style:'width:'+(max?Math.max(x.sh/max*100,1.5):0).toFixed(1)+'%'})):null))),
     h('div',{class:'sum'},h('div',{class:'grand'},h('span',null,'Infratuzilma jami, QQS bilan'),h('b',null,mln(total)+' mln'),h('small',null,som(total)+" so'm"))));
 }
 function overviewPage(){
   const J='Jamlama',H='Hisobot';
   const total=N(H,'G15'),area=(N(J,'C6')||0)+(N(J,'C7')||0),lots=N(J,'C8')||0;
   const out=[h('div',{class:'pagehead'},h('h2',null,"Loyiha birlamchi ma'lumotlari",icon('umumiy')),h('p',null,"Loyiha nomi, joylashuvi, maydoni va foizlarni kiriting. Keyin har bir bo'limga kirib savollarga javob bering."))];
-  out.push(h('div',{class:'stats'},
+  const stats=(h('div',{class:'stats'},
     h('div',{class:'stat'},h('span',null,icon('money',1),'Infratuzilma, QQS bilan'),h('b',null,mln(total)),h('small',null,"mln so'm")),
     h('div',{class:'stat'},h('span',null,icon('area',1),'1 gektar uchun'),h('b',null,area?mln(total/area):'—'),h('small',null,"mln so'm · jami "+fmtNum(area,'#,##0.##')+' ga')),
     h('div',{class:'stat'},h('span',null,icon('lot',1),'1 lot uchun'),h('b',null,lots?mln(total/lots):'—'),h('small',null,"mln so'm · "+fmtNum(lots,'#,##0')+' ta lot'))));
@@ -2340,19 +2379,19 @@ function overviewPage(){
   {const cells=['C6','F6','F7','F8'];let shown=Math.max(1,ui.areas);cells.forEach((a,i)=>{if(N(J,a)!==null)shown=Math.max(shown,i+1)});
     for(let i=0;i<shown;i++)pf.push(qrow(shown>1?(i+1)+'-hudud maydoni (ga)':'Hudud maydoni (ga)',numIn(J,cells[i],{ph:'0'}),{for:'f-'+J+'-'+cells[i],icon:'area',hint:'Gektarda.'}));
     if(shown<4)pf.push(h('div',{class:'q addq'},h('span'),h('div',{class:'qc'},h('button',{class:'btn',type:'button',id:'addarea',onclick:()=>{ui.areas=shown+1;render();const e=$('f-'+J+'-'+cells[shown]);if(e)e.focus()}},icon('plus',1),"Yana hudud qo'shish"))))}
-  {let nl=LOTROWS.filter(r=>V('Lot','B'+r)!==null).length;for(let r=60;r<=79;r++)if(V('Bino','A'+r))nl++;
+  {let nl=LOTROWS.filter(lotUsed).length;for(let r=60;r<=79;r++)if(V('Bino','A'+r))nl++;
     pf.push(nl?qrow('Lotlar soni',h('div',{class:'ro'},h('span',null,nUz(nl)),h('a',{href:'#obyektlar'},"LOTlar ro'yxatidan")),{icon:'lot'})
       :qrow('Lotlar soni',numIn(J,'F12',{whole:true,ph:'0'}),{for:'f-'+J+'-F12',icon:'lot',hint:"«Obyektlar va LOTlar» bo'limida LOT kiritsangiz, o'zi hisoblanadi."}))}
   pf.push(h('div',{class:'qh'},'Foizlar'));
   for(let r=9;r<=12;r++){const lab=String(V(J,'B'+r)).replace(/\s*\(% materialdan\)/,'');
     pf.push(qrow(lab,h('div',{class:'sfx'},numIn(J,'C'+r,{pct:true}),h('i',null,'%')),{for:'f-'+J+'-C'+r,icon:'percent',hint:r>9?'Material narxiga nisbatan.':null}))}
   out.push(h('section',{class:'card one'},h('h3',null,icon('project',1),"Loyiha ma'lumotlari"),h('div',{class:'qs'},pf)));
+  if(total)out.push(stats);
   out.push(h('p',{class:'fine'},"Xarajatlar bo'limlar bo'yicha va byudjet/investor taqsimoti «",h('a',{href:'#malumot'},"Hudud ko'rsatkichlari"),"» bo'limida."));
   out.push(h('p',{class:'note'},icon('warn',1),"Diqqat: barcha summalar taxminiy hisob. Ularni loyihaga to'g'ridan-to'g'ri qo'llab bo'lmaydi — aniq summa loyiha-smeta hujjatlari ishlab chiqilganda aniqlanadi."));
 
   return out;
 }
-function resetUI(on){$('reset').hidden=on;$('reset-yes').hidden=!on;$('reset-no').hidden=!on}
 
 const nUz=(v,f)=>v===null||v===undefined?'—':fmtNum(v,f||'#,##0.##').replace(/,/g,' ').replace('.',',');
 function earthCard(){
@@ -2548,7 +2587,9 @@ const BINOCOLS=['A','B','C','D','E','F','G','J','N','R','T','U','V','W','X','Y',
     BN.cells['Q'+r]=['=H'+r+'*IF(F'+r+'="",$P$2,F'+r+')+'+D+'*'+z('AC',r),6];
     ['U','V','W','X','AB','AC'].forEach(c=>{BN.ed[c+r]={t:'num'}});BN.ed['Y'+r]={t:'list',v:LOTSTYLE};BN.ed['Z'+r]={t:'list',v:LOTTRADE};BN.ed['AA'+r]={t:'text'};
   }});
-  SH.Jamlama.cells.C8=['=IF(COUNTA(Lot!B5:B104)+COUNTA(Bino!A60:A79)>0,COUNTA(Lot!B5:B104)+COUNTA(Bino!A60:A79),IF(F12="",0,F12))',6];
+  /* a LOT counts as soon as anything is typed in its card, not only its name */
+  LOTROWS.forEach(r=>{SH.Lot.cells['Z'+r]=['=IF(COUNTA(A'+r+':T'+r+')>0,1,0)',6]});
+  SH.Jamlama.cells.C8=['=IF(SUM(Lot!Z5:Z104)+COUNTA(Bino!A60:A79)>0,SUM(Lot!Z5:Z104)+COUNTA(Bino!A60:A79),IF(F12="",0,F12))',6];
 })();
 function lotCat(name){name=String(name||'');return LOTCAT.find(c=>c.re.test(name))||LOTCAT[LOTCAT.length-1]}
 function catRate(k){const i=LOTCAT.findIndex(c=>c.k===k);const v=N('LotNarx','B'+(1+i));return v===null?LOTCAT[i].rate:v}
@@ -2754,6 +2795,7 @@ function info(){
   const cap=sum(lots,d=>d.cap)+sum(objs3,b=>b.cap);
   const infra=N('Hisobot','G15')||0,invCost=sum(lots,d=>d.total)+sum(dx,b=>b.inv),budCost=infra+sum(bud,b=>b.cost)+sum(dx,b=>b.bud);
   return {land:total,landTyped:!!land,lots,bud,dx,fp,green,pool,road,trot,velo,veloLen:rd.veloLen,taktil:rd.taktil,trades,objs,jobs,jobsAll:jobs.t+jobs.i+jobs.x,cap,
+    over:land?Math.max(0,fp+road+trot+velo+pool-land):0,
     invArea,budArea:Math.max(0,total-invArea),invCost,budCost,infra,budObj:sum(bud,b=>b.cost),dxBud:sum(dx,b=>b.bud),dxInv:sum(dx,b=>b.inv),lotCost:sum(lots,d=>d.total),cost:invCost+budCost};
 }
 function summaryRows(x){
@@ -2812,7 +2854,8 @@ function malumotPage(p){
   const x=info(),rows=summaryRows(x),half=Math.ceil(rows.length/2);
   const out=[h('div',{class:'pagehead'},h('h2',null,p.title,icon(p.k)),h('p',null,"Hudud balansi, LOTlar, obyektlar, ishchi o'rinlari va moliyalashtirish ulushlari — barcha bo'limlardan o'zi yig'iladi. Ko'kalamzor hudud = umumiy maydon − qurilish osti − yo'llar − trotuarlar − velo yo'laklar − hovuzlar."))];
   if(!x.landTyped)out.push(h('p',{class:'note'},icon('warn',1),"«Loyiha birlamchi ma'lumotlari» bo'limida hudud maydoni kiritilmagan — foizlar kiritilgan obyektlar maydonidan hisoblandi."));
-  const tbl=part=>h('table',{class:'um'},h('thead',null,h('tr',null,h('th',null,'№'),h('th',null,'Nomi'),h('th',{colspan:'2'},'Soni va miqdori'))),
+  if(x.over>0.5)out.push(h('p',{class:'note'},icon('warn',1),"Qurilish osti, yo'llar, trotuarlar, velo yo'laklar va hovuzlar maydoni yig'indisi umumiy yer maydonidan "+nUz(x.over,'#,##0')+" m² ga oshib ketdi — kiritilgan maydonlarni tekshiring."));
+  const tbl=part=>h('table',{class:'um'},h('colgroup',null,h('col',{style:'width:34px'}),h('col'),h('col',{style:'width:31%'}),h('col',{style:'width:52px'})),h('thead',null,h('tr',null,h('th',null,'№'),h('th',null,'Nomi'),h('th',{colspan:'2'},'Soni va miqdori'))),
     h('tbody',null,part.map(r=>h('tr',{class:r.bold?'b':null},h('td',null,String(r.n)),h('td',null,r.label),r.pct?[h('td',{class:'v'},r.val),h('td',{class:'p'},r.pct)]:h('td',{class:'v',colspan:'2'},r.val)))));
   out.push(h('div',{class:'two eq'},costsCard(),fundCard(x,true)));
   out.push(h('section',{class:'card'},h('h3',null,icon('malumot',1),"Hudud ko'rsatkichlari jadvali"),h('div',{class:'umw'},tbl(rows.slice(0,half)),tbl(rows.slice(half)))));
@@ -3023,10 +3066,15 @@ async function connectDownloads(){try{dl=window.claude&&window.claude.use?await 
 /* ---------- render ---------- */
 function summary(){
   $('proj').textContent=V('Jamlama','C5')||'Yangi loyiha';
-  {const x=info();$('t-bud').textContent=mln(x.budCost);$('t-inv').textContent=mln(x.invCost);$('t-all').textContent=mln(x.cost);$('dock-g').textContent=mln(x.budCost)}
-  PAGES.forEach(p=>{const tc=p.tot||p.otot;if(!tc)return;const v=N(p.sheet,tc);$('amt-'+p.k).textContent=v?mln(v):'—'});
+  {const x=info(),J='Jamlama',done={umumiy:!!(V(J,'C5')&&((N(J,'C6')||0)+(N(J,'C7')||0))),obyektlar:x.lots.length+x.bud.length+x.dx.length>0};
+    PAGES.forEach(p=>{const tc=p.tot,a=document.querySelector('#nav a[data-k="'+p.k+'"]');let ok=done[p.k]||false;
+      if(tc){const v=N(p.sheet,tc);$('amt-'+p.k).textContent=v?mln(v):'—';ok=!!v}
+      if(p.k==='obyektlar'){const v=x.budObj+x.dxBud+x.dxInv+x.lotCost;$('amt-'+p.k).textContent=v?mln(v):'—'}
+      if(a)a.classList.toggle('done',ok)});
+    $('t-bud').textContent=mln(x.budCost);$('t-inv').textContent=mln(x.invCost);$('t-all').textContent=mln(x.cost);$('dock-g').textContent=mln(x.budCost)}
 
-  if(page.tot||page.otot){$('dock-l').textContent=page.name+" · mln so'm";$('dock-lv').textContent=mln(N(page.sheet,page.tot||page.otot))}
+  if(page.tot){$('dock-l').textContent=page.name+" · mln so'm";$('dock-lv').textContent=mln(N(page.sheet,page.tot))}
+  else if(page.otot){const x=info();$('dock-l').textContent=page.name+" · mln so'm";$('dock-lv').textContent=mln(x.budObj+x.dxBud+x.dxInv+x.lotCost)}
   else{const lots=N('Jamlama','C8')||0,t=N('Hisobot','G15');$('dock-l').textContent="1 lot uchun · mln so'm";$('dock-lv').textContent=lots&&t!==null?mln(t/lots):'—'}
 }
 function render(){
@@ -3052,10 +3100,11 @@ function go(){
 }
 (function(){
   const nav=$('nav');
-  PAGES.forEach((p,i)=>{
-    if(i===1)nav.append(h('div',{class:'cap'},"Bo'limlar · mln so'm"));
+  const caps={umumiy:['1','Loyiha'],obodonlashtirish:['2',"Infratuzilma · byudjetdan"],obyektlar:['3','Obyektlar va LOTlar'],malumot:['4','Natija']};
+  PAGES.forEach(p=>{
+    if(caps[p.k])nav.append(h('div',{class:'cap'},h('i',null,caps[p.k][0]),caps[p.k][1]));
     if(p.k==='narxlar')nav.append(h('div',{class:'sep'}));
-    nav.append(h('a',{href:'#'+p.k,'data-k':p.k},h('span',{class:'nm'},p.name,icon(p.k)),(p.tot||p.otot)?h('span',{class:'amt',id:'amt-'+p.k},'—'):null));
+    nav.append(h('a',{href:'#'+p.k,'data-k':p.k},h('span',{class:'nm'},h('span',{class:'dot'}),p.name,icon(p.k)),(p.tot||p.otot)?h('span',{class:'amt',id:'amt-'+p.k},'—'):null));
   });
 })();
 
@@ -3129,7 +3178,7 @@ function openProject(id,cells,isDirty){
 function newProject(){openProject('p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),{},false)}
 async function saveProject(){
   if(saving||!cur)return;saving=true;saveBtn();
-  const {p,g}=splitOver(),name=String(V('Jamlama','C5')||'').trim()||'Nomsiz loyiha',sum=(N('Hisobot','G15')||0)+(N('Bino','S4')||0),id=cur;
+  const {p,g}=splitOver(),name=String(V('Jamlama','C5')||'').trim()||'Nomsiz loyiha',sum=info().cost,id=cur;
   try{const d=await STORE[backend].save(x=>{x.projects=x.projects||{};x.projects[id]={name,at:Date.now(),sum,cells:p};x.global=g});
     projects=d.projects;globalP=d.global;dirty=false;clearDraft();
     status((backend==='local'?"Shu qurilmada saqlandi — ":"Saqlandi — ")+fmtWhen(Date.now()));}
@@ -3165,6 +3214,10 @@ function homePage(){
   out.push(h('section',{class:'card'},h('h3',null,icon('list',1),'Saqlangan loyihalar'),
     rows.length?rows:h('p',{class:'empty'},"Hali saqlangan loyiha yo'q. Pastdagi tugma bilan birinchisini boshlang."),
     h('button',{class:'btn newp',type:'button',id:'newp',onclick:newProject},icon('plus',1),'Yangi loyiha')));
+  out.push(h('section',{class:'card how'},h('h3',null,icon('help',1),'Qanday ishlaydi'),h('ol',{class:'steps'},
+    [['Loyiha',"Nomi, joylashuvi va hudud maydonini kiriting."],['Infratuzilma',"Elektr, suv, yo'l va boshqa bo'limlarda savollarga javob bering — materiallar va narx o'zi hisoblanadi. Bu qism byudjetdan."],
+     ['Obyektlar va LOTlar',"Byudjet obyektlari, DXSH obyektlari va investor LOTlarini qo'shing."],['Natija',"«Hudud ko'rsatkichlari»da jami ko'rinadi. «Saqlash»ni bosing va PDF hisobotni yuklab oling."]]
+      .map((x,i)=>h('li',null,h('i',null,String(i+1)),h('div',null,h('b',null,x[0]),h('span',null,x[1])))))));
   const g=ghCard();if(g)out.push(g);
   out.push(h('p',{class:'fine'},backend==='gh'?"Loyihalar umumiy saqlanadi: parolni bilgan hamma ularni ko'radi va o'zgartira oladi. Narxlar bazasidagi o'zgarishlar barcha loyihalarga tegishli.":backend==='claude'?"Loyihalar Claude hisobingizda saqlanadi va siz kiradigan hamma qurilmada ko'rinadi.":"Loyihalar faqat shu kompyuter va shu brauzerda saqlanadi."));
   out.push(h('div',{class:'foot'},h('span'),h('span',{class:'acts'},h('button',{class:'btn',id:'lock',type:'button',onclick:lock},icon('lock',1),"Chiqish (qulflash)"))));
