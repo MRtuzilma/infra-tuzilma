@@ -2099,7 +2099,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794515362';
+const BUILD_ID='1794515769';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
     if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
@@ -2108,18 +2108,24 @@ let pending=false;
 /* A typed value is saved when the field loses focus, and the page is redrawn. If that happens because the user pressed on a
    drop-down or a button, redrawing at once would replace that control under the finger: the list closes or the click is lost,
    and a second press is needed. So the redraw waits until that press is finished (a choice made, the list closed, the click done). */
-let holdEl=null,holdTimer=0;
+let holdEl=null,holdTimer=0,lastPointer=0,lastKey=0,noRefocus='';
+document.addEventListener('keydown',()=>{lastKey=Date.now()},true);
 function scheduleRender(){if(pending)return;pending=true;setTimeout(tryRender,0)}
 function tryRender(){if(holdEl&&document.contains(holdEl))return;holdEl=null;pending=false;render()}
 function releaseHold(){if(!holdEl)return;holdEl=null;clearTimeout(holdTimer);if(pending)setTimeout(tryRender,0)}
 document.addEventListener('pointerdown',e=>{
+  lastPointer=Date.now();
   const t=e.target&&e.target.closest?e.target.closest('select,button,a,summary,label,input[type=checkbox],.pko'):null;
   if(!t||!$('main')||!$('main').contains(t))return;
   holdEl=t;clearTimeout(holdTimer);
   holdTimer=setTimeout(releaseHold,t.tagName==='SELECT'?20000:1500);
 },true);
-document.addEventListener('change',e=>{if(holdEl&&e.target===holdEl)releaseHold()},true);
-document.addEventListener('focusout',e=>{if(holdEl&&holdEl.tagName==='SELECT'&&e.target===holdEl)setTimeout(releaseHold,0)},true);
+/* On a phone the tap that closes a picker can land on the new list drawn under the finger and open it again,
+   so after a choice made by touch the page is redrawn only once that tap is over. */
+const COARSE=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
+const releaseSoon=ms=>{clearTimeout(holdTimer);holdTimer=setTimeout(releaseHold,ms)};
+document.addEventListener('change',e=>{const t=e.target;if(COARSE&&t&&t.tagName==='SELECT'&&lastPointer>lastKey){holdEl=t;releaseSoon(500);return}if(holdEl&&t===holdEl)releaseHold()},true);
+document.addEventListener('focusout',e=>{if(holdEl&&holdEl.tagName==='SELECT'&&e.target===holdEl)releaseSoon(COARSE?500:0)},true);
 document.addEventListener('click',()=>{if(holdEl&&holdEl.tagName!=='SELECT')setTimeout(releaseHold,0)});
 document.addEventListener('pointerup',()=>{if(holdEl&&holdEl.tagName!=='SELECT'){clearTimeout(holdTimer);holdTimer=setTimeout(releaseHold,400)}},true);
 function commit(sheet,a,v){
@@ -2175,7 +2181,8 @@ function selIn(sheet,a,o){
     (o.empty||!cur)?h('option',{value:''},o.empty||'Tanlang'):null,
     opts.map(x=>h('option',{value:x},x==='—'?"— (yo'q)":x)));
   sel.value=cur;
-  sel.addEventListener('change',()=>commit(sheet,a,sel.value===''?null:sel.value));
+  /* chosen with a finger or the mouse: let the list go, so the redrawn page does not focus it again (some phones reopen it then) */
+  sel.addEventListener('change',()=>{if(lastPointer>lastKey){sel.blur();noRefocus=sel.id}commit(sheet,a,sel.value===''?null:sel.value)});
   return sel;
 }
 
@@ -3195,7 +3202,7 @@ function summary(){
 }
 function render(){
   xbCache=null;
-  const act=document.activeElement,id=act&&act.id&&$('main').contains(act)?act.id:'',y=window.scrollY;
+  const act=document.activeElement;let id=act&&act.id&&$('main').contains(act)&&!(act.tagName==='SELECT'&&act.id===noRefocus)?act.id:'';noRefocus='';const y=window.scrollY;
   if(!cur){$('proj').textContent='Loyihalar';$('main').replaceChildren(...homePage().filter(Boolean));if(id){const e=$(id);if(e)e.focus({preventScroll:true})}window.scrollTo(0,y);return}
   const body=page.k==='umumiy'?overviewPage():page.k==='narxlar'?pricesPage():page.k==='obodonlashtirish'?obodPage(page):page.k==='obyektlar'?binoPage(page):page.k==='malumot'?malumotPage(page):sectionPage(page);
   const i=PAGES.indexOf(page),pv=PAGES[i-1],nx=PAGES[i+1];
