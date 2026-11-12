@@ -2099,6 +2099,11 @@ function applyOver(next){
   });
   over=next;
 }
+const BUILD_ID='1794515362';
+(function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
+  fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
+    if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
+      try{sessionStorage.setItem('infra-upd',String(Date.now()))}catch(e){}if(!dirty)location.replace(location.pathname+'?v='+m[1]+location.hash)}}).catch(()=>{})})();
 let pending=false;
 /* A typed value is saved when the field loses focus, and the page is redrawn. If that happens because the user pressed on a
    drop-down or a button, redrawing at once would replace that control under the finger: the list closes or the click is lost,
@@ -2419,11 +2424,15 @@ function workText(s){
   else if(s.sheet==='Yomgir_suvi'){const l=N('Yomgir_suvi','C5');if(l)p.push(km(l)+' km '+(V('Yomgir_suvi','C6')||'')+' yomg\'ir suvi kanalizatsiyasi tarmog\'ini tortish')}
   else if(s.sheet==='Gaz'){const pp=pipesOf('Gaz',pipePairs(3,uRange(6,12)));if(pp.length)p.push(joinUz(pp)+' gaz quvurini tortish');
     const g=V('Gaz','C9');if(g&&g!=='Kerak emas')p.push(nUz(N('Gaz','C10')||1)+' ta gaz rostlash punktini ('+g+') o\'rnatish')}
-  else if(s.sheet==='Yol'){const Y='Yol',rd=roadsOf(),o=(N(Y,'S14')||0)+segList(Y,SEG.yol).reduce((a,z)=>a+z.o,0),ns=segList(Y,SEG.yol).length;
-    if(rd.roadLen)p.push(nUz(rd.roadLen)+' m uzunlikdagi'+(ns?'':(N(Y,'C6')?', '+nUz(N(Y,'C6'))+' m enli':''))+' avtomobil yo\'lini'+(o?' (shundan '+nUz(Math.min(o,rd.roadLen))+' m hudud tashqarisida)':'')+' qurish');
-    if(V(Y,'C8')==='Ha'&&N(Y,'C11'))p.push(nUz(rd.trotLen)+' m '+(V(Y,'S5')==='Beton (quyma)'?'beton':'plitkali')+' trotuar barpo etish');
+  else if(s.sheet==='Yol'){const Y='Yol',rd=roadsOf();
+    /* every piece with its own length and width, e.g. "1 000 m uzunlikdagi, 7 m enli va 400 m uzunlikdagi, 5 m enli" */
+    const pieces=(lc,wc,oc,sg)=>{const a=[];const l=N(Y,lc),w=N(Y,wc);if(l)a.push({l,w,o:Math.min(l,N(Y,oc)||0)});return a.concat(segList(Y,sg))};
+    const desc=a=>{const t=a.map(z=>nUz(z.l)+' m uzunlikdagi'+(z.w?', '+nUz(z.w)+' m enli':'')+(z.o?' (shundan '+nUz(z.o)+' m hudud tashqarisida)':''));
+      return a.length>1?'jami '+nUz(a.reduce((s,z)=>s+z.l,0))+' m: '+joinUz(t):t[0]};
+    const rp=pieces('C5','C6','S14',SEG.yol);if(rp.length)p.push(desc(rp)+(rp.length>1?" avtomobil yo'llarini":" avtomobil yo'lini")+' qurish');
+    if(V(Y,'C8')==='Ha'){const tp=pieces('C9','C10','S15',SEG.trot);if(tp.length)p.push(desc(tp)+' '+(V(Y,'S5')==='Beton (quyma)'?'beton':'plitkali')+' trotuar barpo etish')}
     if(rd.taktil)p.push(nUz(rd.taktil)+' m ('+nUz(rd.taktil*0.3,'#,##0.#')+' m²) taktil yo\'lak (ko\'zi ojizlar uchun) yotqizish');
-    if(rd.veloLen)p.push(nUz(rd.veloLen)+' m uzunlikdagi velo yo\'lak qurish');
+    if(V(Y,'S11')==='Ha'){const vp=pieces('S12','S13','S16',SEG.velo);if(vp.length)p.push(desc(vp)+' velo yo\'lak qurish')}
     if(V(Y,'S8')==='Ha')p.push(nUz((N(Y,'S10')||rd.roadLen||0)*(V(Y,'S9')==='Ikki tomonda'?2:1))+' m yo\'l chetidagi ariq (beton lotok) qurish')}
   else if(s.sheet==='Yoritish'){const L='Yoritish',sol=V(L,'S5')==='Quyosh panelli (avtonom)',by={};
     const addL=(t,l)=>{if(!l)return;const k=sol?'quyosh panelli':(t&&t!=='—'?t:V(L,'C6'))+' LED';by[k]=(by[k]||0)+l};
