@@ -603,7 +603,7 @@ table.um td,table.um th{overflow-wrap:break-word}
   </div>
   <div class="side">
     <button class="savebtn" id="save" type="button">Saqlash</button>
-    <details class="dlm" id="pdfs" hidden><summary class="pdfbtn"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Yuklab olish</summary><div class="menu"><button type="button" data-full="0"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>Qisqa hisobot (PDF)</b><small>Jamlanma, obyektlar, LOTlar, hudud ko'rsatkichlari, diagrammalar</small></span></button><button type="button" data-full="1"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>To'liq hisobot (PDF)</b><small>Qisqa hisobot + har bir bo'lim, obyekt va LOT tafsiloti</small></span></button></div></details>
+    <details class="dlm" id="pdfs" hidden><summary class="pdfbtn"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Yuklab olish</summary><div class="menu"><button type="button" data-full="0"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>Qisqa hisobot (PDF)</b><small>Jamlanma, obyektlar, LOTlar, hudud ko'rsatkichlari, diagrammalar</small></span></button><button type="button" data-full="1"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>To'liq hisobot (PDF)</b><small>Qisqa hisobot + har bir bo'lim, obyekt va LOT tafsiloti</small></span></button><button type="button" data-full="map"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>Joylashuv (PDF)</b><small>Xaritada joylashuvning 4 ta varag'i, har biri alohida yotiq sahifada</small></span></button></div></details>
 
   </div>
   <div class="tots" id="tots"><div class="tb bud"><span>Byudjetdan jami</span><b id="t-bud">—</b><small>mln so'm</small></div><div class="tb inv"><span>Investordan jami</span><b id="t-inv">—</b><small>mln so'm</small></div><div class="tb all"><span>Jami qiymat</span><b id="t-all">—</b><small>mln so'm</small></div></div>
@@ -2112,7 +2112,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794519674';
+const BUILD_ID='1794520105';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
     if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
@@ -3160,7 +3160,7 @@ const MAP=(function(){
     decorations(ctx,P,W,H,U,box)}
   const RENDER=[render1,render2,render3,render4];
   /* the four sheets as JPEG pictures for the PDF (A4 landscape) */
-  function images(){const big=document.createElement('canvas');big.width=2400;big.height=Math.round(2400/1.4142);return RENDER.map(fn=>{fn(big);return big.toDataURL('image/jpeg',0.9)})}
+  function images(w){w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);return RENDER.map(fn=>{fn(big);return big.toDataURL('image/jpeg',0.9)})}
   return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region()};
 })();
 
@@ -3283,9 +3283,10 @@ function reportDoc(full,only){
           {width:'*',table:{widths:[7,'*',54,28],body:s.parts.map((p,i)=>[{text:'',fillColor:PAL.light[i]},{text:p[0],fontSize:7},{text:s.fmt(p[1]),fontSize:7,alignment:'right'},{text:fmtNum(p[1]/tot,'0.#%'),fontSize:7,alignment:'right',color:MUT}])},layout:'noBorders',margin:[0,8,0,0]}],columnGap:6}],unbreakable:true}};
       for(let i=0;i<sets.length;i+=2)c.push({columns:sets.slice(i,i+2).map(cell).concat(sets.length-i<2?[{width:'*',text:''}]:[]),columnGap:18,margin:[0,0,0,14]});
     }}
-  /* 4b. the four map sheets (landscape), right after the charts */
-  const mapAt=c.length;let maps=0;
-  if(MAP.ready()){MAP.images().forEach((im,i)=>{c.push({image:im,fit:[762,500],alignment:'center',pageBreak:'before',pageOrientation:'landscape'});maps++})}
+  /* 4b. the four maps in one row under the charts */
+  if(MAP.ready()){const ims=MAP.images(1200);
+    c.push({unbreakable:true,margin:[0,4,0,0],stack:[{text:'Xaritada joylashuv',style:'h2',margin:[0,4,0,6]},
+      {columns:ims.map((im,i)=>({width:'*',stack:[{image:im,width:122,alignment:'center'},{text:(i+1)+'-rasm · '+['Respublika','Viloyat','Tuman','Loyiha hududi'][i],fontSize:7,color:MUT,alignment:'center',margin:[0,2,0,0]}]})),columnGap:6}]})}
   /* 5. full report: each section, then each object and LOT */
   const head=(t,am)=>({columns:[{text:t,fontSize:13,bold:true,color:NAVY},{text:am===null?'':mln(am)+" mln so'm",fontSize:13,bold:true,color:NAVY,alignment:'right',width:150}],margin:[0,22,0,6],headlineLevel:1});
   let firstSec=true;
@@ -3365,18 +3366,20 @@ function reportDoc(full,only){
   const sig={unbreakable:true,margin:[0,34,0,0],stack:[
     {columns:[{text:'Tuzdi:  ______________________________'},{text:'Tasdiqladi:  ______________________________'}]},
     full?{text:"«≈» belgisi narx taxminiy ekanini bildiradi.",color:MUT,fontSize:8,margin:[0,16,0,0]}:{text:''}]};
-  if(maps){
-    /* the short report ends with the maps, so its signatures stand before them; in the full report the pages after the maps turn back to portrait */
-    if(!full)c.splice(mapAt,0,sig);
-    else{c.push(sig);const nx=c.slice(mapAt+maps).find(n=>n.pageBreak);if(nx)nx.pageOrientation='portrait';else{sig.pageBreak='before';sig.pageOrientation='portrait'}}
-  }else c.push(sig);
+  c.push(sig);
   return {proj,pageSize:'A4',pageMargins:[40,44,40,46],content:c,info:{title:proj+(full?" — to'liq hisobot":' — qisqa hisobot')},
     defaultStyle:{font:'Roboto',fontSize:9,color:'#152033',lineHeight:1.15},
     styles:{h2:{fontSize:11,bold:true,color:NAVY,margin:[0,16,0,6]}},
     pageBreakBefore:(node,after)=>node.headlineLevel===1&&after.length<16,
     footer:(page,count)=>({margin:[40,14,40,0],fontSize:8,color:MUT,columns:[{text:proj},{text:today+'   ·   '+page+' / '+count,alignment:'right'}]})};
 }
-window.infraReport=reportDoc;window.infraCell={V,N};
+window.infraReport=reportDoc;
+function mapDoc(){
+  const proj=String(V('Jamlama','C5')||'Loyiha');
+  return {pageSize:'A4',pageOrientation:'landscape',pageMargins:[20,20,20,20],info:{title:proj+' — xaritada joylashuv'},defaultStyle:{font:'Roboto'},
+    content:MAP.images().map((im,i)=>({image:im,fit:[802,555],alignment:'center',pageBreak:i?'before':undefined}))};
+}
+window.infraMapDoc=mapDoc;window.infraCell={V,N};
 let dl=null;const PDFLIB=['https://cdn.jsdelivr.net/npm/pdfmake@0.2.12/build/pdfmake.min.js','https://cdn.jsdelivr.net/npm/pdfmake@0.2.12/build/vfs_fonts.js'];
 function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>{s.remove();no(new Error('load'))};document.head.appendChild(s)})}
 function pdfMsg(t){const e=$('pdfmsg');e.textContent=t;e.hidden=!t}
@@ -3386,8 +3389,9 @@ async function makeFile(kind,full,b){
   const keep=[...b.childNodes];b.textContent='Tayyorlanmoqda…';pdfMsg('');
   try{
     if(typeof pdfMake==='undefined'){await loadScript(PDFLIB[0]);await loadScript(PDFLIB[1])}
-    const blob=await new Promise((ok,no)=>{try{pdfMake.createPdf(reportDoc(full)).getBlob(ok)}catch(e){no(e)}});
-    const d=new Date(),name='Infratuzilma-'+(full?'toliq-hisobot':'qisqa-hisobot')+'-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.'+kind;
+    if(full==='map'&&!MAP.ready()){pdfMsg("Joylashuv uchun «Loyiha birlamchi ma'lumotlari» bo'limida viloyatni tanlang (tuman va KMZ ham kerak).");b.replaceChildren(...keep);makeFile.busy=false;return}
+    const blob=await new Promise((ok,no)=>{try{pdfMake.createPdf(full==='map'?mapDoc():reportDoc(full)).getBlob(ok)}catch(e){no(e)}});
+    const d=new Date(),name='Infratuzilma-'+(full==='map'?'joylashuv':full?'toliq-hisobot':'qisqa-hisobot')+'-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.'+kind;
     await dl.save({filename:name,data:blob});
     pdfMsg('Fayl saqlashga berildi.');$('pdfs').open=false;
   }catch(e){
@@ -3401,7 +3405,7 @@ async function makeFile(kind,full,b){
   clearTimeout(makeFile.t);makeFile.t=setTimeout(()=>{if(!makeFile.busy)pdfMsg('')},6000);
 }
 $('pdfs').addEventListener('toggle',()=>{if(makeFile.busy&&$('pdfs').open)$('pdfs').open=false});
-document.querySelectorAll('#pdfs .menu button').forEach(b=>b.addEventListener('click',()=>{$('pdfs').open=false;makeFile('pdf',b.dataset.full==='1',$('pdfs').querySelector('summary'))}));
+document.querySelectorAll('#pdfs .menu button').forEach(b=>b.addEventListener('click',()=>{$('pdfs').open=false;makeFile('pdf',b.dataset.full==='map'?'map':b.dataset.full==='1',$('pdfs').querySelector('summary'))}));
 document.addEventListener('click',e=>{const d=$('pdfs');if(d&&d.open&&!d.contains(e.target))d.open=false});
 document.addEventListener('keydown',e=>{const d=$('pdfs');if(e.key==='Escape'&&d&&d.open)d.open=false});
 async function connectDownloads(){try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){dl=null}
