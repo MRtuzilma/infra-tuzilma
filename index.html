@@ -582,6 +582,7 @@ table.um td,table.um th{overflow-wrap:break-word}
 .kmsg{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
 .kmsg.err{color:var(--bad)}
 .mapc .mapcv{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:8px;background:#fff}
+.mapact{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:10px}
 </style>
 
 <div class="gate gut" id="gate">
@@ -2006,7 +2007,7 @@ const LOTEXTRA=[["Avtoturargoh (1 joy)",'joy',4500000],["Kirish darvozasi",'dona
   const c={};LOTCAT.forEach((k,i)=>{c['B'+(1+i)]=[k.rate,6]});
   LOTSITE.forEach((k,i)=>{c['B'+(30+i)]=[k.rate,6]});
   M.sheets.push({name:'LotNarx',rows:40,cols:2,show:2,cells:c,merges:[],dv:[],cf:[],widths:{},hidden:[]});
-  M.sheets.push({name:'Xarita',rows:4,cols:2,show:2,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
+  M.sheets.push({name:'Xarita',rows:5,cols:2,show:2,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
   /* number of lots: investor LOTs plus DXSH objects that carry a LOT number; typed by hand only when there are none */
   const J=M.sheets.find(s=>s.name==='Jamlama');J.cells.F12=[null,6];
   J.cells.C8=['=IF(COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79)>0,COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79),IF(F12="",0,F12))',6];
@@ -2078,7 +2079,7 @@ M.sheets.forEach(sh=>{sh.ed={};sh.dv.forEach(dv=>dv.ranges.forEach(r=>expand(r).
   const BN=SH.Bino;for(let r=3;r<=22;r++){BN.ed['A'+r]={t:'text'};BN.ed['B'+r]={t:'num'}}BN.ed.P1={t:'num'};BN.ed.P2={t:'num'};
   [[30,49],[60,79]].forEach(x=>{for(let r=x[0];r<=x[1];r++){BN.ed['A'+r]={t:'range',s:'Bino',r:'A3:A22'};BN.ed['B'+r]={t:'text'};'CDEFGJN'.split('').forEach(c=>{BN.ed[c+r]={t:'num'}})}});
   const LT=SH.Lot;LOTROWS_ED.forEach(r=>{'ACDEFGIKLNPQ'.split('').forEach(c=>{LT.ed[c+r]={t:'num'}});LT.ed['B'+r]={t:'text'};LT.ed['T'+r]={t:'text'};LT.ed['O'+r]={t:'list',v:LOTSTYLE};LT.ed['S'+r]={t:'list',v:LOTTRADE}});
-  SH.LotNom.ed.A1={t:'text'};['A1','A2','A3','A4'].forEach(a=>{SH.Xarita.ed[a]={t:'text'}});for(let i=1;i<=11;i++)SH.LotNarx.ed['B'+i]={t:'num'};for(let i=30;i<=34;i++)SH.LotNarx.ed['B'+i]={t:'num'};
+  SH.LotNom.ed.A1={t:'text'};['A1','A2','A3','A4','A5'].forEach(a=>{SH.Xarita.ed[a]={t:'text'}});for(let i=1;i<=11;i++)SH.LotNarx.ed['B'+i]={t:'num'};for(let i=30;i<=34;i++)SH.LotNarx.ed['B'+i]={t:'num'};
   for(let r=60;r<=79;r++){BN.ed['R'+r]={t:'num'};BN.ed['T'+r]={t:'num'}}for(let r=30;r<=49;r++)BN.ed['T'+r]={t:'num'};
   const B=SH.Baza,kinds={E:{t:'num'},H:{t:'date'},F:{t:'list',v:['Sayt narxi','≈ Taxminiy']}};
   for(let r=5;r<=304;r++)for(const c of 'BCDEFGHJKLM'){const a=c+r;if(!isFormula(B,a))B.ed[a]=kinds[c]||{t:'text'}}
@@ -2112,7 +2113,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794520488';
+const BUILD_ID='1794540545';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
     if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
@@ -3050,7 +3051,7 @@ const MAP=(function(){
     const buf=await f.arrayBuffer(),u8=new Uint8Array(buf);
     const text=(u8[0]===0x50&&u8[1]===0x4b)?await unzipKml(buf):new TextDecoder().decode(u8);
     const geoms=parseKml(text);if(!geoms.length)throw new Error('Faylda poligon, chiziq yoki nuqta topilmadi.');
-    commit(X,'A3',JSON.stringify(geoms));commit(X,'A4',f.name);
+    commit(X,'A3',JSON.stringify(geoms));commit(X,'A4',f.name);commit(X,'A5',null);
     const np=geoms.filter(g=>g.type==='Polygon').length;let msg=f.name+' — '+np+' ta poligon'+(geoms.length>np?', '+(geoms.length-np)+' ta boshqa obyekt':'');
     const c=kmzCenter(geoms);let found=null;
     if(c)for(const r of UZB.regions){for(const d of r.districts)if(inGeom(c,d.geom)){found=[r,d];break}if(found)break}
@@ -3160,9 +3161,105 @@ const MAP=(function(){
     polys.forEach(g=>{const a=polyAreaM2(g.coordinates),lp=labelPoint(projPoly(g.coordinates,P)).pt;textLabel(ctx,fmt(a,0)+' m²',lp[0],lp[1],(polys.length>1?20:28)*U)});
     decorations(ctx,P,W,H,U,box)}
   const RENDER=[render1,render2,render3,render4];
+
+  /* ----- relief: heights of the project area from open satellite elevation data (SRTM / Copernicus, ~30 m cells).
+     Fetched once when the KMZ is loaded and kept with the project in Xarita!A5 as a small grid:
+     {b:[west,south,east,north],nx,ny,z:[decimetres row by row from the north-west],src} ----- */
+  const dem=()=>{const t=V(X,'A5');if(!t)return null;try{const d=JSON.parse(t);return d&&d.z&&d.z.length===d.nx*d.ny?d:null}catch(e){return null}};
+  const TILE='https://s3.amazonaws.com/elevation-tiles-prod/terrarium/';
+  const lon2x=(lon,z)=>(lon+180)/360*Math.pow(2,z),lat2y=(lat,z)=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*Math.pow(2,z)};
+  async function tilePixels(z,x,y){
+    const r=await fetch(TILE+z+'/'+x+'/'+y+'.png',{mode:'cors'});if(!r.ok)throw new Error('tile '+r.status);
+    const bm=await createImageBitmap(await r.blob()),cv=document.createElement('canvas');cv.width=bm.width;cv.height=bm.height;
+    const c=cv.getContext('2d',{willReadFrequently:true});c.drawImage(bm,0,0);return c.getImageData(0,0,cv.width,cv.height);
+  }
+  async function fromTiles(b,nx,ny){
+    let z=15;const tilesFor=z=>{const x0=Math.floor(lon2x(b[0],z)),x1=Math.floor(lon2x(b[2],z)),y0=Math.floor(lat2y(b[3],z)),y1=Math.floor(lat2y(b[1],z));return {x0,x1,y0,y1,n:(x1-x0+1)*(y1-y0+1)}};
+    while(z>8&&tilesFor(z).n>16)z--;const t=tilesFor(z),img={},jobs=[];
+    for(let i=t.x0;i<=t.x1;i++)for(let j=t.y0;j<=t.y1;j++)jobs.push(tilePixels(z,i,j).then(d=>{img[i+'/'+j]=d}));
+    await Promise.all(jobs);
+    const H=(px,py)=>{const tx=Math.floor(px/256),ty=Math.floor(py/256),d=img[tx+'/'+ty];if(!d)return NaN;
+      const ix=px-tx*256,iy=py-ty*256,k=(iy*256+ix)*4;return d.data[k]*256+d.data[k+1]+d.data[k+2]/256-32768};
+    const out=[];
+    for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){
+      const lon=b[0]+(b[2]-b[0])*i/(nx-1),lat=b[3]-(b[3]-b[1])*j/(ny-1),fx=lon2x(lon,z)*256-0.5,fy=lat2y(lat,z)*256-0.5,x0=Math.floor(fx),y0=Math.floor(fy),ax=fx-x0,ay=fy-y0;
+      out.push(H(x0,y0)*(1-ax)*(1-ay)+H(x0+1,y0)*ax*(1-ay)+H(x0,y0+1)*(1-ax)*ay+H(x0+1,y0+1)*ax*ay)}
+    return out;
+  }
+  async function fromOpenMeteo(b,nx,ny){
+    const la=[],lo=[];for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){lo.push((b[0]+(b[2]-b[0])*i/(nx-1)).toFixed(6));la.push((b[3]-(b[3]-b[1])*j/(ny-1)).toFixed(6))}
+    const r=await fetch('https://api.open-meteo.com/v1/elevation?latitude='+la.join(',')+'&longitude='+lo.join(','));if(!r.ok)throw new Error('open-meteo '+r.status);
+    const d=await r.json();if(!d.elevation||d.elevation.length!==nx*ny)throw new Error('open-meteo');return d.elevation;
+  }
+  async function loadDem(){
+    const k=kmz();if(!k)throw new Error('KMZ fayl yuklanmagan.');
+    const bb=bboxOf(k),padX=(bb[2]-bb[0])*0.08+0.0004,padY=(bb[3]-bb[1])*0.08+0.0004,b=[bb[0]-padX,bb[1]-padY,bb[2]+padX,bb[3]+padY];
+    const kx=Math.cos((b[1]+b[3])/2*Math.PI/180),w=(b[2]-b[0])*kx,hh=b[3]-b[1],L=64;
+    let nx=Math.max(8,Math.round(w>=hh?L:L*w/hh)),ny=Math.max(8,Math.round(hh>=w?L:L*hh/w)),z,src='SRTM / Copernicus';
+    try{z=await fromTiles(b,nx,ny);if(z.some(v=>!isFinite(v)))throw new Error('gap')}
+    catch(e){nx=10;ny=10;z=await fromOpenMeteo(b,nx,ny);src='Copernicus DEM (90 m)'}
+    commit(X,'A5',JSON.stringify({b:b.map(r6),nx,ny,z:z.map(v=>Math.round(v*10)),src}));
+    const s=relStats();return s?'Relyef olindi: '+fmt(s.min,1)+'–'+fmt(s.max,1)+' m, farqi '+fmt(s.max-s.min,1)+' m':'Relyef olindi';
+  }
+  /* height at a point (bilinear in the stored grid), in metres */
+  function hAt(d,lon,lat){const fx=(lon-d.b[0])/(d.b[2]-d.b[0])*(d.nx-1),fy=(d.b[3]-lat)/(d.b[3]-d.b[1])*(d.ny-1);
+    const x0=Math.max(0,Math.min(d.nx-2,Math.floor(fx))),y0=Math.max(0,Math.min(d.ny-2,Math.floor(fy))),ax=Math.min(1,Math.max(0,fx-x0)),ay=Math.min(1,Math.max(0,fy-y0)),g=(i,j)=>d.z[j*d.nx+i]/10;
+    return g(x0,y0)*(1-ax)*(1-ay)+g(x0+1,y0)*ax*(1-ay)+g(x0,y0+1)*(1-ax)*ay+g(x0+1,y0+1)*ax*ay}
+  /* lowest, highest and average height inside the outline */
+  function relStats(){const d=dem(),k=kmz();if(!d||!k)return null;const polys=k.filter(g=>g.type==='Polygon');if(!polys.length)return null;
+    let min=Infinity,max=-Infinity,sum=0,n=0,lo=null,hi=null;
+    for(let j=0;j<d.ny;j++)for(let i=0;i<d.nx;i++){const lon=d.b[0]+(d.b[2]-d.b[0])*i/(d.nx-1),lat=d.b[3]-(d.b[3]-d.b[1])*j/(d.ny-1);
+      if(!polys.some(g=>inPoly([lon,lat],g.coordinates)))continue;const v=d.z[j*d.nx+i]/10;n++;sum+=v;if(v<min){min=v;lo=[lon,lat]}if(v>max){max=v;hi=[lon,lat]}}
+    if(!n){const v=hAt(d,...kmzCenter(polys));return {min:v,max:v,avg:v,lo:null,hi:null}}
+    return {min,max,avg:sum/n,lo,hi}}
+  /* light to dark red: low ground is pale, high ground is deep red */
+  const RAMP=[[255,241,238],[252,187,170],[251,106,74],[203,24,29],[103,0,13]];
+  function ramp(t){t=Math.max(0,Math.min(1,t))*(RAMP.length-1);const i=Math.min(RAMP.length-2,Math.floor(t)),f=t-i,a=RAMP[i],b=RAMP[i+1];return a.map((v,k)=>Math.round(v+(b[k]-v)*f))}
+  const niceStep=r=>{const raw=r/8;if(raw<=0)return 1;const p=Math.pow(10,Math.floor(Math.log10(raw))),n=raw/p;return (n>=5?5:n>=2?2:1)*p};
+  function render5(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,k=kmz(),d=dem();
+    if(!k){placeholder(ctx,W,H,U,"KMZ fayl yuklanmagan («Loyiha birlamchi ma'lumotlari»)");return}
+    const polys=k.filter(g=>g.type==='Polygon');if(!polys.length){placeholder(ctx,W,H,U,'KMZ faylda poligon topilmadi');return}
+    if(!d){placeholder(ctx,W,H,U,"Relyef olinmagan — pastdagi «Relyefni olish» tugmasini bosing");return}
+    const st=relStats(),lo=st.min,hi=st.max,span=Math.max(0.5,hi-lo);
+    const box=frame(ctx,W,H,U,'Loyiha hududi relyefi','5-rasm · Balandlik '+fmt(lo,1)+'–'+fmt(hi,1)+' m (farqi '+fmt(hi-lo,1)+' m)'),
+      inner={x:box.x+40*U,y:box.y+40*U,w:box.w-260*U,h:box.h-70*U},P=makeProj(polys,W,H,inner);
+    /* colour grid → small picture, stretched over the grid's box and cut to the outline */
+    const g=document.createElement('canvas');g.width=d.nx;g.height=d.ny;const gc=g.getContext('2d'),im=gc.createImageData(d.nx,d.ny);
+    for(let q=0;q<d.nx*d.ny;q++){const c=ramp((d.z[q]/10-lo)/span);im.data[q*4]=c[0];im.data[q*4+1]=c[1];im.data[q*4+2]=c[2];im.data[q*4+3]=255}gc.putImageData(im,0,0);
+    const a=P([d.b[0],d.b[3]]),b=P([d.b[2],d.b[1]]),cw=(b[0]-a[0])/(d.nx-1),ch=(b[1]-a[1])/(d.ny-1);
+    ctx.save();ctx.beginPath();polys.forEach(pg=>pg.coordinates.forEach(r=>r.forEach((c,i)=>{const [x,y]=P(c);i?ctx.lineTo(x,y):ctx.moveTo(x,y)})));ctx.clip('evenodd');
+    ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(g,a[0]-cw/2,a[1]-ch/2,b[0]-a[0]+cw,b[1]-a[1]+ch);
+    /* contour lines (marching squares), labelled now and then */
+    const step=niceStep(hi-lo),gz=(i,j)=>d.z[j*d.nx+i]/10,px=(i,j)=>[a[0]+i*cw,a[1]+j*ch];
+    ctx.strokeStyle='rgba(60,20,20,0.55)';ctx.lineWidth=1.1*U;const labels=[];
+    if(hi-lo>=0.5)for(let lv=Math.ceil(lo/step)*step;lv<=hi;lv+=step){ctx.beginPath();let cnt=0;
+      for(let j=0;j<d.ny-1;j++)for(let i=0;i<d.nx-1;i++){
+        const v=[gz(i,j),gz(i+1,j),gz(i+1,j+1),gz(i,j+1)],c=[px(i,j),px(i+1,j),px(i+1,j+1),px(i,j+1)],pts=[];
+        for(let e=0;e<4;e++){const v1=v[e],v2=v[(e+1)%4];if((v1<lv)!==(v2<lv)){const t=(lv-v1)/(v2-v1),p1=c[e],p2=c[(e+1)%4];pts.push([p1[0]+(p2[0]-p1[0])*t,p1[1]+(p2[1]-p1[1])*t])}}
+        if(pts.length>=2){ctx.moveTo(pts[0][0],pts[0][1]);ctx.lineTo(pts[1][0],pts[1][1]);if(pts.length===4){ctx.moveTo(pts[2][0],pts[2][1]);ctx.lineTo(pts[3][0],pts[3][1])}
+          if(++cnt%40===20)labels.push([(pts[0][0]+pts[1][0])/2,(pts[0][1]+pts[1][1])/2,lv])}}
+      ctx.stroke()}
+    labels.forEach(([x,y,lv])=>{const t=fmt(lv,step<1?1:0);ctx.font='600 '+(12*U)+'px '+FONT;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3*U;ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.strokeText(t,x,y);ctx.fillStyle='#3a1010';ctx.fillText(t,x,y)});
+    ctx.restore();
+    /* outline in red, lowest and highest points marked */
+    polys.forEach(pg=>draw(ctx,pg,P,{stroke:'#d50000',width:3*U}));
+    const mark=(pt,txt,col)=>{if(!pt)return;const [x,y]=P(pt);ctx.beginPath();ctx.arc(x,y,6*U,0,7);ctx.fillStyle=col;ctx.fill();ctx.lineWidth=2*U;ctx.strokeStyle='#fff';ctx.stroke();
+      ctx.font='700 '+(14*U)+'px '+FONT;ctx.textAlign='left';ctx.textBaseline='middle';ctx.lineWidth=3.5*U;ctx.strokeStyle='rgba(255,255,255,0.95)';ctx.strokeText(txt,x+10*U,y);ctx.fillStyle='#1a1a1a';ctx.fillText(txt,x+10*U,y)};
+    if(hi-lo>=0.1){mark(st.hi,'▲ '+fmt(hi,1)+' m','#67000d');mark(st.lo,'▼ '+fmt(lo,1)+' m','#fc9272')}
+    /* legend: colour bar in metres */
+    const lx=W-170*U,ly=box.y+140*U,lh=Math.min(320*U,box.h-230*U),lw=26*U;
+    for(let y=0;y<lh;y++){const c=ramp(1-y/lh);ctx.fillStyle='rgb('+c.join(',')+')';ctx.fillRect(lx,ly+y,lw,1.5)}
+    ctx.strokeStyle='#555';ctx.lineWidth=1*U;ctx.strokeRect(lx,ly,lw,lh);ctx.fillStyle='#1a1a1a';ctx.font=(14*U)+'px '+FONT;ctx.textAlign='left';ctx.textBaseline='middle';
+    for(let q=0;q<=4;q++){const v=hi-(hi-lo)*q/4,y=ly+lh*q/4;ctx.fillText(fmt(v,1)+' m',lx+lw+8*U,y);ctx.beginPath();ctx.moveTo(lx+lw,y);ctx.lineTo(lx+lw+4*U,y);ctx.stroke()}
+    ctx.font='600 '+(14*U)+'px '+FONT;ctx.fillText('Balandlik',lx,ly-22*U);
+    ctx.font=(12*U)+'px '+FONT;ctx.fillStyle='#666';ctx.fillText('Gorizontallar: har '+fmt(step,step<1?1:0)+' m',lx,ly+lh+24*U);
+    ctx.fillText('Manba: '+(d.src||'SRTM'),lx,ly+lh+44*U);ctx.fillText('Aniqlik: ±3–5 m',lx,ly+lh+62*U);
+    decorations(ctx,P,W,H,U,box)}
+  function relief(w,thumb){if(!dem()||!kmz())return null;w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);NOSUB=!!thumb;try{render5(big);return big.toDataURL('image/jpeg',0.9)}finally{NOSUB=false}}
+
   /* the four sheets as JPEG pictures for the PDF (A4 landscape) */
   function images(w,thumb){w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);NOSUB=!!thumb;try{return RENDER.map(fn=>{fn(big);return big.toDataURL('image/jpeg',0.9)})}finally{NOSUB=false}}
-  return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region()};
+  return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region(),dem,loadDem,relStats,render5,relief};
 })();
 
 /* first page: region, district and the KMZ outline */
@@ -3177,7 +3274,8 @@ function mapFields(){
   ds.value=d?d.name:'';ds.addEventListener('change',()=>commit(X,'A2',ds.value||null));
   out.push(qrow('Tuman (shahar)',ds,{for:'f-Xarita-A2',icon:'pin'}));
   const fi=h('input',{type:'file',accept:'.kmz,.kml',hidden:true,id:'kmzfile'});
-  const take=async f=>{if(!f)return;ui.kmzMsg='O‘qilmoqda…';ui.kmzErr=false;render();try{ui.kmzMsg='✓ '+await MAP.load(f)+'.'}catch(e){ui.kmzMsg=e&&e.message||String(e);ui.kmzErr=true}render()};
+  const take=async f=>{if(!f)return;ui.kmzMsg='O‘qilmoqda…';ui.kmzErr=false;ui.demMsg='';render();try{ui.kmzMsg='✓ '+await MAP.load(f)+'.'}catch(e){ui.kmzMsg=e&&e.message||String(e);ui.kmzErr=true;render();return}
+    render();getRelief()};
   fi.addEventListener('change',()=>{take(fi.files[0]);fi.value=''});
   const drop=h('div',{class:'kdrop',tabindex:'0',role:'button',onclick:()=>fi.click(),onkeydown:e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fi.click()}}},
     h('b',null,icon('upload',1),k?'Boshqa KMZ fayl yuklash':'KMZ faylni tanlang'),h('small',null,"yoki shu yerga tashlang · .kmz / .kml (Google Earth)"));
@@ -3185,11 +3283,15 @@ function mapFields(){
   drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('over');take(e.dataTransfer.files[0])});
   const a=MAP.area(k);
   const info=k?h('div',{class:'kinfo'},h('span',null,icon('check',1),String(V(X,'A4')||'KMZ fayl'),a?' · '+nUz(a,'#,##0')+' m² ('+nUz(a/10000,'#,##0.##')+' ga)':''),
-    h('button',{class:'lnk',type:'button',onclick:()=>{commit(X,'A3',null);commit(X,'A4',null);ui.kmzMsg='';}},"o'chirish")):null;
-  out.push(qrow('Loyiha hududi (KMZ)',h('div',{class:'kbox'},drop,fi,info,ui.kmzMsg?h('div',{class:'kmsg'+(ui.kmzErr?' err':'')},ui.kmzMsg):null),
+    h('button',{class:'lnk',type:'button',onclick:()=>{commit(X,'A3',null);commit(X,'A4',null);commit(X,'A5',null);ui.kmzMsg='';ui.demMsg='';}},"o'chirish")):null;
+  out.push(qrow('Loyiha hududi (KMZ)',h('div',{class:'kbox'},drop,fi,info,ui.kmzMsg?h('div',{class:'kmsg'+(ui.kmzErr?' err':'')},ui.kmzMsg):null,ui.demMsg?h('div',{class:'kmsg'+(ui.demErr?' err':'')},ui.demMsg):null),
     {icon:'xarita',hint:k?h('span',null,"Xaritalar «",h('a',{href:'#xarita'},'Xaritada joylashuv'),"» bo'limida."):"Yuklasangiz, viloyat, tuman va maydon o'zi aniqlanadi."}));
   return out;
 }
+/* fetch the heights of the project area (needs internet once; the result stays with the project) */
+async function getRelief(){if(getRelief.busy)return;getRelief.busy=true;ui.demMsg="Relyef ma'lumoti olinmoqda…";ui.demErr=false;render();
+  try{ui.demMsg='✓ '+await MAP.loadDem()+'.'}catch(e){ui.demMsg="Relyef ma'lumotini olib bo'lmadi — internetni tekshirib, «Relyefni olish» tugmasini qayta bosing.";ui.demErr=true}
+  getRelief.busy=false;render()}
 function xaritaPage(p){
   const r=MAP.region(),d=MAP.district(),k=MAP.kmz();
   const out=[h('div',{class:'pagehead'},h('h2',null,p.title,icon(p.k)),h('p',null,"Viloyat, tuman va KMZ fayl «",h('a',{href:'#umumiy'},"Loyiha birlamchi ma'lumotlari"),"» bo'limidan olinadi. Bu 4 ta xarita ikkala PDF hisobotga diagrammalardan keyin qo'shiladi."))];
@@ -3198,6 +3300,13 @@ function xaritaPage(p){
   ['1-rasm · O‘zbekiston Respublikasi','2-rasm · Viloyat','3-rasm · Tuman va loyiha hududi','4-rasm · Loyiha hududi o‘lchamlari'].forEach((t,i)=>{
     const cv=h('canvas',{width:'1200',height:'849',class:'mapcv','aria-label':t});MAP.RENDER[i](cv);
     out.push(h('section',{class:'card mapc'},h('h3',null,icon('xarita',1),t),cv))});
+  {const cv=h('canvas',{width:'1200',height:'849',class:'mapcv','aria-label':'5-rasm · Loyiha hududi relyefi'});MAP.render5(cv);
+    const st=MAP.relStats();
+    out.push(h('section',{class:'card mapc'},h('h3',null,icon('xarita',1),'5-rasm · Loyiha hududi relyefi'),
+      h('p',{class:'fine'},"Balandlik ochiq sun'iy yo'ldosh ma'lumotidan olinadi (SRTM / Copernicus, 30 m katak, aniqligi ±3–5 m). Umumiy qiyalikni ko'rsatadi, geodezik s'yomka o'rnini bosmaydi."),
+      cv,ui.demMsg?h('p',{class:'kmsg'+(ui.demErr?' err':'')},ui.demMsg):null,
+      k?h('div',{class:'mapact'},h('button',{class:'btn',type:'button',disabled:!!getRelief.busy,onclick:getRelief},icon('refresh',1),MAP.dem()?'Relyefni qayta olish':'Relyefni olish'),
+        st?h('span',{class:'fine'},'Eng past '+nUz(st.min,'#,##0.0')+' m · eng baland '+nUz(st.max,'#,##0.0')+' m · o‘rtacha '+nUz(st.avg,'#,##0.0')+' m'):null):null))}
   return out;
 }
 
@@ -3287,7 +3396,8 @@ function reportDoc(full,only){
   /* 4b. the four maps in one row under the charts */
   if(MAP.ready()){const ims=MAP.images(1200,true);
     c.push({unbreakable:true,margin:[0,4,0,0],stack:[{text:'Xaritada joylashuv',style:'h2',margin:[0,4,0,6]},
-      {columns:ims.map((im,i)=>({width:'*',stack:[{image:im,width:122,alignment:'center'},{text:''}]})),columnGap:6}]})}
+      {columns:ims.map((im,i)=>({width:'*',stack:[{image:im,width:122,alignment:'center'},{text:''}]})),columnGap:6}]});
+    const rel=MAP.relief(1200,true);if(rel)c.push({margin:[0,8,0,0],columns:[{width:'*',stack:[{image:rel,width:122,alignment:'center'}]},{width:'*',text:''},{width:'*',text:''},{width:'*',text:''}],columnGap:6})}
   /* 5. full report: each section, then each object and LOT */
   const head=(t,am)=>({columns:[{text:t,fontSize:13,bold:true,color:NAVY},{text:am===null?'':mln(am)+" mln so'm",fontSize:13,bold:true,color:NAVY,alignment:'right',width:150}],margin:[0,22,0,6],headlineLevel:1});
   let firstSec=true;
@@ -3378,7 +3488,7 @@ window.infraReport=reportDoc;
 function mapDoc(){
   const proj=String(V('Jamlama','C5')||'Loyiha');
   return {pageSize:'A4',pageOrientation:'landscape',pageMargins:[20,20,20,20],info:{title:proj+' — xaritada joylashuv'},defaultStyle:{font:'Roboto'},
-    content:MAP.images().map((im,i)=>({image:im,fit:[802,555],alignment:'center',pageBreak:i?'before':undefined}))};
+    content:MAP.images().concat(MAP.relief()||[]).map((im,i)=>({image:im,fit:[802,555],alignment:'center',pageBreak:i?'before':undefined}))};
 }
 window.infraMapDoc=mapDoc;window.infraCell={V,N};
 let dl=null;const PDFLIB=['https://cdn.jsdelivr.net/npm/pdfmake@0.2.12/build/pdfmake.min.js','https://cdn.jsdelivr.net/npm/pdfmake@0.2.12/build/vfs_fonts.js'];
@@ -3517,7 +3627,7 @@ async function refresh(){
   catch(e){loadErr=e&&(e.status===401||e.status===403)?"Loyihalarni yuklab bo'lmadi: kirish kaliti yaroqsiz yoki muddati tugagan.":"Loyihalarni yuklab bo'lmadi. Internetni tekshirib, qayta urinib ko'ring."}
   loaded=true;if(!cur)render();
 }
-function resetUiState(){Object.assign(ui,{kmzMsg:'',kmzErr:false,lotOpen:{},lots:0,areas:1,pipes:{},segs:{},objs:{b:1,p:0},zones:1,showAll:{},q:'',cat:'',old:false,pe:null,leave:false,del:null})}
+function resetUiState(){Object.assign(ui,{kmzMsg:'',kmzErr:false,demMsg:'',demErr:false,lotOpen:{},lots:0,areas:1,pipes:{},segs:{},objs:{b:1,p:0},zones:1,showAll:{},q:'',cat:'',old:false,pe:null,leave:false,del:null})}
 function openProject(id,cells,isDirty){
   cur=id;resetUiState();const p=projects[id];
   const cl=Object.assign({},cells||(p?p.cells:{}));if('Jamlama!C8' in cl){if(!('Jamlama!F12' in cl))cl['Jamlama!F12']=cl['Jamlama!C8'];delete cl['Jamlama!C8']}
