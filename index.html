@@ -2114,7 +2114,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794594056';
+const BUILD_ID='1794594814';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
     if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
@@ -3437,6 +3437,14 @@ const MAP=(function(){
     if(rows.length>max){txt(ctx,'… yana '+(rows.length-max)+' ta',x+6*U,y+rh/2,11*U,{halo:false,col:'#777'});y+=rh}
     return y}
   function arcTo(ctx,a,b,bend){const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=b[0]-a[0],dy=b[1]-a[1],cx=mx-dy*bend,cy=my+dx*bend;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.quadraticCurveTo(cx,cy,b[0],b[1]);return [cx,cy]}
+  /* the project on a small-scale map: a red ring with the project's own outline inside it, enlarged and filled red */
+  function siteMark(ctx,x,y,r,U){
+    ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fillStyle='rgba(255,255,255,0.92)';ctx.fill();
+    const polys=(kmz()||[]).filter(g=>g.type==='Polygon');
+    if(polys.length){const box={x:x-r*0.62,y:y-r*0.62,w:r*1.24,h:r*1.24},Q=makeProj(polys,0,0,box);
+      polys.forEach(g=>{trace(ctx,g,Q);ctx.fillStyle='#e53935';ctx.fill('evenodd');ctx.lineJoin='round';ctx.lineWidth=1.2*U;ctx.strokeStyle='#8e0000';ctx.stroke()})}
+    else{ctx.beginPath();ctx.arc(x,y,r*0.45,0,7);ctx.fillStyle='#e53935';ctx.fill()}
+    ring(ctx,x,y,r,'#e00000',3,U)}
   /* sheet 8: Uzbekistan, railway, the region's station and airport, planes coming in from abroad */
   function render8(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,r=region();
     if(!r){placeholder(ctx,W,H,U,"Viloyat tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
@@ -3460,7 +3468,7 @@ const MAP=(function(){
     /* station and airport of the region */
     const [sx,sy]=P(RN[ra.st]);emoji(ctx,'🚆',sx-16*U,sy+18*U,24*U);dot(ctx,ax,ay,6*U,'#1e5ad2','#fff',U);emoji(ctx,'✈️',ax+16*U,ay-16*U,22*U);
     /* the project, red ring */
-    const s=site();if(s){const [px,py]=P(s);ring(ctx,px,py,13*U,'#e00000',3,U)}
+    const s=site();if(s){const [px,py]=P(s);siteMark(ctx,px,py,16*U,U)}
     /* table */
     const tx=mb.x+mb.w+30*U,tw=W-tx-30*U;let y=box.y-6*U;
     y=panel(ctx,tx,y,tw,U,'Viloyat markazlaridan · taxminiy vaqt',[['Shahar',0.36],['🚆 Poyezd',0.32,'r'],['✈️ Samolyot',0.32,'r']],ra.rows.map(x=>[x.n,hm(x.rail),x.air===null?'—':hm(x.air)]),13);
@@ -3498,7 +3506,7 @@ const MAP=(function(){
     const rc=RC[r.id],[qx,qy]=P([rc[1],rc[2]]);ctx.save();ctx.translate(qx,qy);ctx.beginPath();for(let i=0;i<10;i++){const rr=i%2?5*U:12*U,a=-Math.PI/2+i*Math.PI/5;ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}ctx.closePath();
     ctx.fillStyle='#f2b705';ctx.fill();ctx.lineWidth=1.6*U;ctx.strokeStyle='#5a4300';ctx.stroke();ctx.restore();
     {const t=rc[0]+' (viloyat markazi)';ctx.font='700 '+(13*U)+'px '+FONT;const right=qx+14*U+ctx.measureText(t).width<mb.x+mb.w;txt(ctx,t,right?qx+14*U:qx-14*U,qy+12*U,13*U,{w:'700',col:'#5a4300',al:right?'left':'right'})}
-    if(s){const [px,py]=P(s);ring(ctx,px,py,15*U,'#e00000',3.2,U);txt(ctx,'Loyiha hududi',px,py+28*U,13*U,{w:'700',al:'center',col:'#b00000'})}
+    if(s){const [px,py]=P(s);siteMark(ctx,px,py,18*U,U);txt(ctx,'Loyiha hududi',px,py+31*U,13*U,{w:'700',al:'center',col:'#b00000'})}
     /* key */
     {const ky=H-30*U;let kx=mb.x+mb.w*0.28;[['#f39c12',5,"Magistral yo'l"],['#fdd36a',3.2,"Asosiy yo'l"]].forEach(([c,w,t])=>{ctx.beginPath();ctx.moveTo(kx,ky);ctx.lineTo(kx+26*U,ky);ctx.strokeStyle='#8a5a00';ctx.lineWidth=(w+1.4)*U;ctx.stroke();ctx.strokeStyle=c;ctx.lineWidth=w*U;ctx.stroke();txt(ctx,t,kx+32*U,ky,11*U,{halo:false,col:'#444'});kx+=135*U});
       dot(ctx,kx+6*U,ky,4.2*U,'#2e7d32','#fff',U);txt(ctx,'tuman markazi',kx+16*U,ky,11*U,{halo:false,col:'#444'})}
