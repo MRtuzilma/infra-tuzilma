@@ -2113,7 +2113,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794591954';
+const BUILD_ID='1794592708';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
     if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
@@ -3379,19 +3379,27 @@ const MAP=(function(){
     while(st.length){const [a,b]=st.pop();let md=0,mi=-1;for(let i=a+1;i<b;i++){const d=segDist(pts[i],pts[a],pts[b]);if(d>md){md=d;mi=i}}if(md>tol){keep[mi]=1;st.push([a,mi],[mi,b])}}
     return pts.filter((_,i)=>keep[i]).map(p=>[r6(p[0]),r6(p[1])])}
   const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  /* main roads of the region (trunk and primary, OpenStreetMap) and driving times (OSRM table) */
+  async function overpass(q){let err=null;
+    for(const host of ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter']){
+      try{const res=await fetch(host+'?data='+encodeURIComponent(q));if(!res.ok)throw new Error(String(res.status));return await res.json()}catch(e){err=e}}
+    throw err||new Error('overpass')}
   async function loadRoads(progress){
     const s=site(),r=region();if(!s||!r)throw new Error('Loyiha joyi aniqlanmagan.');
-    const o=origins(),all=o.reg.concat(o.dis),out={k:roadKey(),src:'OSRM',reg:[],dis:[]};
+    const o=origins(),all=o.reg.concat(o.dis),out={k:roadKey(),src:'OSRM',reg:[],dis:[],net:[]};
+    if(progress)progress("asosiy yo'llar");
+    try{const b=bboxOf([r.geom]),pad=0.08,q='[out:json][timeout:120];way["highway"~"^(motorway|trunk|primary)$"]('+[b[1]-pad,b[0]-pad,b[3]+pad,b[2]+pad].map(v=>v.toFixed(4)).join(',')+');out geom qt;';
+      const js=await overpass(q);(js.elements||[]).forEach(e=>{if(!e.geometry||e.geometry.length<2)return;const t=e.tags||{},cls=/motorway|trunk/.test(t.highway)?0:1;
+        out.net.push([cls,String(t.ref||'').split(';')[0],simplify(e.geometry.map(g=>[g.lon,g.lat]),cls?0.0025:0.0015)])})}catch(e){out.netErr=1}
+    if(progress)progress('vaqtlar');
     const q=a=>a.map(c=>c[0].toFixed(5)+','+c[1].toFixed(5)).join(';');
     let tbl=null;try{const res=await fetch(OSRM+'/table/v1/driving/'+q([s].concat(all.map(x=>x.c)))+'?sources='+all.map((_,i)=>i+1).join(';')+'&destinations=0&annotations=duration,distance');
       if(res.ok){const j=await res.json();if(j.code==='Ok')tbl=j}}catch(e){}
     if(!tbl)out.src='taxmin';
-    for(let i=0;i<all.length;i++){const x=all[i],row={n:x.n,c:[r6(x.c[0]),r6(x.c[1])]};
+    all.forEach((x,i)=>{const row={n:x.n,c:[r6(x.c[0]),r6(x.c[1])]};
       if(tbl&&tbl.durations[i]&&tbl.durations[i][0]!=null){row.s=Math.round(tbl.durations[i][0]);row.m=Math.round(tbl.distances[i][0])}
-      else{const km=gc(x.c,s)*1.35;row.s=Math.round(km/60*3600);row.m=Math.round(km*1000);row.est=1}
-      if(tbl){try{if(progress)progress(i+1,all.length);const res=await fetch(OSRM+'/route/v1/driving/'+q([x.c,s])+'?overview=simplified&geometries=geojson');
-        if(res.ok){const j=await res.json();if(j.code==='Ok'&&j.routes[0])row.g=simplify(j.routes[0].geometry.coordinates,x.reg?0.01:0.003)}}catch(e){}await wait(250)}
-      (x.reg?out.reg:out.dis).push(row)}
+      else{const km=gc(x.c,s)*1.3;row.s=Math.round(km/65*3600);row.m=Math.round(km*1000);row.est=1}
+      (x.reg?out.reg:out.dis).push(row)});
     commit(X,'A7',JSON.stringify(out));return out}
   /* ----- drawing helpers ----- */
   function emoji(ctx,ch,x,y,size){ctx.save();ctx.font=size+'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(ch,x,y);ctx.restore()}
@@ -3438,37 +3446,48 @@ const MAP=(function(){
       txt(ctx,'🚆 vokzaldan ~'+fmt(ra.toSite.st,0)+' km · ✈️ aeroportdan ~'+fmt(ra.toSite.ap,0)+' km',tx,y,11.5*U,{halo:false,col:'#333'});y+=16*U}
     txt(ctx,"Poyezd: Afrosiyob ~130, boshqa ~55 km/soat; samolyot: to'g'ri reys hisobida. Taxminiy.",tx,Math.min(H-28*U,y+10*U),10*U,{halo:false,col:'#888'});
     decorations(ctx,P,W,H,U,mb)}
-  /* sheet 9: the region, its centre and district centres, driving routes to the project */
+  /* sheet 9: the region with its main roads (small cars on them), its centre, district centres and the project;
+     on the right, driving times: first from the other regions' centres, then from this region's district centres */
   function render9(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,r=region(),s=site();
     if(!r){placeholder(ctx,W,H,U,"Viloyat tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
-    const rd=roads(),box=frame(ctx,W,H,U,'Avtomobil yo‘li orqali yetib kelish','9-rasm · '+r.name+(rd&&rd.src==='OSRM'?' · yo‘llar: OpenStreetMap':' · to‘g‘ri chiziq bo‘yicha taxmin')),
-      mb={x:box.x-20*U,y:box.y,w:box.w*0.62,h:box.h},P=makeProj([r.geom],W,H,mb);
-    r.districts.forEach(x=>draw(ctx,x.geom,P,{stroke:COL.inner,width:1*U}));draw(ctx,r.geom,P,{stroke:COL.line,width:2.2*U});
-    if(!s){placeholder(ctx,W,H,U,'Loyiha joyi aniqlanmagan');return}
-    const [px,py]=P(s);
+    const rd=roads(),box=frame(ctx,W,H,U,'Avtomobil yo‘li orqali yetib kelish','9-rasm · '+r.name+' · asosiy avtomobil yo‘llari'),
+      mb={x:box.x-20*U,y:box.y,w:box.w*0.6,h:box.h},P=makeProj([r.geom],W,H,mb);
+    ctx.fillStyle='#fafafa';trace(ctx,r.geom,P);ctx.fill('evenodd');
+    r.districts.forEach(x=>draw(ctx,x.geom,P,{stroke:COL.inner,width:1*U}));
+    /* main roads: casing, then colour; trunk roads wider */
+    const net=rd&&rd.net?rd.net:[];
     ctx.save();ctx.beginPath();ctx.rect(mb.x,mb.y,mb.w,mb.h);ctx.clip();
-    const line=(row,col,w,dash)=>{const pts=(row.g&&row.g.length>1?row.g:[row.c,s]).map(P);ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
-      ctx.lineJoin='round';ctx.lineCap='round';ctx.setLineDash(dash||[]);ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.lineWidth=w+2.5*U;ctx.stroke();ctx.strokeStyle=col;ctx.lineWidth=w;ctx.stroke();ctx.setLineDash([]);return pts};
-    if(rd){rd.dis.forEach(x=>line(x,'rgba(46,125,50,0.85)',2*U,x.g?null:[6*U,5*U]));
-      rd.reg.forEach(x=>{const pts=line(x,'rgba(21,101,192,0.9)',3*U,x.g?null:[8*U,6*U]);
-        /* where a route from another region comes into view: a car and the city name */
-        let e=null;for(let i=0;i<pts.length;i++){const p=pts[i];if(p[0]>=mb.x+14*U&&p[0]<=mb.x+mb.w-14*U&&p[1]>=mb.y+14*U&&p[1]<=mb.y+mb.h-14*U){e=p;break}}
-        if(e&&Math.hypot(e[0]-px,e[1]-py)>60*U){emoji(ctx,'🚗',e[0],e[1],20*U);txt(ctx,x.n,e[0],e[1]+16*U,11*U,{al:'center',col:'#0d47a1'})}})}
+    [1,0].forEach(cls=>{net.filter(w=>w[0]===cls).forEach(w=>{const pts=w[2].map(P);ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
+      ctx.lineJoin='round';ctx.lineCap='round';ctx.strokeStyle='#8a5a00';ctx.lineWidth=(cls?3.2:5)*U;ctx.stroke();ctx.strokeStyle=cls?'#fdd36a':'#f39c12';ctx.lineWidth=(cls?2:3.4)*U;ctx.stroke()})});
     ctx.restore();
+    draw(ctx,r.geom,P,{stroke:COL.line,width:2.2*U});
+    /* small cars along the trunk roads, spread out; road numbers on the longest ones */
+    const placed=[],free=(x,y,d)=>placed.every(p=>Math.hypot(p[0]-x,p[1]-y)>d)&&x>mb.x+12*U&&x<mb.x+mb.w-12*U&&y>mb.y+12*U&&y<mb.y+mb.h-12*U;
+    const along=(w,step,fn)=>{const pts=w[2].map(P);let acc=step/2;for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]);while(acc<=L){const t=acc/L;fn(a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t);acc+=step}acc-=L}};
+    const sorted=net.slice().sort((a,b)=>a[0]-b[0]);let cars=0;
+    sorted.forEach(w=>along(w,150*U,(x,y)=>{if(cars<16&&free(x,y,95*U)){placed.push([x,y]);emoji(ctx,'🚗',x,y-1*U,15*U);cars++}}));
+    const refs={};net.forEach(w=>{if(!w[1])return;const len=w[2].reduce((s,p,i,a)=>i?s+Math.hypot(p[0]-a[i-1][0],p[1]-a[i-1][1]):0,0);if(!refs[w[1]]||len>refs[w[1]].len)refs[w[1]]={len,w}});
+    Object.values(refs).sort((a,b)=>b.len-a.len).slice(0,6).forEach(({w})=>{const pts=w[2].map(P),m=pts[Math.floor(pts.length/2)];if(!m||!free(m[0],m[1],50*U))return;placed.push(m);
+      ctx.font='700 '+(11*U)+'px '+FONT;const tw=ctx.measureText(w[1]).width+10*U;ctx.fillStyle='#fff';ctx.strokeStyle='#8a5a00';ctx.lineWidth=1.4*U;
+      ctx.beginPath();ctx.roundRect?ctx.roundRect(m[0]-tw/2,m[1]-9*U,tw,18*U,4*U):ctx.rect(m[0]-tw/2,m[1]-9*U,tw,18*U);ctx.fill();ctx.stroke();txt(ctx,w[1],m[0],m[1],11*U,{w:'700',al:'center',halo:false,col:'#5a3a00'})});
     /* district centres, region centre, project */
-    const o=origins();o.dis.forEach(x=>{const [cx,cy]=P(x.c);dot(ctx,cx,cy,4*U,'#2e7d32','#fff',U);txt(ctx,x.n,cx+6*U,cy-8*U,10.5*U,{w:'500',col:'#1b5e20'})});
+    const o=origins();o.dis.forEach(x=>{const [cx,cy]=P(x.c);dot(ctx,cx,cy,4.2*U,'#2e7d32','#fff',U);txt(ctx,x.n,cx+6*U,cy-8*U,10.5*U,{w:'500',col:'#1b5e20'})});
     const rc=RC[r.id],[qx,qy]=P([rc[1],rc[2]]);ctx.save();ctx.translate(qx,qy);ctx.beginPath();for(let i=0;i<10;i++){const rr=i%2?5*U:12*U,a=-Math.PI/2+i*Math.PI/5;ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}ctx.closePath();
-    ctx.fillStyle='#f2b705';ctx.fill();ctx.lineWidth=1.6*U;ctx.strokeStyle='#5a4300';ctx.stroke();ctx.restore();txt(ctx,rc[0]+' (viloyat markazi)',qx+14*U,qy+12*U,13*U,{w:'700',col:'#5a4300'});
-    ring(ctx,px,py,15*U,'#e00000',3.2,U);emoji(ctx,'🚗',px+24*U,py-20*U,22*U);txt(ctx,'Loyiha hududi',px,py+28*U,13*U,{w:'700',al:'center',col:'#b00000'});
-    /* tables */
-    const tx=mb.x+mb.w+30*U,tw=W-tx-30*U;let y=box.y-6*U;
-    if(!rd){txt(ctx,"Yo'llar hali hisoblanmagan.",tx,y+10*U,13*U,{halo:false,col:'#777'});decorations(ctx,P,W,H,U,mb);return}
-    const fm=x=>(x.est?'~':'')+hm(x.s/3600),km=x=>fmt(x.m/1000,0)+' km';
-    y=panel(ctx,tx,y,tw,U,'🚗 Viloyat markazlaridan',[['Shahar',0.44],['Masofa',0.26,'r'],['Vaqt',0.3,'r']],rd.reg.slice().sort((a,b)=>a.s-b.s).map(x=>[x.n,km(x),fm(x)]),13);
-    y=panel(ctx,tx,y+10*U,tw,U,'🚗 Tuman markazlaridan',[['Tuman',0.44],['Masofa',0.26,'r'],['Vaqt',0.3,'r']],rd.dis.slice().sort((a,b)=>a.s-b.s).map(x=>[x.n,km(x),fm(x)]),Math.max(4,Math.floor((H-60*U-y-40*U)/(17.5*U))));
+    ctx.fillStyle='#f2b705';ctx.fill();ctx.lineWidth=1.6*U;ctx.strokeStyle='#5a4300';ctx.stroke();ctx.restore();
+    {const t=rc[0]+' (viloyat markazi)';ctx.font='700 '+(13*U)+'px '+FONT;const right=qx+14*U+ctx.measureText(t).width<mb.x+mb.w;txt(ctx,t,right?qx+14*U:qx-14*U,qy+12*U,13*U,{w:'700',col:'#5a4300',al:right?'left':'right'})}
+    if(s){const [px,py]=P(s);ring(ctx,px,py,15*U,'#e00000',3.2,U);txt(ctx,'Loyiha hududi',px,py+28*U,13*U,{w:'700',al:'center',col:'#b00000'})}
+    /* key */
+    {const ky=H-30*U;let kx=mb.x+mb.w*0.28;[['#f39c12',5,"Magistral yo'l"],['#fdd36a',3.2,"Asosiy yo'l"]].forEach(([c,w,t])=>{ctx.beginPath();ctx.moveTo(kx,ky);ctx.lineTo(kx+26*U,ky);ctx.strokeStyle='#8a5a00';ctx.lineWidth=(w+1.4)*U;ctx.stroke();ctx.strokeStyle=c;ctx.lineWidth=w*U;ctx.stroke();txt(ctx,t,kx+32*U,ky,11*U,{halo:false,col:'#444'});kx+=135*U});
+      dot(ctx,kx+6*U,ky,4.2*U,'#2e7d32','#fff',U);txt(ctx,'tuman markazi',kx+16*U,ky,11*U,{halo:false,col:'#444'})}
     decorations(ctx,P,W,H,U,mb);
-    /* small key under the map */
-    const ky=H-30*U;let kx=mb.x+mb.w*0.3;[['rgba(21,101,192,0.9)','viloyatlardan'],['rgba(46,125,50,0.85)','tumanlardan']].forEach(([c,t])=>{ctx.beginPath();ctx.moveTo(kx,ky);ctx.lineTo(kx+26*U,ky);ctx.strokeStyle=c;ctx.lineWidth=3*U;ctx.stroke();txt(ctx,t,kx+32*U,ky,11*U,{halo:false,col:'#444'});kx+=130*U})}
+    /* tables: regions first, then districts */
+    const tx=mb.x+mb.w+28*U,tw=W-tx-30*U;let y=box.y-6*U;
+    if(!rd){txt(ctx,"Yo'llar hali hisoblanmagan.",tx,y+10*U,13*U,{halo:false,col:'#777'});return}
+    if(!net.length)txt(ctx,"Asosiy yo'llar xaritasi olinmadi.",mb.x+10*U,mb.y+10*U,12*U,{col:'#b00000'});
+    const fm=x=>(x.est?'~':'')+hm(x.s/3600),km=x=>(x.est?'~':'')+fmt(x.m/1000,0)+' km';
+    y=panel(ctx,tx,y,tw,U,'🚗 Viloyat markazlaridan loyiha hududigacha',[['Shahar',0.44],['Masofa',0.26,'r'],['Vaqt',0.3,'r']],rd.reg.slice().sort((a,b)=>a.s-b.s).map(x=>[x.n,km(x),fm(x)]),13);
+    y=panel(ctx,tx,y+10*U,tw,U,'🚗 '+r.name.replace(/ viloyati$| Respublikasi$/,'')+' tumanlaridan',[['Tuman',0.44],['Masofa',0.26,'r'],['Vaqt',0.3,'r']],rd.dis.slice().sort((a,b)=>a.s-b.s).map(x=>[x.n,km(x),fm(x)]),Math.max(4,Math.floor((H-40*U-y-30*U)/(17.5*U))));
+    txt(ctx,rd.src==='OSRM'?"Vaqt: OpenStreetMap yo'llari bo'yicha, tirbandliksiz.":"~ — taxmin: to'g'ri masofa ×1,3, 65 km/soat.",tx,Math.min(H-26*U,y+12*U),10*U,{halo:false,col:'#888'})}
   function extra(w,thumb){const out=[];const r=relief(w,thumb);if(r)out.push(r);if(pop()&&region()){[render6,render7].forEach(fn=>{if(fn===render7&&!district())return;
       const big=document.createElement('canvas');big.width=w||2400;big.height=Math.round(big.width/1.4142);NOSUB=!!thumb;try{fn(big);out.push(big.toDataURL('image/jpeg',0.9))}finally{NOSUB=false}})}
     if(region()){[render8,render9].forEach(fn=>{const big=document.createElement('canvas');big.width=w||2400;big.height=Math.round(big.width/1.4142);NOSUB=!!thumb;try{fn(big);out.push(big.toDataURL('image/jpeg',0.9))}finally{NOSUB=false}})}
@@ -3511,8 +3530,8 @@ async function getPop(){if(getPop.busy||!MAP.region())return;getPop.busy=true;ui
   try{const n=await MAP.loadPop();ui.popMsg='✓ Aholi zichligi uchun '+nUz(n)+' ta aholi punkti olindi.'}catch(e){ui.popMsg="Aholi punktlari ma'lumotini olib bo'lmadi — internetni tekshirib, «Aholi zichligini olish» tugmasini bosing.";ui.popErr=true}
   getPop.busy=false;render()}
 async function getRoads(){if(getRoads.busy||!MAP.region()||!MAP.site())return;getRoads.busy=true;ui.roadMsg="Yo'llar hisoblanmoqda…";ui.roadErr=false;render();
-  try{const d=await MAP.loadRoads((i,n)=>{ui.roadMsg="Yo'llar hisoblanmoqda… "+i+'/'+n;const e=document.getElementById('roadmsg');if(e)e.textContent=ui.roadMsg});
-    ui.roadMsg=d.src==='OSRM'?"✓ Yo'llar va vaqtlar OpenStreetMap yo'l tarmog'i bo'yicha hisoblandi.":"Yo'nalish xizmatiga ulanib bo'lmadi — vaqtlar to'g'ri chiziq bo'yicha taxminan (60 km/soat) hisoblandi.";ui.roadErr=d.src!=='OSRM'}
+  try{const d=await MAP.loadRoads(st=>{ui.roadMsg="Yo'llar hisoblanmoqda… ("+st+')';const e=document.getElementById('roadmsg');if(e)e.textContent=ui.roadMsg});
+    ui.roadMsg=(d.netErr?"Asosiy yo'llar xaritasini olib bo'lmadi. ":"✓ "+d.net.length+" ta asosiy yo'l bo'lagi olindi. ")+(d.src==='OSRM'?"Vaqtlar OpenStreetMap yo'llari bo'yicha hisoblandi.":"Vaqtlarni yo'nalish xizmatidan olib bo'lmadi — taxminiy hisoblandi.");ui.roadErr=!!d.netErr||d.src!=='OSRM'}
   catch(e){ui.roadMsg="Yo'llarni hisoblab bo'lmadi.";ui.roadErr=true}
   getRoads.busy=false;render()}
 /* when the map data is missing, fetch it once by itself */
@@ -3547,7 +3566,7 @@ function xaritaPage(p){
     const cv=h('canvas',{width:'1200',height:'849',class:'mapcv','aria-label':t});fn(cv);
     out.push(h('section',{class:'card mapc'},h('h3',null,icon('xarita',1),t),
       i===0?h('p',{class:'fine'},"Temiryo'l, vokzal, aeroport va reyslar sxematik; vaqtlar taxminiy (poyezd tezligi va to'g'ri reys bo'yicha)."):
-        h('p',{class:'fine'},"Avtomobil yo'llari va vaqtlari OpenStreetMap yo'l tarmog'i bo'yicha (OSRM) hisoblanadi; tirbandlik hisobga olinmaydi."),
+        h('p',{class:'fine'},"Viloyatning asosiy (magistral va respublika) yo'llari OpenStreetMap'dan olinadi. Vaqtlar: avval viloyat markazlaridan, keyin shu viloyat tumanlaridan — yo'l tarmog'i bo'yicha, tirbandliksiz."),
       cv,i===1?h('div',{class:'mapact'},h('button',{class:'btn',type:'button',disabled:!!getRoads.busy||!MAP.site(),onclick:getRoads},icon('refresh',1),MAP.roads()?"Yo'llarni qayta hisoblash":"Yo'llarni hisoblash"),
         ui.roadMsg?h('span',{class:'kmsg'+(ui.roadErr?' err':''),id:'roadmsg'},ui.roadMsg):null):null))})}
   return out;
