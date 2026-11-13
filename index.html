@@ -2116,7 +2116,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794600334';
+const BUILD_ID='1794600972';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
     if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
@@ -3551,158 +3551,60 @@ const MAP=(function(){
     days.forEach(({sd,col,t})=>{const v=[t,sd.rise?hmm(sd.rise.min):'—',sd.set?hmm(sd.set.min):'—',sd.rise&&sd.set?hmm(sd.set.min-sd.rise.min):'—',fmt(sd.noon.alt,0)+'°'];let cx=x;
       ctx.fillStyle=col;ctx.fillRect(x,y+3*U,3*U,rh-6*U);v.forEach((s,i)=>{const c=cols[i];txt(ctx,s,c[2]?cx+c[1]*w-5*U:cx+9*U,y+rh/2,10.5*U,{al:c[2]?'right':'left',halo:false,w:i?'500':'600'});cx+=c[1]*w});y+=rh});
     txt(ctx,'Manba: Open-Meteo (ERA5 qayta tahlili), quyosh — astronomik hisob.',x,Math.min(H-24*U,y+8*U),9*U,{halo:false,col:'#999',bl:'top'})}
-  /* ===== sheets 10–11: trees, shrubs and flowers suited to the site. Picked from a catalogue by the region's climate zone,
-     the coldest winter night, yearly rain, soil salinity and height above sea; each drawn as its own illustration ===== */
-  const ZONE={qoraqalpogiston:'arid',xorazm:'arid',buxoro:'arid',navoiy:'arid',samarqand:'central',jizzax:'central',sirdaryo:'central',qashqadaryo:'central',
-    surxondaryo:'south',andijon:'east',namangan:'east',fargona:'east',toshkent:'east',toshkent_sh:'east'};
-  const ZNAME={arid:'cho‘l va quruq mintaqa',central:'markaziy mintaqa',south:'janubiy issiq mintaqa',east:'sharqiy vodiy va tog‘oldi mintaqasi'};
-  const ZMIN={arid:-28,central:-22,south:-12,east:-24},ZRAIN={arid:110,central:330,south:180,east:380};
-  const SALTY={qoraqalpogiston:2,xorazm:2,buxoro:2,navoiy:1,sirdaryo:2,jizzax:1,qashqadaryo:1,surxondaryo:1};
-  /* id, name, latin, drawing, height, crown, cold (°C), water 1 little…3 much, drought 1…3, salt 0…2, zones, evergreen, bloom, extra, spacing m */
-  const TREES=[
-    ['chinor','Sharq chinori','Platanus orientalis','spread',[25,30],[15,20],-25,3,1,0,'central east south',0,null,'Keng soya beradi, yuzlab yil yashaydi; ko‘chalar va maydonlar uchun.',10],
-    ['qayragoch','Mayda bargli qayrag‘och','Ulmus pumila','round',[10,15],[8,10],-40,1,3,2,'arid central east south',0,null,'Tez o‘sadi, qurg‘oqchilik va sho‘rga juda chidamli.',6],
-    ['jiyda','Jiyda','Elaeagnus angustifolia','small',[5,7],[5,6],-30,1,3,2,'arid central south east',0,['may–iyun','sariq, xushbo‘y'],'Kumushrang barg, mevali; sho‘r yerlarni ko‘kalamzorlashtiradi.',5],
-    ['tut','Oq tut','Morus alba','round',[10,15],[8,12],-30,2,2,1,'arid central south east',0,null,'Mevali, quyuq soya beradi; mahalliy sharoitga moslashgan.',7],
-    ['akatsiya','Oq akatsiya','Robinia pseudoacacia','oval',[15,20],[8,10],-30,1,3,1,'arid central south east',0,['may','oq, xushbo‘y shingil'],'Tez o‘sadi, asal beradi, tuproqni azot bilan boyitadi.',6],
-    ['sofora','Yapon soforasi','Styphnolobium japonicum','round',[15,20],[10,12],-25,2,3,1,'central south east',0,['iyul–avgust','sarg‘ish-oq'],'Issiq, chang va gazga chidamli; yozda kech gullaydi.',8],
-    ['eldar','Eldar qarag‘ayi','Pinus eldarica','pine',[15,20],[6,8],-22,1,3,1,'central south east arid',1,null,'Doim yashil; issiq va qurg‘oqchilikka chidamli igna bargli.',6],
-    ['archa','Virginiya archasi','Juniperus virginiana','cone',[10,15],[3,5],-35,1,3,1,'arid central south east',1,null,'Doim yashil, havoni tozalaydi; qishda ham manzara beradi.',4],
-    ['shumtol','Yashil shumtol','Fraxinus pennsylvanica','oval',[15,20],[8,10],-35,2,2,1,'arid central south east',0,null,'Tez o‘sadi, sovuq va sho‘rga o‘rtacha chidamli.',7],
-    ['katalpa','Katalpa','Catalpa bignonioides','round',[10,15],[8,10],-25,2,2,0,'central south east',0,['iyun','oq, katta shingil'],'Yirik yuraksimon barglari va chiroyli gullari bilan bezak.',8],
-    ['turangil','Turang‘il','Populus euphratica','round',[10,15],[6,8],-30,1,3,2,'arid south',0,null,'Amudaryo to‘qaylarining mahalliy daraxti; sho‘rga juda chidamli.',6],
-    ['terak','Bolle teragi','Populus bolleana','column',[25,30],[3,4],-35,3,1,1,'central east',0,null,'Ustunsimon, tez o‘sadi; ariq bo‘ylari va shamoldan himoya qatorlari uchun.',4],
-    ['sarv','Doim yashil sarv','Cupressus sempervirens','flame',[15,20],[2,3],-15,1,2,0,'south central',1,null,'Doim yashil ustunsimon; xiyobon va kirish yo‘laklarini bezaydi.',3],
-    ['albitsiya','Ipak akatsiya','Albizia julibrissin','spread',[6,10],[6,8],-18,2,2,0,'south central east',0,['iyun–avgust','pushti, ipaksimon'],'Pushti ipaksimon gullari bilan juda chiroyli; issiqsevar.',6],
-    ['yongoq','Grek yong‘og‘i','Juglans regia','spread',[15,25],[12,15],-28,3,1,0,'central east south',0,null,'Mevali, uzoq yashaydi; keng soya beradi.',10],
-    ['kashtan','Ot kashtani','Aesculus hippocastanum','oval',[15,20],[10,12],-30,3,1,0,'east',0,['may','oq gul shamlari'],'Bahorda oq gul shamlari bilan manzarali.',8],
-    ['kelt','Kavkaz kelti','Celtis caucasica','round',[10,15],[8,10],-25,1,3,1,'central south east',0,null,'Mahalliy tur; toshloq va quruq yerlarda ham o‘sadi.',7],
-    ['pista','Pista','Pistacia vera','small',[5,8],[5,7],-25,1,3,1,'central south arid',0,null,'Juda qurg‘oqchilikka chidamli mevali daraxt; adirlar uchun.',6],
-    ['gledichiya','Gledichiya','Gleditsia triacanthos','oval',[15,20],[8,12],-30,1,3,1,'arid central south east',0,null,'Ochiq-yashil nafis toj; issiq va qurg‘oqchilikka chidamli.',7]];
-  const SHRUBS=[
-    ['atirgul','Park atirgullari','Rosa (park navlari)','rose',[0.8,1.5],-20,2,2,0,'arid central south east',0,['may–oktabr','qizil, pushti, oq'],'Uzoq gullaydi; gulzor va xiyobonlarning asosiy bezagi.',1],
-    ['nastarin','Nastarin','Syringa vulgaris','lilac',[3,5],-35,2,2,0,'central east',0,['aprel–may','binafsha, xushbo‘y'],'Bahorda xushbo‘y binafsha shingillar beradi.',2],
-    ['yulgun','Yulg‘un','Tamarix ramosissima','feather',[2,5],-30,1,3,2,'arid central south',0,['may–sentabr','pushti to‘pgul'],'Sho‘r va qurg‘oqchilikka eng chidamli butalardan.',2],
-    ['anor','Anor','Punica granatum','pome',[2,4],-15,2,2,1,'south central',0,['may–iyul','qizil'],'Qizil gullari va mevasi bilan manzarali; issiqsevar.',3],
-    ['zirk','Zirk','Berberis oblonga','bush',[1,2],-30,1,3,1,'arid central south east',0,['may','sariq'],'Mahalliy tur; qizil mevalar, tikanli to‘siq sifatida.',1],
-    ['ligustrum','Oddiy ligustrum','Ligustrum vulgare','hedge',[2,3],-30,2,2,1,'arid central south east',0,null,'Kesishga juda chidamli — jonli devor uchun eng qulay.',0.5],
-    ['spireya','Vangutta spireyasi','Spiraea × vanhouttei','spirea',[1.5,2],-30,2,2,0,'central east',0,['may','oq'],'Bahorda oq gullar bilan qoplanadi.',1.5],
-    ['gibiskus','Suriya gibiskusi','Hibiscus syriacus','hibiscus',[2,3],-20,2,2,0,'central south east',0,['iyul–sentabr','binafsha, pushti'],'Yozning ikkinchi yarmida uzoq gullaydi.',1.5],
-    ['kazakarcha','Kazak archasi','Juniperus sabina','creep',[0.5,1.5],-35,1,3,1,'arid central south east',1,null,'Doim yashil, yer bag‘irlab o‘sadi; qiyaliklarni mustahkamlaydi.',1.5]];
-  const FLOWERS=[
-    ['lola','Grejg lolasi','Tulipa greigii','tulip',[0.2,0.4],-30,1,2,0,'arid central south east',0,['aprel','qizil'],'O‘zbekistonning mahalliy lolasi; bahor gulzorlari uchun.',0.15],
-    ['barxat','Barxatgul','Tagetes erecta','pompom',[0.2,0.6],0,2,3,1,'arid central south east',0,['iyun–oktabr','sariq, to‘q sariq'],'Bir yillik; issiq va qurg‘oqchilikka chidamli, kuzgacha gullaydi.',0.25],
-    ['kanna','Kanna','Canna indica','canna',[0.8,1.5],0,3,1,0,'central south east',0,['iyul–oktabr','qizil, to‘q sariq'],'Yirik barg va gullar; ildizi qishda qazib olinadi.',0.5],
-    ['lavanda','Lavanda','Lavandula angustifolia','spike',[0.4,0.6],-20,1,3,1,'central south east',0,['iyun–avgust','binafsha, xushbo‘y'],'Xushbo‘y, qurg‘oqchilikka chidamli; asalarilarni jalb qiladi.',0.4],
-    ['salviya','Yaltiroq salviya','Salvia splendens','spikeRed',[0.3,0.6],0,2,2,0,'arid central south east',0,['iyun–oktabr','qizil'],'Bir yillik; yorqin qizil rangli gulzor chegaralari uchun.',0.25],
-    ['rudbekiya','Rudbekiya','Rudbeckia fulgida','daisy',[0.5,0.8],-30,2,2,0,'central south east arid',0,['iyul–sentabr','sariq, qora markazli'],'Ko‘p yillik, parvarishi oson va uzoq gullaydi.',0.4],
-    ['semizot','Semizo‘t guli','Portulaca grandiflora','carpet',[0.1,0.15],0,1,3,2,'arid central south east',0,['iyun–sentabr','rang-barang'],'Yer bag‘irlab o‘sadi; jazirama va sho‘rga chidamli.',0.2],
-    ['xrizantema','Xrizantema','Chrysanthemum morifolium','mum',[0.4,0.8],-20,2,2,0,'central south east',0,['sentabr–noyabr','oq, sariq, pushti'],'Kuzning oxirigacha gullaydi; mavsumni uzaytiradi.',0.4],
-    ['iris','Gulsapsar (iris)','Iris germanica','iris',[0.6,0.9],-30,1,3,1,'arid central south east',0,['may','binafsha, havorang'],'Ko‘p yillik, qurg‘oqchilikka chidamli; bahorgi bezak.',0.4]];
-  const NATIVE=new Set(['kelt','turangil','zirk','lola','jiyda','pista','yulgun','tut']);
-  const toT=a=>({id:a[0],n:a[1],l:a[2],k:a[3],h:a[4],c:a[5],cold:a[6],water:a[7],dry:a[8],salt:a[9],z:a[10].split(' '),ev:a[11],bl:a[12],note:a[13],sp:a[14]});
-  const toS=a=>({id:a[0],n:a[1],l:a[2],k:a[3],h:a[4],cold:a[5],water:a[6],dry:a[7],salt:a[8],z:a[9].split(' '),ev:a[10],bl:a[11],note:a[12],sp:a[13]});
-  /* the site's conditions */
-  function siteCond(){const r=region();if(!r)return null;const z=ZONE[r.id]||'central',C=climate(),st=relStats();
-    return {r,z,min:C?C.ext.min[0]:ZMIN[z],rain:C?C.yr.p:ZRAIN[z],el:st?st.avg:C&&C.el!=null?C.el:null,salt:SALTY[r.id]||0,fromClim:!!C}}
-  function pick(list,c,n,annual){const sc=list.map(p=>{let s=p.z.includes(c.z)?4:0;if(!annual||p.cold<0){if(p.cold>c.min+2)s-=10;else if(p.cold>c.min-3)s-=1}
-      if(c.rain<200)s+=(p.dry-2)*1.6;else if(c.rain<350)s+=(p.dry-2)*0.8;else s+=(p.water-2)*0.3;s+=c.salt*(p.salt-1)*0.9;if(c.el!=null&&c.el>1200&&p.cold<=-28)s+=1;if(NATIVE.has(p.id))s+=0.9;return [p,s]});
-    const ok=sc.filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]).map(x=>x[0]);return ok.slice(0,n)}
-  function whyOf(p,c){const w=[];if(c.salt>=1&&p.salt>=2)w.push('sho‘rga chidamli');if(c.rain<350&&p.dry>=3)w.push('qurg‘oqchilikka chidamli');if(c.min<=-18&&p.cold<=c.min-3)w.push('qishki sovuqqa ('+fmt(c.min,0)+' °C) bardosh beradi');if(NATIVE.has(p.id)&&!/mahalliy/i.test(p.note))w.push('mahalliy tur');
-    if(p.z.includes(c.z)&&!w.length)w.push(ZNAME[c.z]+'ga mos');return w.slice(0,2).join(', ')}
-  /* ---- drawing kit ---- */
-  const seeded=s=>{let h=0;for(const ch of s)h=(h*31+ch.charCodeAt(0))|0;return ()=>{h=(h+0x6D2B79F5)|0;let t=Math.imul(h^h>>>15,1|h);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}};
-  const LEAF={chinor:['#3f7d2a','#78b84a'],qayragoch:['#3d7a2e','#77b356'],jiyda:['#8fa391','#c9d6c8'],tut:['#3b7a28','#7cbf4b'],akatsiya:['#4d8a33','#8cc265'],sofora:['#3a7a3a','#7bb86a'],
-    eldar:['#2f5f3a','#5f9466'],archa:['#244f35','#4d7d58'],shumtol:['#3e7f35','#86c06a'],katalpa:['#4f9338','#9ad06c'],turangil:['#6f8f6a','#b5c9a5'],terak:['#4c7f44','#a9c8a0'],
-    sarv:['#1f4a32','#3f7552'],albitsiya:['#4e8c3c','#93c770'],yongoq:['#3c7530','#7db255'],kashtan:['#2f6e2c','#6eab4c'],kelt:['#3f7631','#80b25c'],pista:['#6b8c55','#a9c48b'],gledichiya:['#6a9a3a','#b4d672']};
-  const BLOOM={jiyda:'#f2d64b',akatsiya:'#ffffff',sofora:'#f4efc2',katalpa:'#ffffff',albitsiya:'#f48fb1',kashtan:'#fffaf0'};
-  function blob(ctx,cx,cy,rx,ry,n,cols,rnd,r0){for(let pass=0;pass<2;pass++)for(let i=0;i<n;i++){const a=rnd()*Math.PI*2,d=Math.sqrt(rnd()),x=cx+Math.cos(a)*rx*d*0.8,y=cy+Math.sin(a)*ry*d*0.8,r=r0*(0.65+rnd()*0.5);
-      ctx.beginPath();ctx.arc(pass?x-r*0.18:x,pass?y-r*0.22:y,pass?r*0.62:r,0,7);ctx.fillStyle=pass?cols[1]:cols[0];ctx.globalAlpha=pass?0.55:1;ctx.fill()}ctx.globalAlpha=1}
-  function trunk(ctx,x,yb,yt,w,U,forks){ctx.fillStyle='#6d4c33';ctx.beginPath();ctx.moveTo(x-w/2,yb);ctx.lineTo(x-w*0.3,yt);ctx.lineTo(x+w*0.3,yt);ctx.lineTo(x+w/2,yb);ctx.closePath();ctx.fill();
-    ctx.strokeStyle='#6d4c33';ctx.lineCap='round';(forks||[]).forEach(([dx,dy,lw])=>{ctx.lineWidth=lw;ctx.beginPath();ctx.moveTo(x,yt+(yb-yt)*0.15);ctx.quadraticCurveTo(x+dx*0.4,yt,x+dx,yt+dy);ctx.stroke()})}
-  function stage(ctx,x,y,w,h,U){const g=ctx.createLinearGradient(0,y,0,y+h);g.addColorStop(0,'#eef6fb');g.addColorStop(0.78,'#f8fbf3');g.addColorStop(0.78,'#d9e8c4');g.addColorStop(1,'#c3d9a6');ctx.fillStyle=g;ctx.fillRect(x,y,w,h)}
-  function shadow(ctx,cx,yb,rx,U){ctx.beginPath();ctx.ellipse(cx,yb,rx,rx*0.16,0,0,7);ctx.fillStyle='rgba(60,80,40,0.25)';ctx.fill()}
-  function drawTree(ctx,x,y,w,h,p,U){stage(ctx,x,y,w,h,U);const rnd=seeded(p.id),cx=x+w/2,yb=y+h*0.86,L=LEAF[p.id]||['#3f7d2a','#7cb850'],H=h*0.8;ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
-    const k=p.k;shadow(ctx,cx,yb,w*(k==='column'||k==='flame'?0.12:k==='spread'?0.4:0.28),U);
-    if(k==='cone'||k==='pine'){trunk(ctx,cx,yb,yb-H*0.25,8*U);const tiers=k==='cone'?6:5;for(let i=0;i<tiers;i++){const t=i/(tiers-1),yy=yb-H*0.18-t*H*0.72,rw=(k==='cone'?w*0.24:w*0.27)*(1-t*0.78)+4*U;
-        if(k==='cone'){ctx.beginPath();ctx.moveTo(cx-rw,yy);ctx.lineTo(cx,yy-H*0.24);ctx.lineTo(cx+rw,yy);ctx.closePath();ctx.fillStyle=L[0];ctx.fill();ctx.beginPath();ctx.moveTo(cx-rw*0.2,yy-2*U);ctx.lineTo(cx,yy-H*0.22);ctx.lineTo(cx-rw*0.75,yy-2*U);ctx.fillStyle=L[1];ctx.globalAlpha=0.45;ctx.fill();ctx.globalAlpha=1}
-        else blob(ctx,cx+(rnd()-0.5)*8*U,yy-H*0.06,rw,H*0.08,18,L,rnd,H*0.075)}}
-    else if(k==='flame'){trunk(ctx,cx,yb,yb-H*0.1,6*U);ctx.beginPath();ctx.moveTo(cx,yb-H*1.02);ctx.bezierCurveTo(cx+w*0.13,yb-H*0.7,cx+w*0.1,yb-H*0.2,cx,yb-H*0.08);ctx.bezierCurveTo(cx-w*0.1,yb-H*0.2,cx-w*0.13,yb-H*0.7,cx,yb-H*1.02);ctx.fillStyle=L[0];ctx.fill();
-      for(let i=0;i<14;i++){ctx.beginPath();ctx.ellipse(cx-w*0.03+(rnd()-0.5)*w*0.08,yb-H*(0.2+rnd()*0.7),w*0.02,H*0.05,0,0,7);ctx.fillStyle=L[1];ctx.globalAlpha=0.5;ctx.fill()}ctx.globalAlpha=1}
-    else if(k==='column'){trunk(ctx,cx,yb,yb-H*0.18,8*U);blob(ctx,cx,yb-H*0.56,w*0.1,H*0.4,40,L,rnd,w*0.07)}
-    else{const P={round:[0.3,0.27,0.5,0.3],oval:[0.23,0.33,0.5,0.34],spread:[0.42,0.24,0.42,0.42],small:[0.3,0.22,0.55,0.38]}[k]||[0.3,0.27,0.5,0.3];
-      const rx=w*P[0],ry=H*P[1],ccy=yb-H*P[2],ty=yb-H*P[3];
-      if(k==='small'){[-1,0,1].forEach(s=>{ctx.strokeStyle='#6d4c33';ctx.lineWidth=5*U;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(cx+s*3*U,yb);ctx.quadraticCurveTo(cx+s*rx*0.3,yb-H*0.3,cx+s*rx*0.55,ccy)})}
-      else trunk(ctx,cx,yb,ty,(k==='spread'?16:11)*U,U,[[-rx*0.6,ry*0.1,6*U],[rx*0.55,ry*0.05,6*U],[0,-ry*0.3,5*U]]);
-      blob(ctx,cx,ccy,rx,ry,k==='spread'?46:36,L,rnd,Math.min(rx,ry)*0.42)}
-    const bc=BLOOM[p.id];if(bc){for(let i=0;i<(p.id==='albitsiya'?26:32);i++){const a=rnd()*Math.PI*2,d=Math.sqrt(rnd()),rx=w*(p.k==='spread'?0.38:0.26),ry=H*0.24,c0=yb-H*(p.k==='spread'?0.42:p.k==='small'?0.55:0.52);
-        const X=cx+Math.cos(a)*rx*d,Y=c0+Math.sin(a)*ry*d;if(p.id==='albitsiya'){for(let j=0;j<6;j++){ctx.strokeStyle=bc;ctx.lineWidth=1*U;ctx.beginPath();ctx.moveTo(X,Y);ctx.lineTo(X+Math.cos(j)*5*U,Y-3*U-Math.abs(Math.sin(j))*4*U);ctx.stroke()}}
-        else if(p.id==='kashtan'){ctx.beginPath();ctx.moveTo(X-3*U,Y+4*U);ctx.lineTo(X,Y-6*U);ctx.lineTo(X+3*U,Y+4*U);ctx.fillStyle=bc;ctx.fill()}
-        else{ctx.beginPath();ctx.arc(X,Y,(p.id==='jiyda'?1.6:2.4)*U,0,7);ctx.fillStyle=bc;ctx.fill()}}}
-    if(p.id==='tut'||p.id==='yongoq'||p.id==='pista')for(let i=0;i<14;i++){const a=rnd()*Math.PI*2,d=Math.sqrt(rnd());ctx.beginPath();ctx.arc(cx+Math.cos(a)*w*0.25*d,yb-H*0.5+Math.sin(a)*H*0.2*d,2.6*U,0,7);ctx.fillStyle=p.id==='tut'?'#5b2245':p.id==='pista'?'#c9a46a':'#7a9a3a';ctx.fill()}
-    ctx.restore()}
-  function bloomDot(ctx,X,Y,r,col,U){ctx.beginPath();ctx.arc(X,Y,r,0,7);ctx.fillStyle=col;ctx.fill();ctx.beginPath();ctx.arc(X-r*0.3,Y-r*0.3,r*0.35,0,7);ctx.fillStyle='rgba(255,255,255,0.45)';ctx.fill()}
-  function bushBase(ctx,cx,yb,rx,ry,cols,rnd,U){shadow(ctx,cx,yb,rx*0.95,U);blob(ctx,cx,yb-ry,rx,ry,34,cols,rnd,Math.min(rx,ry)*0.45)}
-  function drawSmall(ctx,x,y,w,h,p,U){stage(ctx,x,y,w,h,U);const rnd=seeded(p.id),cx=x+w/2,yb=y+h*0.86;ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();const G=['#3d7a35','#7ab65a'];
-    const scatter=(n,rx,ry,c0,fn)=>{for(let i=0;i<n;i++){const a=rnd()*Math.PI*2,d=Math.sqrt(rnd());fn(cx+Math.cos(a)*rx*d,c0+Math.sin(a)*ry*d,i)}};
-    switch(p.k){
-      case 'rose':bushBase(ctx,cx,yb,w*0.32,h*0.28,G,rnd,U);scatter(11,w*0.26,h*0.2,yb-h*0.3,(X,Y,i)=>{const col=['#c2185b','#e53950','#f06292'][i%3];for(let j=3;j>0;j--){ctx.beginPath();ctx.arc(X,Y,j*2.6*U,0,7);ctx.fillStyle=j%2?col:'rgba(255,255,255,0.25)';ctx.fill()}});break;
-      case 'lilac':shadow(ctx,cx,yb,w*0.3,U);[-1,0,1].forEach(s=>{ctx.strokeStyle='#7a5a40';ctx.lineWidth=3*U;ctx.beginPath();ctx.moveTo(cx+s*4*U,yb);ctx.lineTo(cx+s*w*0.12,yb-h*0.35);ctx.stroke()});blob(ctx,cx,yb-h*0.45,w*0.3,h*0.24,30,G,rnd,w*0.07);
-        scatter(9,w*0.26,h*0.2,yb-h*0.5,(X,Y)=>{for(let j=0;j<10;j++){ctx.beginPath();ctx.arc(X+(rnd()-0.5)*6*U,Y-j*1.6*U+(rnd()-0.5)*3*U,2.2*U*(1-j/14),0,7);ctx.fillStyle=j%2?'#9c6ade':'#b48ae8';ctx.fill()}});break;
-      case 'feather':shadow(ctx,cx,yb,w*0.3,U);for(let i=0;i<22;i++){const a=-Math.PI/2+(rnd()-0.5)*1.6,l=h*(0.45+rnd()*0.3),X=cx+Math.cos(a)*l,Y=yb+Math.sin(a)*l;ctx.strokeStyle='#7d8f6a';ctx.lineWidth=1.4*U;ctx.beginPath();ctx.moveTo(cx,yb);ctx.quadraticCurveTo(cx+Math.cos(a)*l*0.5,yb+Math.sin(a)*l*0.6,X,Y);ctx.stroke();
-          for(let j=0;j<8;j++){const t=0.55+j*0.06;ctx.beginPath();ctx.arc(cx+(X-cx)*t+(rnd()-0.5)*4*U,yb+(Y-yb)*t,2.2*U,0,7);ctx.fillStyle=j%2?'#f3a6c8':'#e57fae';ctx.fill()}}break;
-      case 'pome':bushBase(ctx,cx,yb,w*0.3,h*0.3,['#3c6e2e','#7aa850'],rnd,U);scatter(7,w*0.24,h*0.22,yb-h*0.32,(X,Y,i)=>{if(i%2){ctx.beginPath();ctx.arc(X,Y,6*U,0,7);ctx.fillStyle='#c62828';ctx.fill();ctx.fillStyle='#8e0000';ctx.fillRect(X-1.5*U,Y-8*U,3*U,3*U)}else{ctx.beginPath();ctx.moveTo(X,Y+4*U);ctx.lineTo(X-4*U,Y-4*U);ctx.lineTo(X+4*U,Y-4*U);ctx.fillStyle='#ff5722';ctx.fill()}});break;
-      case 'bush':bushBase(ctx,cx,yb,w*0.3,h*0.22,['#7a3b2e','#b5653f'],rnd,U);scatter(16,w*0.26,h*0.16,yb-h*0.24,(X,Y)=>bloomDot(ctx,X,Y,2.2*U,'#d32f2f',U));break;
-      case 'hedge':shadow(ctx,cx,yb,w*0.42,U);ctx.fillStyle=G[0];const hx=x+w*0.08,hw=w*0.84,hh=h*0.42;ctx.beginPath();ctx.roundRect?ctx.roundRect(hx,yb-hh,hw,hh,8*U):ctx.rect(hx,yb-hh,hw,hh);ctx.fill();
-        for(let i=0;i<90;i++){ctx.beginPath();ctx.arc(hx+rnd()*hw,yb-hh+rnd()*hh,2.5*U,0,7);ctx.fillStyle=i%2?G[1]:'#2f6328';ctx.globalAlpha=0.6;ctx.fill()}ctx.globalAlpha=1;break;
-      case 'spirea':shadow(ctx,cx,yb,w*0.36,U);for(let i=0;i<14;i++){const a=-Math.PI/2+(rnd()-0.5)*2.2,l=h*(0.35+rnd()*0.25),ex=cx+Math.cos(a)*l*1.3,ey=yb+Math.sin(a)*l*0.9;ctx.strokeStyle='#5d7a45';ctx.lineWidth=1.6*U;ctx.beginPath();ctx.moveTo(cx,yb);ctx.quadraticCurveTo(cx+Math.cos(a)*l,yb-l,ex,ey+h*0.08);ctx.stroke();
-          for(let j=0;j<9;j++){const t=0.3+j*0.08,bx=cx+(ex-cx)*t,by=yb+(ey+h*0.08-yb)*t-Math.sin(t*Math.PI)*l*0.35;bloomDot(ctx,bx,by,2.6*U,'#ffffff',U)}}break;
-      case 'hibiscus':bushBase(ctx,cx,yb,w*0.26,h*0.33,G,rnd,U);scatter(8,w*0.2,h*0.26,yb-h*0.36,(X,Y,i)=>{for(let j=0;j<5;j++){const a=j/5*Math.PI*2;ctx.beginPath();ctx.ellipse(X+Math.cos(a)*4*U,Y+Math.sin(a)*4*U,4.5*U,3*U,a,0,7);ctx.fillStyle=i%2?'#ba68c8':'#f48fb1';ctx.fill()}ctx.beginPath();ctx.arc(X,Y,2*U,0,7);ctx.fillStyle='#6a1b4d';ctx.fill()});break;
-      case 'creep':shadow(ctx,cx,yb,w*0.44,U);blob(ctx,cx,yb-h*0.1,w*0.42,h*0.09,40,['#2c5a3a','#5f8f68'],rnd,h*0.06);break;
-      case 'tulip':for(let i=0;i<6;i++){const X=x+w*(0.18+i*0.13),Y=yb-h*(0.42+rnd()*0.12);ctx.strokeStyle='#4f8a3a';ctx.lineWidth=2.2*U;ctx.beginPath();ctx.moveTo(X,yb);ctx.lineTo(X,Y);ctx.stroke();
-          ctx.beginPath();ctx.ellipse(X-6*U,yb-h*0.1,4*U,h*0.13,-0.35,0,7);ctx.fillStyle='#6a9e4f';ctx.fill();ctx.beginPath();ctx.moveTo(X-8*U,Y);ctx.quadraticCurveTo(X-9*U,Y-16*U,X-4*U,Y-18*U);ctx.lineTo(X,Y-13*U);ctx.lineTo(X+4*U,Y-18*U);ctx.quadraticCurveTo(X+9*U,Y-16*U,X+8*U,Y);ctx.quadraticCurveTo(X,Y+5*U,X-8*U,Y);ctx.fillStyle=i%3===1?'#e53935':'#d32f2f';ctx.fill()}break;
-      case 'pompom':bushBase(ctx,cx,yb,w*0.36,h*0.14,G,rnd,U);scatter(12,w*0.32,h*0.1,yb-h*0.2,(X,Y,i)=>{for(let j=0;j<10;j++){const a=j/10*Math.PI*2;ctx.beginPath();ctx.arc(X+Math.cos(a)*3.5*U,Y+Math.sin(a)*3.5*U,2.6*U,0,7);ctx.fillStyle=i%2?'#ff9800':'#fbc02d';ctx.fill()}});break;
-      case 'canna':for(let i=0;i<5;i++){const X=cx+(i-2)*w*0.09;ctx.beginPath();ctx.ellipse(X,yb-h*0.25,w*0.05,h*0.24,(i-2)*0.25,0,7);ctx.fillStyle=i%2?'#4e7a32':'#6b9c45';ctx.fill()}
-        [[-0.12,0.68],[0.04,0.76],[0.15,0.64]].forEach(([dx,hy])=>{const X=cx+dx*w,Y=yb-h*hy;ctx.strokeStyle='#4e7a32';ctx.lineWidth=2.5*U;ctx.beginPath();ctx.moveTo(X,yb-h*0.3);ctx.lineTo(X,Y);ctx.stroke();for(let j=0;j<4;j++){ctx.beginPath();ctx.ellipse(X+(j%2?5:-5)*U,Y-j*5*U,5*U,7*U,j%2?0.5:-0.5,0,7);ctx.fillStyle=j%2?'#e53935':'#ff7043';ctx.fill()}});break;
-      case 'spike':case 'spikeRed':{const col=p.k==='spike'?['#7e57c2','#9575cd']:['#d32f2f','#ef5350'];shadow(ctx,cx,yb,w*0.36,U);for(let i=0;i<18;i++){const X=x+w*(0.14+rnd()*0.72),Y=yb-h*(0.3+rnd()*0.25);ctx.strokeStyle='#7f9a6a';ctx.lineWidth=1.3*U;ctx.beginPath();ctx.moveTo(X,yb);ctx.lineTo(X,Y);ctx.stroke();
-          for(let j=0;j<8;j++){ctx.beginPath();ctx.ellipse(X,Y-j*3.2*U,(p.k==='spike'?2.2:2.8)*U,2*U,0,0,7);ctx.fillStyle=col[j%2];ctx.fill()}}
-        blob(ctx,cx,yb-h*0.08,w*0.36,h*0.07,20,['#7f9a6a','#b5c4a0'],rnd,h*0.05);break}
-      case 'daisy':case 'mum':{bushBase(ctx,cx,yb,w*0.34,h*0.16,G,rnd,U);const cols=p.k==='daisy'?['#fbc02d']:['#ffffff','#ffd54f','#f48fb1'];scatter(10,w*0.3,h*0.12,yb-h*0.28,(X,Y,i)=>{const c=cols[i%cols.length],n=p.k==='daisy'?12:16;
-          for(let j=0;j<n;j++){const a=j/n*Math.PI*2;ctx.beginPath();ctx.ellipse(X+Math.cos(a)*5*U,Y+Math.sin(a)*5*U,4*U,1.6*U,a,0,7);ctx.fillStyle=c;ctx.fill()}ctx.beginPath();ctx.arc(X,Y,p.k==='daisy'?3.2*U:2.4*U,0,7);ctx.fillStyle=p.k==='daisy'?'#3e2723':'#f9a825';ctx.fill()});break}
-      case 'carpet':shadow(ctx,cx,yb,w*0.44,U);blob(ctx,cx,yb-h*0.06,w*0.42,h*0.06,40,['#6f9a4a','#a3c977'],rnd,h*0.04);scatter(26,w*0.4,h*0.05,yb-h*0.1,(X,Y,i)=>bloomDot(ctx,X,Y,3.6*U,['#e91e63','#ff9800','#ffeb3b','#f44336','#ffffff'][i%5],U));break;
-      case 'iris':for(let i=0;i<9;i++){const X=cx+(i-4)*w*0.06;ctx.beginPath();ctx.moveTo(X-3*U,yb);ctx.quadraticCurveTo(X+(i-4)*2*U,yb-h*0.3,X+(i-4)*3*U,yb-h*0.48);ctx.lineTo(X+3*U,yb);ctx.fillStyle=i%2?'#5f8f6a':'#7aa784';ctx.fill()}
-        [[-0.16,0.72],[0.02,0.8],[0.17,0.7]].forEach(([dx,hy])=>{const X=cx+dx*w,Y=yb-h*hy;ctx.strokeStyle='#5f8f6a';ctx.lineWidth=2*U;ctx.beginPath();ctx.moveTo(X,yb);ctx.lineTo(X,Y+8*U);ctx.stroke();
-          ctx.beginPath();ctx.ellipse(X-5*U,Y+6*U,4*U,7*U,0.6,0,7);ctx.ellipse(X+5*U,Y+6*U,4*U,7*U,-0.6,0,7);ctx.fillStyle='#5e35b1';ctx.fill();ctx.beginPath();ctx.ellipse(X,Y-4*U,4*U,8*U,0,0,7);ctx.fillStyle='#9575cd';ctx.fill();ctx.beginPath();ctx.arc(X,Y+5*U,1.6*U,0,7);ctx.fillStyle='#fdd835';ctx.fill()});break;
-      default:bushBase(ctx,cx,yb,w*0.3,h*0.25,G,rnd,U)}
-    ctx.restore()}
-  /* a card: picture above, facts below */
-  function plantCard(ctx,x,y,w,h,U,p,c,draw,i,tree){ctx.fillStyle='#fff';ctx.fillRect(x,y,w,h);ctx.strokeStyle='#dfe4ec';ctx.lineWidth=1*U;ctx.strokeRect(x,y,w,h);
-    const ph=h*0.47;draw(ctx,x+1*U,y+1*U,w-2*U,ph,p,U);ctx.fillStyle='#1f3864';ctx.beginPath();ctx.arc(x+16*U,y+16*U,10*U,0,7);ctx.fill();txt(ctx,String(i+1),x+16*U,y+16.5*U,11*U,{al:'center',halo:false,col:'#fff',w:'800'});
-    if(p.ev){txt(ctx,'DOIM YASHIL',x+w-8*U,y+14*U,8.5*U,{al:'right',w:'800',col:'#2e7d32'})}
-    let ty=y+ph+8*U;const tx=x+9*U,tw=w-18*U;txt(ctx,p.n,tx,ty,13*U,{halo:false,w:'800',bl:'top',col:'#1f3864'});ty+=16*U;txt(ctx,p.l,tx,ty,10*U,{halo:false,bl:'top',col:'#7a8496',w:'500'});ty+=15*U;
-    const range=(a,u)=>a[0]===a[1]?fmt(a[0],a[0]<1?1:0)+u:(a[0]<1?fmt(a[0]*100,0)+'–'+fmt(a[1]*100,0)+' sm':fmt(a[0],0)+'–'+fmt(a[1],0)+u);
-    const rows=[['Bo‘yi',range(p.h,' m')+(p.c?' · toji '+range(p.c,' m'):'')],['Sovuqqa',p.cold<0?fmt(p.cold,0)+' °C gacha':'bir yillik (issiqsevar)'],['Suv talabi',['kam','o‘rtacha','ko‘p'][p.water-1]],
-      p.bl?['Gullashi',p.bl[0]+' · '+p.bl[1]]:['Manzara',p.ev?'yil bo‘yi yashil':'soya va ko‘kalamzor'],['Ekish oralig‘i',(p.sp<1?fmt(p.sp*100,0)+' sm':fmt(p.sp,p.sp%1?1:0)+' m')]];
-    rows.forEach(([a,b])=>{txt(ctx,a,tx,ty,9.6*U,{halo:false,bl:'top',col:'#7a8496',w:'600'});const bw=tw-64*U;ctx.font='600 '+(9.6*U)+'px '+FONT;let s=b;while(ctx.measureText(s).width>bw&&s.length>4)s=s.slice(0,-2);if(s!==b)s=s.trim()+'…';
-      txt(ctx,s,tx+64*U,ty,9.6*U,{halo:false,bl:'top',w:'600',col:'#222'});ty+=13.5*U});
-    const why=whyOf(p,c);ty+=3*U;ty=para(ctx,(why?'✓ '+cap1(why)+'. ':'')+p.note,tx,ty,tw,9.4*U,{col:'#3f4b5e'})}
-  function plantHead(ctx,x,y,w,U,c,extra){const parts=[c.r.name+' — '+ZNAME[c.z],'qishki eng past '+fmt(c.min,1)+' °C'+(c.fromClim?'':' (mintaqa o‘rtachasi)'),'yog‘in ~'+fmt(c.rain,0)+' mm/yil'+(c.fromClim?'':' (mintaqa)'),
-      c.el!=null?'balandlik ~'+fmt(c.el,0)+' m':null,c.salt?'tuproq sho‘rlanishi '+(c.salt>1?'kuchli':'o‘rtacha')+' bo‘lishi mumkin':'sho‘rlanish xavfi past'].filter(Boolean);
-    txt(ctx,'Tanlov asosi:',x,y,11*U,{halo:false,w:'800',bl:'top',col:'#c62828'});ctx.font='800 '+(11*U)+'px '+FONT;const o=ctx.measureText('Tanlov asosi: ').width;
-    let yy=para(ctx,parts.join(' · ')+(extra?'. '+extra:''),x+o,y,w-o,11*U,{col:'#333'});return yy}
-  function plantSheet(cv,which){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,c=siteCond();
-    if(!c){placeholder(ctx,W,H,U,"Viloyat tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
-    const tree=which===10,title=tree?'Hududga mos ko‘p yillik daraxtlar':'Hududga mos butalar va gullar';
-    const fb=frame(ctx,W,H,U,title+' · '+(district()?district().name:c.r.name),which+'-rasm');
-    let list;if(tree){list=pick(TREES.map(toT),c,8).slice(0,8);if(!list.some(p=>p.ev)){const e=pick(TREES.map(toT).filter(p=>p.ev),c,1);if(e.length)list[list.length-1]=e[0]}}
-    else{const sh=pick(SHRUBS.map(toS),c,4),fl=pick(FLOWERS.map(toS),c,4,true);list=sh.concat(fl)}
-    let gx='';try{const x=info();if(x&&x.green>0){gx=tree?'Ko‘kalamzor maydoni '+fmt(x.green,0)+' m² — o‘rtacha 7×7 m oraliqda taxminan '+fmt(Math.round(x.green/49),0)+' ta daraxt sig‘adi':'Ko‘kalamzor maydoni '+fmt(x.green,0)+' m²; butalar chegara va jonli devorlarga, gullar kirish joylari va xiyobonlarga'}}catch(e){}
-    const y0=plantHead(ctx,fb.x,fb.y-4*U,fb.w,U,c,gx)+6*U,cols=4,rowsN=Math.ceil(list.length/cols),gap=10*U,cw=(fb.w-gap*(cols-1))/cols,ch=(H-y0-30*U-gap*(rowsN-1))/rowsN;
-    list.forEach((p,i)=>plantCard(ctx,fb.x+(i%cols)*(cw+gap),y0+Math.floor(i/cols)*(ch+gap),cw,ch,U,p,c,tree?drawTree:drawSmall,i,tree));
-    txt(ctx,(tree?'Daraxtlar':'Butalar va gullar')+' viloyat iqlim mintaqasi, qishki eng past harorat, yog‘in, tuproq sho‘rlanishi va balandlikka qarab tanlangan. Rasmlar — illyustratsiya. Ekishdan oldin tuproq tahlili tavsiya etiladi.',
-      fb.x,H-22*U,9.5*U,{halo:false,col:'#888'})}
-  function render10(cv){plantSheet(cv,10)}
-  function render11(cv){plantSheet(cv,11)}
+  /* ===== sheet 10: what the budget pays for — every infrastructure section that has a cost, the budget's own objects and the
+     budget share of DXSH objects. Read live from the project, so a section with no cost simply drops out. ===== */
+  const BCOL={obodonlashtirish:'#2e9e5b',elektr:'#f2a516',suv:'#2d8fd5',kanalizatsiya:'#8a6a52','yomgir-suvi':'#4fb8d8',gaz:'#e0533d',yol:'#4a5568',yoritish:'#e8b400',qoshimcha:'#8e5bd6',bud:'#1f3864',dx:'#0f8b7d'};
+  function rrect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+  function clipLines(ctx,t,w,n,font){ctx.font=font;const out=[];let line='';for(const wd of String(t).split(/\s+/)){const s=line?line+' '+wd:wd;if(ctx.measureText(s).width>w&&line){out.push(line);line=wd;if(out.length===n)break}else line=s}
+    if(out.length<n&&line)out.push(line);else if(out.length===n&&line){let l=out[n-1];while(ctx.measureText(l+'…').width>w&&l.length>3)l=l.slice(0,-1);out[n-1]=l.replace(/[ ,;]+$/,'')+'…'}return out}
+  function iconBadge(ctx,cx,cy,r,col,k,U){const g=ctx.createLinearGradient(cx-r,cy-r,cx+r,cy+r);g.addColorStop(0,col);g.addColorStop(1,shade(col,-0.25));ctx.beginPath();ctx.arc(cx,cy,r,0,7);ctx.fillStyle=g;ctx.fill();
+    const d=ICON[k];if(d&&typeof Path2D!=='undefined'){const s=r*1.1/24;ctx.save();ctx.translate(cx-12*s,cy-12*s);ctx.scale(s,s);ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke(new Path2D(d));ctx.restore()}}
+  function shade(hex,f){const n=parseInt(hex.slice(1),16),c=[n>>16,(n>>8)&255,n&255].map(v=>Math.round(f<0?v*(1+f):v+(255-v)*f));return 'rgb('+c.join(',')+')'}
+  function budgetItems(){let x;try{x=info()}catch(e){return null}
+    const items=PAGES.filter(s=>s.tot).map(s=>{const am=secInfo(s).am;if(!am)return null;let d='';try{d=workText(s)}catch(e){}if(!d)d=secInfo(s).ds||'';
+      return {k:s.k,icon:s.k,name:s.title,am,d:d?d[0].toUpperCase()+d.slice(1):'',col:BCOL[s.k]||'#1f3864'}}).filter(Boolean);
+    const objs=x.bud.filter(b=>b.cost>0).map(b=>({n:String(b.name||b.type).trim(),t:b.type,am:b.cost,dx:false})).concat(x.dx.filter(b=>b.bud>0).map(b=>({n:String(b.name||b.type).trim(),t:b.type,am:b.bud,dx:true,sh:b.share})));
+    return {x,items,objs,infra:items.reduce((s,i)=>s+i.am,0)}}
+  function render10(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,B=budgetItems();
+    if(!B||(!B.items.length&&!B.objs.length)){placeholder(ctx,W,H,U,"Byudjet hisobidan infratuzilma hali kiritilmagan");return}
+    const total=B.x.budCost||B.infra,fb=frame(ctx,W,H,U,'Byudjet hisobidan amalga oshiriladigan infratuzilma','10-rasm · Jami '+mln(total)+" mln so‘m, QQS bilan");
+    /* ---- left: the ring of shares, the total in the middle, the three sources below ---- */
+    const segs=B.items.map(i=>[i.name,i.am,i.col]);const ob=B.objs.filter(o=>!o.dx).reduce((s,o)=>s+o.am,0),od=B.objs.filter(o=>o.dx).reduce((s,o)=>s+o.am,0);
+    if(ob)segs.push(['Byudjet obyektlari',ob,BCOL.bud]);if(od)segs.push(['DXSH — byudjet ulushi',od,BCOL.dx]);const sum=segs.reduce((s,a)=>s+a[1],0)||1;
+    const lx=fb.x,lw=330*U,cx=lx+lw/2,cy=fb.y+150*U,R=124*U;
+    ctx.beginPath();ctx.arc(cx,cy,R+12*U,0,7);ctx.fillStyle='#f4f6fa';ctx.fill();let a0=-Math.PI/2;
+    segs.forEach(([n,v,c])=>{const a1=a0+v/sum*Math.PI*2;ctx.beginPath();ctx.arc(cx,cy,R,a0,a1);ctx.arc(cx,cy,R*0.64,a1,a0,true);ctx.closePath();ctx.fillStyle=c;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2.5*U;ctx.stroke();
+      const am=(a0+a1)/2,f=v/sum;if(f>=0.06){txt(ctx,Math.round(f*100)+'%',cx+Math.cos(am)*R*0.82,cy+Math.sin(am)*R*0.82,11*U,{al:'center',halo:false,col:'#fff',w:'800'})}a0=a1});
+    txt(ctx,'BYUDJETDAN JAMI',cx,cy-30*U,10*U,{al:'center',halo:false,col:'#7a8496',w:'800'});txt(ctx,mln(total),cx,cy+2*U,30*U,{al:'center',halo:false,col:'#1f3864',w:'800'});txt(ctx,"mln so‘m",cx,cy+30*U,11*U,{al:'center',halo:false,col:'#7a8496',w:'600'});
+    let y=cy+R+36*U;const lh=Math.min(22*U,(H-46*U-90*U-y)/Math.max(1,segs.length));
+    segs.forEach(([n,v,c])=>{rrect(ctx,lx,y-6*U,12*U,12*U,3*U);ctx.fillStyle=c;ctx.fill();const nm=clipLines(ctx,n,lw-150*U,1,'600 '+(11.5*U)+'px '+FONT)[0];txt(ctx,nm,lx+20*U,y,11.5*U,{halo:false,col:'#333',w:'600'});
+      txt(ctx,(v/sum*100).toFixed(1).replace('.',',')+'%',lx+lw-78*U,y,10.5*U,{al:'right',halo:false,col:'#8a94a6',w:'600'});txt(ctx,mln(v),lx+lw,y,12*U,{al:'right',halo:false,col:'#1f3864',w:'800'});
+      ctx.strokeStyle='#eef1f6';ctx.lineWidth=1*U;ctx.beginPath();ctx.moveTo(lx,y+lh/2);ctx.lineTo(lx+lw,y+lh/2);ctx.stroke();y+=lh});
+    /* key counts */
+    y+=6*U;const kp=[[B.items.length,'yo‘nalish'],[B.objs.length,'obyekt'],[total&&B.x.land?mln(total/(B.x.land/10000)):'—',"mln/ga"]];const kw=(lw-16*U)/3;
+    kp.forEach(([v,l],i)=>{const x0=lx+i*(kw+8*U);rrect(ctx,x0,y,kw,54*U,8*U);ctx.fillStyle='#f4f6fa';ctx.fill();txt(ctx,String(v),x0+kw/2,y+22*U,19*U,{al:'center',halo:false,w:'800',col:'#1f3864'});txt(ctx,l,x0+kw/2,y+42*U,10*U,{al:'center',halo:false,col:'#7a8496',w:'600'})});
+    /* ---- right: one card per section, then the budget's own objects ---- */
+    const rx=lx+lw+34*U,rw=fb.x+fb.w-rx,cols=2,gap=12*U,cw=(rw-gap)/cols,list=B.items;
+    const objH=B.objs.length?Math.min(150*U,44*U+Math.ceil(B.objs.length/2)*30*U):0,availH=H-fb.y-46*U-(objH?objH+16*U:0),rows=Math.max(1,Math.ceil(list.length/cols)),chh=Math.min(168*U,(availH-gap*(rows-1))/rows);
+    list.forEach((it,i)=>{const x0=rx+(i%cols)*(cw+gap),y0=fb.y+Math.floor(i/cols)*(chh+gap);
+      ctx.save();ctx.shadowColor='rgba(20,40,80,0.10)';ctx.shadowBlur=10*U;ctx.shadowOffsetY=3*U;rrect(ctx,x0,y0,cw,chh,10*U);ctx.fillStyle='#fff';ctx.fill();ctx.restore();
+      rrect(ctx,x0,y0,cw,chh,10*U);ctx.strokeStyle='#e3e8f0';ctx.lineWidth=1*U;ctx.stroke();ctx.save();rrect(ctx,x0,y0,cw,chh,10*U);ctx.clip();ctx.fillStyle=it.col;ctx.fillRect(x0,y0,4*U,chh);ctx.restore();
+      {const d=ICON[it.icon],sz=Math.min(chh*0.62,cw*0.3);if(d&&typeof Path2D!=='undefined'&&chh>90*U){const s2=sz/24;ctx.save();rrect(ctx,x0,y0,cw,chh,10*U);ctx.clip();ctx.translate(x0+cw-sz*0.85,y0+chh-sz*0.8);ctx.scale(s2,s2);ctx.globalAlpha=0.08;ctx.strokeStyle=it.col;ctx.lineWidth=2.2;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke(new Path2D(d));ctx.restore()}}
+      const ir=17*U;iconBadge(ctx,x0+16*U+ir,y0+14*U+ir,ir,it.col,it.icon,U);const tx=x0+24*U+2*ir+8*U,tw=x0+cw-12*U-tx;
+      const nm=clipLines(ctx,it.name,tw-110*U,1,'800 '+(13*U)+'px '+FONT)[0];txt(ctx,nm,tx,y0+22*U,13*U,{halo:false,w:'800',col:'#1b2a44'});
+      ctx.font='800 '+(15*U)+'px '+FONT;const aw=ctx.measureText(mln(it.am)).width;txt(ctx,'mln',x0+cw-12*U,y0+23*U,9.5*U,{al:'right',halo:false,col:'#8a94a6',w:'600'});txt(ctx,mln(it.am),x0+cw-32*U,y0+22*U,15*U,{al:'right',halo:false,w:'800',col:it.col});
+      const f=it.am/(total||1),bw=x0+cw-12*U-tx-44*U;rrect(ctx,tx,y0+36*U,bw,6*U,3*U);ctx.fillStyle='#edf0f5';ctx.fill();rrect(ctx,tx,y0+36*U,Math.max(6*U,bw*f),6*U,3*U);ctx.fillStyle=it.col;ctx.fill();
+      txt(ctx,(f*100).toFixed(1).replace('.',',')+'%',x0+cw-12*U,y0+39*U,10*U,{al:'right',halo:false,col:'#5d6a82',w:'700'});
+      const dl=Math.max(1,Math.floor((chh-62*U)/(14*U)));clipLines(ctx,it.d,cw-28*U,Math.min(7,dl),'500 '+(10.5*U)+'px '+FONT).forEach((l,j)=>txt(ctx,l,x0+16*U,y0+62*U+j*14*U,10.5*U,{halo:false,col:'#4a5568',bl:'middle'}))});
+    if(objH){const oy=H-46*U-objH,ow=rw;rrect(ctx,rx,oy,ow,objH,10*U);ctx.fillStyle='#f4f6fa';ctx.fill();
+      iconBadge(ctx,rx+28*U,oy+24*U,13*U,BCOL.bud,'obyektlar',U);txt(ctx,'Byudjet hisobidan quriladigan obyektlar',rx+50*U,oy+24*U,13*U,{halo:false,w:'800',col:'#1b2a44'});
+      txt(ctx,mln(ob+od)+" mln so‘m",rx+ow-14*U,oy+24*U,13*U,{al:'right',halo:false,w:'800',col:BCOL.bud});
+      const pw=(ow-28*U-10*U)/2,max=Math.floor((objH-44*U)/(30*U))*2;B.objs.slice(0,max).forEach((o,i)=>{const px=rx+14*U+(i%2)*(pw+10*U),py=oy+44*U+Math.floor(i/2)*30*U;
+        rrect(ctx,px,py,pw,24*U,12*U);ctx.fillStyle='#fff';ctx.fill();ctx.beginPath();ctx.arc(px+12*U,py+12*U,5*U,0,7);ctx.fillStyle=o.dx?BCOL.dx:BCOL.bud;ctx.fill();
+        const nm=clipLines(ctx,o.n+(o.dx?' (DXSH, '+Math.round((o.sh||0)*100)+'%)':''),pw-110*U,1,'600 '+(10.5*U)+'px '+FONT)[0];txt(ctx,nm,px+24*U,py+12*U,10.5*U,{halo:false,w:'600',col:'#333'});
+        txt(ctx,mln(o.am)+' mln',px+pw-10*U,py+12*U,10.5*U,{al:'right',halo:false,w:'800',col:'#1f3864'})});
+      if(B.objs.length>max)txt(ctx,'… yana '+(B.objs.length-max)+' ta',rx+ow-14*U,oy+objH-10*U,10*U,{al:'right',halo:false,col:'#7a8496'})}
+    txt(ctx,"Ma'lumotlar loyiha bo‘limlaridan avtomatik olinadi: bo‘lim o‘zgarsa — bu varaq ham o‘zgaradi, summasi yo‘q bo‘lim ko‘rsatilmaydi. Summalar QQS bilan.",fb.x,H-22*U,9.5*U,{halo:false,col:'#8a94a6'})}
   const RENDER=[render1,render2,render3,render4];
 
   /* ----- relief: heights of the project area from open satellite elevation data (SRTM / Copernicus, ~30 m cells).
@@ -3989,13 +3891,14 @@ const MAP=(function(){
     txt(ctx,rd.src==='OSRM'?"Vaqt: OpenStreetMap yo'llari bo'yicha, tirbandliksiz.":"~ — asosiy yo'llar tarmog'i bo'yicha taxmin (80/65/50 km/soat).",tx,Math.min(H-26*U,y+12*U),10*U,{halo:false,col:'#888'})}
   function extra(w,thumb){const out=[];const r=relief(w,thumb);if(r)out.push(r);if(pop()&&region()){[render6,render7].forEach(fn=>{if(fn===render7&&!district())return;
       const big=document.createElement('canvas');big.width=w||2400;big.height=Math.round(big.width/1.4142);NOSUB=!!thumb;try{fn(big);out.push(big.toDataURL('image/jpeg',0.9))}finally{NOSUB=false}})}
-    if(region()){[render8,render9,render10,render11].forEach(fn=>{const big=document.createElement('canvas');big.width=w||2400;big.height=Math.round(big.width/1.4142);NOSUB=!!thumb;try{fn(big);out.push(big.toDataURL('image/jpeg',0.9))}finally{NOSUB=false}})}
+    if(region()){[render8,render9].forEach(fn=>{const big=document.createElement('canvas');big.width=w||2400;big.height=Math.round(big.width/1.4142);NOSUB=!!thumb;try{fn(big);out.push(big.toDataURL('image/jpeg',0.9))}finally{NOSUB=false}})}
+    {const big=document.createElement('canvas');big.width=w||2400;big.height=Math.round(big.width/1.4142);NOSUB=!!thumb;try{render10(big);out.push(big.toDataURL('image/jpeg',0.9))}finally{NOSUB=false}}
     return out}
   function relief(w,thumb){if(!dem()||!kmz())return null;w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);NOSUB=!!thumb;try{render5(big);return big.toDataURL('image/jpeg',0.9)}finally{NOSUB=false}}
 
   /* the four sheets as JPEG pictures for the PDF (A4 landscape) */
   function images(w,thumb){w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);NOSUB=!!thumb;try{return RENDER.map(fn=>{fn(big);return big.toDataURL('image/jpeg',0.9)})}finally{NOSUB=false}}
-  return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region(),dem,loadDem,relStats,render5,relief,pop,loadPop,render6,render7,extra,render8,render9,render10,render11,roads,loadRoads,site,cover,climate,loadClimate};
+  return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region(),dem,loadDem,relStats,render5,relief,pop,loadPop,render6,render7,extra,render8,render9,render10,roads,loadRoads,site,cover,climate,loadClimate};
 })();
 
 /* first page: region, district and the KMZ outline */
@@ -4153,9 +4056,8 @@ function xaritaPage(p){
         h('p',{class:'fine'},"Viloyatning asosiy (magistral va respublika) yo'llari OpenStreetMap'dan olinadi. Vaqtlar: avval viloyat markazlaridan, keyin shu viloyat tumanlaridan — yo'l tarmog'i bo'yicha, tirbandliksiz."),
       cv,i===1?h('div',{class:'mapact'},h('button',{class:'btn',type:'button',disabled:!!getRoads.busy||!MAP.site(),onclick:getRoads},icon('refresh',1),MAP.roads()?"Yo'llarni qayta hisoblash":"Yo'llarni hisoblash"),
         ui.roadMsg?h('span',{class:'kmsg'+(ui.roadErr?' err':''),id:'roadmsg'},ui.roadMsg):null):null))})}
-  if(r){[['10-rasm · Hududga mos daraxtlar',MAP.render10],['11-rasm · Hududga mos butalar va gullar',MAP.render11]].forEach(([t,fn])=>{
-    const cv=h('canvas',{width:'1200',height:'849',class:'mapcv','aria-label':t});fn(cv);
-    out.push(h('section',{class:'card mapc'},h('h3',null,icon('xarita',1),t),h('p',{class:'fine'},"Viloyatning iqlim mintaqasi, qishki eng past harorat va yog‘in (ob-havo ma'lumoti olingan bo‘lsa — loyiha nuqtasi bo‘yicha), tuproq sho‘rlanishi va balandlikka qarab avtomatik tanlanadi."),cv))})}
+  {const t='10-rasm · Byudjet hisobidan infratuzilma',cv=h('canvas',{width:'1200',height:'849',class:'mapcv','aria-label':t});MAP.render10(cv);
+    out.push(h('section',{class:'card mapc'},h('h3',null,icon('money',1),t),h('p',{class:'fine'},"Bo‘limlardagi summalar va byudjet obyektlaridan avtomatik tuziladi; summasi yo‘q bo‘lim ko‘rsatilmaydi."),cv))}
   return out;
 }
 
