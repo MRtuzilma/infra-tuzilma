@@ -2007,7 +2007,7 @@ const LOTEXTRA=[["Avtoturargoh (1 joy)",'joy',4500000],["Kirish darvozasi",'dona
   const c={};LOTCAT.forEach((k,i)=>{c['B'+(1+i)]=[k.rate,6]});
   LOTSITE.forEach((k,i)=>{c['B'+(30+i)]=[k.rate,6]});
   M.sheets.push({name:'LotNarx',rows:40,cols:2,show:2,cells:c,merges:[],dv:[],cf:[],widths:{},hidden:[]});
-  M.sheets.push({name:'Xarita',rows:6,cols:2,show:2,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
+  M.sheets.push({name:'Xarita',rows:7,cols:2,show:2,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
   /* number of lots: investor LOTs plus DXSH objects that carry a LOT number; typed by hand only when there are none */
   const J=M.sheets.find(s=>s.name==='Jamlama');J.cells.F12=[null,6];
   J.cells.C8=['=IF(COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79)>0,COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79),IF(F12="",0,F12))',6];
@@ -2079,7 +2079,7 @@ M.sheets.forEach(sh=>{sh.ed={};sh.dv.forEach(dv=>dv.ranges.forEach(r=>expand(r).
   const BN=SH.Bino;for(let r=3;r<=22;r++){BN.ed['A'+r]={t:'text'};BN.ed['B'+r]={t:'num'}}BN.ed.P1={t:'num'};BN.ed.P2={t:'num'};
   [[30,49],[60,79]].forEach(x=>{for(let r=x[0];r<=x[1];r++){BN.ed['A'+r]={t:'range',s:'Bino',r:'A3:A22'};BN.ed['B'+r]={t:'text'};'CDEFGJN'.split('').forEach(c=>{BN.ed[c+r]={t:'num'}})}});
   const LT=SH.Lot;LOTROWS_ED.forEach(r=>{'ACDEFGIKLNPQ'.split('').forEach(c=>{LT.ed[c+r]={t:'num'}});LT.ed['B'+r]={t:'text'};LT.ed['T'+r]={t:'text'};LT.ed['O'+r]={t:'list',v:LOTSTYLE};LT.ed['S'+r]={t:'list',v:LOTTRADE}});
-  SH.LotNom.ed.A1={t:'text'};['A1','A2','A3','A4','A5','A6'].forEach(a=>{SH.Xarita.ed[a]={t:'text'}});for(let i=1;i<=11;i++)SH.LotNarx.ed['B'+i]={t:'num'};for(let i=30;i<=34;i++)SH.LotNarx.ed['B'+i]={t:'num'};
+  SH.LotNom.ed.A1={t:'text'};['A1','A2','A3','A4','A5','A6','A7'].forEach(a=>{SH.Xarita.ed[a]={t:'text'}});for(let i=1;i<=11;i++)SH.LotNarx.ed['B'+i]={t:'num'};for(let i=30;i<=34;i++)SH.LotNarx.ed['B'+i]={t:'num'};
   for(let r=60;r<=79;r++){BN.ed['R'+r]={t:'num'};BN.ed['T'+r]={t:'num'}}for(let r=30;r<=49;r++)BN.ed['T'+r]={t:'num'};
   const B=SH.Baza,kinds={E:{t:'num'},H:{t:'date'},F:{t:'list',v:['Sayt narxi','≈ Taxminiy']}};
   for(let r=5;r<=304;r++)for(const c of 'BCDEFGHJKLM'){const a=c+r;if(!isFormula(B,a))B.ed[a]=kinds[c]||{t:'text'}}
@@ -2113,7 +2113,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794542595';
+const BUILD_ID='1794591954';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
     if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
@@ -3329,13 +3329,155 @@ const MAP=(function(){
     ctx.font=(12*U)+'px '+FONT;ctx.fillStyle='#666';ctx.fillText('Gorizontallar: har '+fmt(step,step<1?1:0)+' m',lx,ly+lh+24*U);
     ctx.fillText('Manba: '+(d.src||'SRTM'),lx,ly+lh+44*U);ctx.fillText('Aniqlik: ±3–5 m',lx,ly+lh+62*U);
     decorations(ctx,P,W,H,U,box)}
+  /* ----- getting there: rail and air (sheet 8, whole country) and roads (sheet 9, the region) -----
+     Region centres, stations, airports and the main railway are a fixed schematic list (approximate coordinates).
+     Road routes and driving times come from the open OSRM router (OpenStreetMap roads) and are kept in Xarita!A7;
+     without it, straight lines and a 60 km/h estimate are used. */
+  const RC={qoraqalpogiston:['Nukus',59.6103,42.4531],andijon:['Andijon',72.3442,40.7821],buxoro:['Buxoro',64.4286,39.7747],jizzax:['Jizzax',67.8422,40.1158],
+    qashqadaryo:['Qarshi',65.7891,38.8606],navoiy:['Navoiy',65.3792,40.1039],namangan:['Namangan',71.6726,40.9983],samarqand:['Samarqand',66.9597,39.6542],
+    surxondaryo:['Termiz',67.2783,37.2242],sirdaryo:['Guliston',68.7842,40.4897],toshkent:['Nurafshon',69.3517,41.042],fargona:["Farg'ona",71.7843,40.3842],
+    xorazm:['Urganch',60.6348,41.55],toshkent_sh:['Toshkent',69.2401,41.2995]};
+  const AP={TAS:['Toshkent xalqaro aeroporti',69.2812,41.2579],SKD:['Samarqand xalqaro aeroporti',66.9838,39.7005],BHK:['Buxoro xalqaro aeroporti',64.4833,39.775],
+    NVI:['Navoiy xalqaro aeroporti',65.1708,40.1172],KSQ:['Qarshi xalqaro aeroporti',65.773,38.8336],TMJ:['Termiz xalqaro aeroporti',67.31,37.2867],
+    UGC:['Urganch xalqaro aeroporti',60.6417,41.5843],NCU:['Nukus xalqaro aeroporti',59.6233,42.4884],FEG:["Farg'ona xalqaro aeroporti",71.7451,40.3588],
+    AZN:['Andijon xalqaro aeroporti',72.294,40.7277],NMA:['Namangan xalqaro aeroporti',71.5567,40.9846]};
+  const RAP={qoraqalpogiston:'NCU',andijon:'AZN',buxoro:'BHK',jizzax:'SKD',qashqadaryo:'KSQ',navoiy:'NVI',namangan:'NMA',samarqand:'SKD',surxondaryo:'TMJ',sirdaryo:'TAS',toshkent:'TAS',fargona:'FEG',xorazm:'UGC',toshkent_sh:'TAS'};
+  /* railway nodes and lines; fast lines are those served by the Afrosiyob high-speed trains */
+  const RN={T:[69.29,41.29],NU:[69.35,41.04],AN:[70.14,41.02],PO:[71.1,40.87],NA:[71.67,41.0],AD:[72.34,40.78],FA:[71.78,40.38],QQ:[70.94,40.53],
+    SY:[68.67,40.84],GU:[68.78,40.49],XO:[68.83,40.22],JI:[67.84,40.12],SA:[66.96,39.65],KA:[66.26,39.9],NV:[65.38,40.1],KO:[64.55,39.72],BU:[64.43,39.77],
+    QA:[65.79,38.86],GZ:[66.25,38.62],BO:[67.2,38.2],QU:[67.58,37.83],TE:[67.28,37.22],UQ:[63.56,42.16],MI:[61.6,42.3],NK:[59.61,42.45],QN:[58.89,43.07],UR:[60.63,41.55],XI:[60.36,41.38],TU:[63.58,39.1],BE:[57.0,44.5]};
+  const RL=[['T','SY',1],['SY','GU',1],['GU','XO',1],['XO','JI',1],['JI','SA',1],['SA','KA',1],['KA','NV',1],['NV','KO',1],['KO','BU',1],['KO','QA',1],['QA','GZ',0],['GZ','BO',0],['BO','QU',0],['QU','TE',0],
+    ['T','NU',0],['NU','AN',0],['AN','PO',0],['PO','NA',0],['NA','AD',0],['AD','FA',0],['FA','QQ',0],['QQ','PO',0],['NV','UQ',0],['UQ','MI',0],['MI','NK',0],['NK','QN',0],['QN','BE',0],['NK','UR',0],['UR','XI',0],['KO','TU',0]];
+  const RST={qoraqalpogiston:'NK',andijon:'AD',buxoro:'BU',jizzax:'JI',qashqadaryo:'QA',navoiy:'NV',namangan:'NA',samarqand:'SA',surxondaryo:'TE',sirdaryo:'GU',toshkent:'NU',fargona:'FA',xorazm:'UR',toshkent_sh:'T'};
+  const ABROAD=[['Moskva',37.62,55.75],['Istanbul',28.98,41.01],['Dubay',55.27,25.2],['Seul',126.98,37.57]];
+  const gc=(a,b)=>{const R=6371,la1=a[1]*RAD,la2=b[1]*RAD,dl=(b[0]-a[0])*RAD,dp=la2-la1,x=Math.sin(dp/2)**2+Math.cos(la1)*Math.cos(la2)*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(x))};
+  /* where the project is: the KMZ centre, else the district centre */
+  function site(){const k=kmz();if(k){const c=kmzCenter(k);if(c)return c}const d=district();if(!d)return null;const c=centreOf(d,pop());if(c)return [c[0],c[1]];const lp=largestPoly(d.geom);return lp?labelPoint(lp).pt:null}
+  /* fastest rail time from one station to another (Dijkstra on the schematic network) */
+  function railTime(a,b){const g={};RL.forEach(([x,y,f])=>{const km=gc(RN[x],RN[y])*1.15,h=km/(f?130:55);(g[x]=g[x]||[]).push([y,h,km]);(g[y]=g[y]||[]).push([x,h,km])});
+    const dist={},km={},seen={};Object.keys(RN).forEach(k=>{dist[k]=Infinity});dist[a]=0;km[a]=0;
+    for(;;){let u=null;for(const k in dist)if(!seen[k]&&(u===null||dist[k]<dist[u]))u=k;if(u===null||dist[u]===Infinity)break;if(u===b)break;seen[u]=1;
+      (g[u]||[]).forEach(([v,h,d])=>{if(dist[u]+h<dist[v]){dist[v]=dist[u]+h;km[v]=km[u]+d}})}
+    return dist[b]===Infinity?null:{h:dist[b],km:km[b]}}
+  const flightH=km=>km/750+0.5;
+  const hm=h=>{if(h===null||h===undefined||!isFinite(h))return '—';const m=Math.round(h*60);return m<60?m+' daq':Math.floor(m/60)+' soat'+(m%60?' '+(m%60)+' daq':'')};
+  function railAir(){const r=region();if(!r)return null;const st=RST[r.id],ap=RAP[r.id],s=site();
+    const rows=UZB.regions.filter(x=>x.id!==r.id).map(x=>{const rt=railTime(RST[x.id],st),a1=AP[RAP[x.id]],a2=AP[ap];
+      return {n:RC[x.id][0],rail:rt?rt.h:null,railKm:rt?rt.km:null,air:RAP[x.id]===ap?null:flightH(gc([a1[1],a1[2]],[a2[1],a2[2]])),airKm:RAP[x.id]===ap?null:gc([a1[1],a1[2]],[a2[1],a2[2]])}}).sort((a,b)=>(a.rail||99)-(b.rail||99));
+    const abroad=ABROAD.map(([n,lo,la])=>({n,h:flightH(gc([lo,la],[AP[ap][1],AP[ap][2]]))}));
+    const toSite=s?{st:gc(RN[st],s)*1.3,ap:gc([AP[ap][1],AP[ap][2]],s)*1.3}:null;
+    return {st,ap,rows,abroad,toSite}}
+  /* ----- roads: driving times and routes (OSRM) ----- */
+  const OSRM='https://router.project-osrm.org';
+  const roads=()=>{const t=V(X,'A7'),s=site(),r=region();if(!t||!s||!r)return null;try{const d=JSON.parse(t);return d&&d.k===roadKey()?d:null}catch(e){return null}};
+  const roadKey=()=>{const s=site(),r=region();return r&&s?r.id+'|'+s[0].toFixed(3)+','+s[1].toFixed(3):''};
+  function origins(){const r=region(),p=pop();if(!r)return {reg:[],dis:[]};
+    const reg=UZB.regions.filter(x=>x.id!==r.id).map(x=>({n:RC[x.id][0],c:[RC[x.id][1],RC[x.id][2]],reg:true}));
+    const dis=r.districts.map(d=>{const c=centreOf(d,p);if(c)return {n:d.name.replace(/ tumani$/,'').replace(/ shahri$/,' sh.'),c:[c[0],c[1]]};const lp=largestPoly(d.geom);return lp?{n:d.name.replace(/ tumani$/,'').replace(/ shahri$/,' sh.'),c:labelPoint(lp).pt}:null}).filter(Boolean);
+    return {reg,dis}}
+  function simplify(pts,tol){if(pts.length<3)return pts;const keep=new Uint8Array(pts.length);keep[0]=keep[pts.length-1]=1;const st=[[0,pts.length-1]];
+    while(st.length){const [a,b]=st.pop();let md=0,mi=-1;for(let i=a+1;i<b;i++){const d=segDist(pts[i],pts[a],pts[b]);if(d>md){md=d;mi=i}}if(md>tol){keep[mi]=1;st.push([a,mi],[mi,b])}}
+    return pts.filter((_,i)=>keep[i]).map(p=>[r6(p[0]),r6(p[1])])}
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+  async function loadRoads(progress){
+    const s=site(),r=region();if(!s||!r)throw new Error('Loyiha joyi aniqlanmagan.');
+    const o=origins(),all=o.reg.concat(o.dis),out={k:roadKey(),src:'OSRM',reg:[],dis:[]};
+    const q=a=>a.map(c=>c[0].toFixed(5)+','+c[1].toFixed(5)).join(';');
+    let tbl=null;try{const res=await fetch(OSRM+'/table/v1/driving/'+q([s].concat(all.map(x=>x.c)))+'?sources='+all.map((_,i)=>i+1).join(';')+'&destinations=0&annotations=duration,distance');
+      if(res.ok){const j=await res.json();if(j.code==='Ok')tbl=j}}catch(e){}
+    if(!tbl)out.src='taxmin';
+    for(let i=0;i<all.length;i++){const x=all[i],row={n:x.n,c:[r6(x.c[0]),r6(x.c[1])]};
+      if(tbl&&tbl.durations[i]&&tbl.durations[i][0]!=null){row.s=Math.round(tbl.durations[i][0]);row.m=Math.round(tbl.distances[i][0])}
+      else{const km=gc(x.c,s)*1.35;row.s=Math.round(km/60*3600);row.m=Math.round(km*1000);row.est=1}
+      if(tbl){try{if(progress)progress(i+1,all.length);const res=await fetch(OSRM+'/route/v1/driving/'+q([x.c,s])+'?overview=simplified&geometries=geojson');
+        if(res.ok){const j=await res.json();if(j.code==='Ok'&&j.routes[0])row.g=simplify(j.routes[0].geometry.coordinates,x.reg?0.01:0.003)}}catch(e){}await wait(250)}
+      (x.reg?out.reg:out.dis).push(row)}
+    commit(X,'A7',JSON.stringify(out));return out}
+  /* ----- drawing helpers ----- */
+  function emoji(ctx,ch,x,y,size){ctx.save();ctx.font=size+'px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(ch,x,y);ctx.restore()}
+  function dot(ctx,x,y,r,fill,stroke,U){ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fillStyle=fill;ctx.fill();ctx.lineWidth=1.6*U;ctx.strokeStyle=stroke;ctx.stroke()}
+  function txt(ctx,t,x,y,size,o){o=o||{};ctx.font=(o.w||'600')+' '+size+'px '+FONT;ctx.textAlign=o.al||'left';ctx.textBaseline=o.bl||'middle';ctx.lineJoin='round';
+    if(o.halo!==false){ctx.lineWidth=size*0.28;ctx.strokeStyle='rgba(255,255,255,0.95)';ctx.strokeText(t,x,y)}ctx.fillStyle=o.col||'#1a1a1a';ctx.fillText(t,x,y)}
+  function panel(ctx,x,y,w,U,title,cols,rows,max){
+    const fs=12.5*U,rh=17.5*U;txt(ctx,title,x,y,14*U,{w:'700',halo:false,bl:'top'});y+=22*U;
+    ctx.fillStyle='#eef1f6';ctx.fillRect(x,y,w,rh);let cx=x;cols.forEach(c=>{txt(ctx,c[0],c[2]==='r'?cx+c[1]*w-6*U:cx+6*U,y+rh/2,11*U,{w:'700',al:c[2]==='r'?'right':'left',halo:false,col:'#444'});cx+=c[1]*w});y+=rh;
+    const show=rows.slice(0,max);show.forEach((r,i)=>{if(i%2){ctx.fillStyle='#f7f8fa';ctx.fillRect(x,y,w,rh)}let cx=x;r.forEach((v,k)=>{const c=cols[k];
+      txt(ctx,String(v),c[2]==='r'?cx+c[1]*w-6*U:cx+6*U,y+rh/2,fs,{w:k?'500':'600',al:c[2]==='r'?'right':'left',halo:false});cx+=c[1]*w});y+=rh});
+    if(rows.length>max){txt(ctx,'… yana '+(rows.length-max)+' ta',x+6*U,y+rh/2,11*U,{halo:false,col:'#777'});y+=rh}
+    return y}
+  function arcTo(ctx,a,b,bend){const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=b[0]-a[0],dy=b[1]-a[1],cx=mx-dy*bend,cy=my+dx*bend;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.quadraticCurveTo(cx,cy,b[0],b[1]);return [cx,cy]}
+  /* sheet 8: Uzbekistan, railway, the region's station and airport, planes coming in from abroad */
+  function render8(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,r=region();
+    if(!r){placeholder(ctx,W,H,U,"Viloyat tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
+    const ra=railAir(),box=frame(ctx,W,H,U,'Temiryo‘l va havo yo‘li orqali yetib kelish','8-rasm · '+RC[r.id][0]+' vokzali va '+AP[ra.ap][0]),
+      mb={x:box.x-20*U,y:box.y,w:box.w*0.62,h:box.h},P=makeProj([UZB.country],W,H,mb);
+    UZB.regions.forEach(x=>draw(ctx,x.geom,P,{fill:x.id===r.id?'rgba(239,83,80,0.18)':null,stroke:COL.inner,width:1*U}));draw(ctx,UZB.country,P,{stroke:COL.line,width:2*U});
+    /* railway: dark line with white ticks */
+    RL.forEach(([a,b,f])=>{const p1=P(RN[a]),p2=P(RN[b]);ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.lineCap='round';ctx.strokeStyle='#333';ctx.lineWidth=(f?4.2:3.2)*U;ctx.stroke();
+      ctx.setLineDash([6*U,6*U]);ctx.strokeStyle='#fff';ctx.lineWidth=(f?1.8:1.3)*U;ctx.stroke();ctx.setLineDash([])});
+    /* region centres */
+    UZB.regions.forEach(x=>{const c=RC[x.id],[px,py]=P([c[1],c[2]]);dot(ctx,px,py,(x.id===r.id?6:3.6)*U,x.id===r.id?'#c62828':'#fff','#333',U);
+      if(x.id!=='toshkent')txt(ctx,c[0],px+7*U,py-9*U,(x.id===r.id?14:11)*U,{w:x.id===r.id?'700':'500',col:'#333'})});
+    /* planes from abroad towards the airport */
+    const ap=AP[ra.ap],[ax,ay]=P([ap[1],ap[2]]);
+    ABROAD.forEach(([n,lo,la],i)=>{const ang=Math.atan2(-(la-ap[2]),(lo-ap[1])*Math.cos(ap[2]*RAD)),R=Math.max(mb.w,mb.h)*0.62;
+      let sx=ax+Math.cos(ang)*R,sy=ay+Math.sin(ang)*R;sx=Math.max(mb.x+10*U,Math.min(mb.x+mb.w-10*U,sx));sy=Math.max(mb.y+14*U,Math.min(mb.y+mb.h-14*U,sy));
+      const c=arcTo(ctx,[sx,sy],[ax,ay],0.18);ctx.setLineDash([7*U,6*U]);ctx.strokeStyle='rgba(30,90,200,0.75)';ctx.lineWidth=2*U;ctx.stroke();ctx.setLineDash([]);
+      const t=0.32,px=(1-t)*(1-t)*sx+2*(1-t)*t*c[0]+t*t*ax,py=(1-t)*(1-t)*sy+2*(1-t)*t*c[1]+t*t*ay,tx=2*(1-t)*(c[0]-sx)+2*t*(ax-c[0]),ty=2*(1-t)*(c[1]-sy)+2*t*(ay-c[1]);
+      ctx.save();ctx.translate(px,py);ctx.rotate(Math.atan2(ty,tx)+Math.PI/4);emoji(ctx,'✈️',0,0,26*U);ctx.restore();
+      txt(ctx,n+' · '+hm(ra.abroad[i].h),sx+(sx<ax?6:-6)*U,sy+(sy<ay?10:-10)*U,11.5*U,{al:sx<ax?'left':'right',col:'#1e4fa8'})});
+    /* station and airport of the region */
+    const [sx,sy]=P(RN[ra.st]);emoji(ctx,'🚆',sx-16*U,sy+18*U,24*U);dot(ctx,ax,ay,6*U,'#1e5ad2','#fff',U);emoji(ctx,'✈️',ax+16*U,ay-16*U,22*U);
+    /* the project, red ring */
+    const s=site();if(s){const [px,py]=P(s);ring(ctx,px,py,13*U,'#e00000',3,U)}
+    /* table */
+    const tx=mb.x+mb.w+30*U,tw=W-tx-30*U;let y=box.y-6*U;
+    y=panel(ctx,tx,y,tw,U,'Viloyat markazlaridan · taxminiy vaqt',[['Shahar',0.36],['🚆 Poyezd',0.32,'r'],['✈️ Samolyot',0.32,'r']],ra.rows.map(x=>[x.n,hm(x.rail),x.air===null?'—':hm(x.air)]),13);
+    y=panel(ctx,tx,y+12*U,tw,U,'Xorijdan ✈️ '+ra.ap+' aeroportiga',[['Shahar',0.6],['Parvoz',0.4,'r']],ra.abroad.map(x=>[x.n,hm(x.h)]),4);
+    if(ra.toSite){y+=10*U;txt(ctx,'Loyiha hududigacha avtomobilda:',tx,y,12*U,{w:'700',halo:false});y+=17*U;
+      txt(ctx,'🚆 vokzaldan ~'+fmt(ra.toSite.st,0)+' km · ✈️ aeroportdan ~'+fmt(ra.toSite.ap,0)+' km',tx,y,11.5*U,{halo:false,col:'#333'});y+=16*U}
+    txt(ctx,"Poyezd: Afrosiyob ~130, boshqa ~55 km/soat; samolyot: to'g'ri reys hisobida. Taxminiy.",tx,Math.min(H-28*U,y+10*U),10*U,{halo:false,col:'#888'});
+    decorations(ctx,P,W,H,U,mb)}
+  /* sheet 9: the region, its centre and district centres, driving routes to the project */
+  function render9(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,r=region(),s=site();
+    if(!r){placeholder(ctx,W,H,U,"Viloyat tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
+    const rd=roads(),box=frame(ctx,W,H,U,'Avtomobil yo‘li orqali yetib kelish','9-rasm · '+r.name+(rd&&rd.src==='OSRM'?' · yo‘llar: OpenStreetMap':' · to‘g‘ri chiziq bo‘yicha taxmin')),
+      mb={x:box.x-20*U,y:box.y,w:box.w*0.62,h:box.h},P=makeProj([r.geom],W,H,mb);
+    r.districts.forEach(x=>draw(ctx,x.geom,P,{stroke:COL.inner,width:1*U}));draw(ctx,r.geom,P,{stroke:COL.line,width:2.2*U});
+    if(!s){placeholder(ctx,W,H,U,'Loyiha joyi aniqlanmagan');return}
+    const [px,py]=P(s);
+    ctx.save();ctx.beginPath();ctx.rect(mb.x,mb.y,mb.w,mb.h);ctx.clip();
+    const line=(row,col,w,dash)=>{const pts=(row.g&&row.g.length>1?row.g:[row.c,s]).map(P);ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
+      ctx.lineJoin='round';ctx.lineCap='round';ctx.setLineDash(dash||[]);ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.lineWidth=w+2.5*U;ctx.stroke();ctx.strokeStyle=col;ctx.lineWidth=w;ctx.stroke();ctx.setLineDash([]);return pts};
+    if(rd){rd.dis.forEach(x=>line(x,'rgba(46,125,50,0.85)',2*U,x.g?null:[6*U,5*U]));
+      rd.reg.forEach(x=>{const pts=line(x,'rgba(21,101,192,0.9)',3*U,x.g?null:[8*U,6*U]);
+        /* where a route from another region comes into view: a car and the city name */
+        let e=null;for(let i=0;i<pts.length;i++){const p=pts[i];if(p[0]>=mb.x+14*U&&p[0]<=mb.x+mb.w-14*U&&p[1]>=mb.y+14*U&&p[1]<=mb.y+mb.h-14*U){e=p;break}}
+        if(e&&Math.hypot(e[0]-px,e[1]-py)>60*U){emoji(ctx,'🚗',e[0],e[1],20*U);txt(ctx,x.n,e[0],e[1]+16*U,11*U,{al:'center',col:'#0d47a1'})}})}
+    ctx.restore();
+    /* district centres, region centre, project */
+    const o=origins();o.dis.forEach(x=>{const [cx,cy]=P(x.c);dot(ctx,cx,cy,4*U,'#2e7d32','#fff',U);txt(ctx,x.n,cx+6*U,cy-8*U,10.5*U,{w:'500',col:'#1b5e20'})});
+    const rc=RC[r.id],[qx,qy]=P([rc[1],rc[2]]);ctx.save();ctx.translate(qx,qy);ctx.beginPath();for(let i=0;i<10;i++){const rr=i%2?5*U:12*U,a=-Math.PI/2+i*Math.PI/5;ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr)}ctx.closePath();
+    ctx.fillStyle='#f2b705';ctx.fill();ctx.lineWidth=1.6*U;ctx.strokeStyle='#5a4300';ctx.stroke();ctx.restore();txt(ctx,rc[0]+' (viloyat markazi)',qx+14*U,qy+12*U,13*U,{w:'700',col:'#5a4300'});
+    ring(ctx,px,py,15*U,'#e00000',3.2,U);emoji(ctx,'🚗',px+24*U,py-20*U,22*U);txt(ctx,'Loyiha hududi',px,py+28*U,13*U,{w:'700',al:'center',col:'#b00000'});
+    /* tables */
+    const tx=mb.x+mb.w+30*U,tw=W-tx-30*U;let y=box.y-6*U;
+    if(!rd){txt(ctx,"Yo'llar hali hisoblanmagan.",tx,y+10*U,13*U,{halo:false,col:'#777'});decorations(ctx,P,W,H,U,mb);return}
+    const fm=x=>(x.est?'~':'')+hm(x.s/3600),km=x=>fmt(x.m/1000,0)+' km';
+    y=panel(ctx,tx,y,tw,U,'🚗 Viloyat markazlaridan',[['Shahar',0.44],['Masofa',0.26,'r'],['Vaqt',0.3,'r']],rd.reg.slice().sort((a,b)=>a.s-b.s).map(x=>[x.n,km(x),fm(x)]),13);
+    y=panel(ctx,tx,y+10*U,tw,U,'🚗 Tuman markazlaridan',[['Tuman',0.44],['Masofa',0.26,'r'],['Vaqt',0.3,'r']],rd.dis.slice().sort((a,b)=>a.s-b.s).map(x=>[x.n,km(x),fm(x)]),Math.max(4,Math.floor((H-60*U-y-40*U)/(17.5*U))));
+    decorations(ctx,P,W,H,U,mb);
+    /* small key under the map */
+    const ky=H-30*U;let kx=mb.x+mb.w*0.3;[['rgba(21,101,192,0.9)','viloyatlardan'],['rgba(46,125,50,0.85)','tumanlardan']].forEach(([c,t])=>{ctx.beginPath();ctx.moveTo(kx,ky);ctx.lineTo(kx+26*U,ky);ctx.strokeStyle=c;ctx.lineWidth=3*U;ctx.stroke();txt(ctx,t,kx+32*U,ky,11*U,{halo:false,col:'#444'});kx+=130*U})}
   function extra(w,thumb){const out=[];const r=relief(w,thumb);if(r)out.push(r);if(pop()&&region()){[render6,render7].forEach(fn=>{if(fn===render7&&!district())return;
-      const big=document.createElement('canvas');big.width=w||2400;big.height=Math.round(big.width/1.4142);NOSUB=!!thumb;try{fn(big);out.push(big.toDataURL('image/jpeg',0.9))}finally{NOSUB=false}})}return out}
+      const big=document.createElement('canvas');big.width=w||2400;big.height=Math.round(big.width/1.4142);NOSUB=!!thumb;try{fn(big);out.push(big.toDataURL('image/jpeg',0.9))}finally{NOSUB=false}})}
+    if(region()){[render8,render9].forEach(fn=>{const big=document.createElement('canvas');big.width=w||2400;big.height=Math.round(big.width/1.4142);NOSUB=!!thumb;try{fn(big);out.push(big.toDataURL('image/jpeg',0.9))}finally{NOSUB=false}})}
+    return out}
   function relief(w,thumb){if(!dem()||!kmz())return null;w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);NOSUB=!!thumb;try{render5(big);return big.toDataURL('image/jpeg',0.9)}finally{NOSUB=false}}
 
   /* the four sheets as JPEG pictures for the PDF (A4 landscape) */
   function images(w,thumb){w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);NOSUB=!!thumb;try{return RENDER.map(fn=>{fn(big);return big.toDataURL('image/jpeg',0.9)})}finally{NOSUB=false}}
-  return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region(),dem,loadDem,relStats,render5,relief,pop,loadPop,render6,render7,extra};
+  return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region(),dem,loadDem,relStats,render5,relief,pop,loadPop,render6,render7,extra,render8,render9,roads,loadRoads,site};
 })();
 
 /* first page: region, district and the KMZ outline */
@@ -3347,7 +3489,7 @@ function mapFields(){
   out.push(qrow('Viloyat',rs,{for:'f-Xarita-A1',icon:'xarita'}));
   const ds=h('select',{id:'f-Xarita-A2',class:'in','aria-label':'Tuman',disabled:!r},h('option',{value:''},r?'Tumanni tanlang':'Avval viloyatni tanlang'),
     r?r.districts.slice().sort((a,b)=>a.name.localeCompare(b.name,'uz')).map(x=>h('option',{value:x.name},x.name)):null);
-  ds.value=d?d.name:'';ds.addEventListener('change',()=>{commit(X,'A2',ds.value||null);if(ds.value)setTimeout(()=>{if(MAP.region()&&!MAP.pop())getPop()},0)});
+  ds.value=d?d.name:'';ds.addEventListener('change',()=>{commit(X,'A2',ds.value||null);if(ds.value)setTimeout(autoMapData,0)});
   out.push(qrow('Tuman (shahar)',ds,{for:'f-Xarita-A2',icon:'pin'}));
   const fi=h('input',{type:'file',accept:'.kmz,.kml',hidden:true,id:'kmzfile'});
   const take=async f=>{if(!f)return;ui.kmzMsg='O‘qilmoqda…';ui.kmzErr=false;ui.demMsg='';render();try{ui.kmzMsg='✓ '+await MAP.load(f)+'.'}catch(e){ui.kmzMsg=e&&e.message||String(e);ui.kmzErr=true;render();return}
@@ -3368,9 +3510,14 @@ function mapFields(){
 async function getPop(){if(getPop.busy||!MAP.region())return;getPop.busy=true;ui.popMsg="Aholi punktlari ma'lumoti olinmoqda…";ui.popErr=false;render();
   try{const n=await MAP.loadPop();ui.popMsg='✓ Aholi zichligi uchun '+nUz(n)+' ta aholi punkti olindi.'}catch(e){ui.popMsg="Aholi punktlari ma'lumotini olib bo'lmadi — internetni tekshirib, «Aholi zichligini olish» tugmasini bosing.";ui.popErr=true}
   getPop.busy=false;render()}
+async function getRoads(){if(getRoads.busy||!MAP.region()||!MAP.site())return;getRoads.busy=true;ui.roadMsg="Yo'llar hisoblanmoqda…";ui.roadErr=false;render();
+  try{const d=await MAP.loadRoads((i,n)=>{ui.roadMsg="Yo'llar hisoblanmoqda… "+i+'/'+n;const e=document.getElementById('roadmsg');if(e)e.textContent=ui.roadMsg});
+    ui.roadMsg=d.src==='OSRM'?"✓ Yo'llar va vaqtlar OpenStreetMap yo'l tarmog'i bo'yicha hisoblandi.":"Yo'nalish xizmatiga ulanib bo'lmadi — vaqtlar to'g'ri chiziq bo'yicha taxminan (60 km/soat) hisoblandi.";ui.roadErr=d.src!=='OSRM'}
+  catch(e){ui.roadMsg="Yo'llarni hisoblab bo'lmadi.";ui.roadErr=true}
+  getRoads.busy=false;render()}
 /* when the map data is missing, fetch it once by itself */
-function autoMapData(){const key=cur+'|'+(V('Xarita','A1')||'')+'|'+(V('Xarita','A4')||'');if(autoMapData.done===key)return;autoMapData.done=key;
-  setTimeout(()=>{if(MAP.region()&&!MAP.pop())getPop();if(MAP.kmz()&&!MAP.dem())getRelief()},50)}
+function autoMapData(){const key=cur+'|'+(V('Xarita','A1')||'')+'|'+(V('Xarita','A2')||'')+'|'+(V('Xarita','A4')||'');if(autoMapData.done===key)return;autoMapData.done=key;
+  setTimeout(async()=>{if(MAP.kmz()&&!MAP.dem())getRelief();if(MAP.region()&&!MAP.pop())await getPop();if(MAP.region()&&MAP.site()&&!MAP.roads())getRoads()},50)}
 async function getRelief(){if(getRelief.busy)return;getRelief.busy=true;ui.demMsg="Relyef ma'lumoti olinmoqda…";ui.demErr=false;render();
   try{ui.demMsg='✓ '+await MAP.loadDem()+'.'}catch(e){ui.demMsg="Relyef ma'lumotini olib bo'lmadi — internetni tekshirib, «Relyefni olish» tugmasini qayta bosing.";ui.demErr=true}
   getRelief.busy=false;render()}
@@ -3396,6 +3543,13 @@ function xaritaPage(p){
       i===0?h('p',{class:'fine'},"Jigarrang — aholi zich yashaydigan joylar, zichlik kamaygan sari ochroq (OpenStreetMap aholi punktlari bo'yicha, taxminiy). Sariq doira — tuman markazi, qizil doira — loyiha hududi."):null,
       cv,i===1?h('div',{class:'mapact'},h('button',{class:'btn',type:'button',disabled:!!getPop.busy,onclick:getPop},icon('refresh',1),MAP.pop()?'Aholi zichligini qayta olish':'Aholi zichligini olish'),
         ui.popMsg?h('span',{class:'kmsg'+(ui.popErr?' err':'')},ui.popMsg):null):null))})}
+  if(r){[['8-rasm · Temiryo‘l va havo yo‘li',MAP.render8],['9-rasm · Avtomobil yo‘llari',MAP.render9]].forEach(([t,fn],i)=>{
+    const cv=h('canvas',{width:'1200',height:'849',class:'mapcv','aria-label':t});fn(cv);
+    out.push(h('section',{class:'card mapc'},h('h3',null,icon('xarita',1),t),
+      i===0?h('p',{class:'fine'},"Temiryo'l, vokzal, aeroport va reyslar sxematik; vaqtlar taxminiy (poyezd tezligi va to'g'ri reys bo'yicha)."):
+        h('p',{class:'fine'},"Avtomobil yo'llari va vaqtlari OpenStreetMap yo'l tarmog'i bo'yicha (OSRM) hisoblanadi; tirbandlik hisobga olinmaydi."),
+      cv,i===1?h('div',{class:'mapact'},h('button',{class:'btn',type:'button',disabled:!!getRoads.busy||!MAP.site(),onclick:getRoads},icon('refresh',1),MAP.roads()?"Yo'llarni qayta hisoblash":"Yo'llarni hisoblash"),
+        ui.roadMsg?h('span',{class:'kmsg'+(ui.roadErr?' err':''),id:'roadmsg'},ui.roadMsg):null):null))})}
   return out;
 }
 
@@ -3485,8 +3639,9 @@ function reportDoc(full,only){
   /* 4b. the four maps in one row under the charts */
   if(MAP.ready()){const ims=MAP.images(1200,true);
     c.push({unbreakable:true,margin:[0,4,0,0],stack:[{text:'Xaritada joylashuv',style:'h2',margin:[0,4,0,6]},
-      {columns:ims.map((im,i)=>({width:'*',stack:[{image:im,width:122,alignment:'center'},{text:''}]})),columnGap:6}]});
-    const ex=MAP.extra(1200,true);if(ex.length)c.push({margin:[0,8,0,0],columns:[0,1,2,3].map(i=>ex[i]?{width:'*',stack:[{image:ex[i],width:122,alignment:'center'}]}:{width:'*',text:''}),columnGap:6})}
+      {text:''}]});
+    /* all sheets in rows of five, each the same size */
+    const all=ims.concat(MAP.extra(1200,true));for(let a=0;a<all.length;a+=5)c.push({margin:[0,a?6:0,0,0],unbreakable:true,columns:[0,1,2,3,4].map(i=>all[a+i]?{width:'*',image:all[a+i],width:99}:{width:99,text:''}),columnGap:5})}
   /* 5. full report: each section, then each object and LOT */
   const head=(t,am)=>({columns:[{text:t,fontSize:13,bold:true,color:NAVY},{text:am===null?'':mln(am)+" mln so'm",fontSize:13,bold:true,color:NAVY,alignment:'right',width:150}],margin:[0,22,0,6],headlineLevel:1});
   let firstSec=true;
@@ -3716,7 +3871,7 @@ async function refresh(){
   catch(e){loadErr=e&&(e.status===401||e.status===403)?"Loyihalarni yuklab bo'lmadi: kirish kaliti yaroqsiz yoki muddati tugagan.":"Loyihalarni yuklab bo'lmadi. Internetni tekshirib, qayta urinib ko'ring."}
   loaded=true;if(!cur)render();
 }
-function resetUiState(){Object.assign(ui,{kmzMsg:'',kmzErr:false,demMsg:'',demErr:false,popMsg:'',popErr:false,lotOpen:{},lots:0,areas:1,pipes:{},segs:{},objs:{b:1,p:0},zones:1,showAll:{},q:'',cat:'',old:false,pe:null,leave:false,del:null})}
+function resetUiState(){Object.assign(ui,{kmzMsg:'',kmzErr:false,demMsg:'',demErr:false,popMsg:'',popErr:false,roadMsg:'',roadErr:false,lotOpen:{},lots:0,areas:1,pipes:{},segs:{},objs:{b:1,p:0},zones:1,showAll:{},q:'',cat:'',old:false,pe:null,leave:false,del:null})}
 function openProject(id,cells,isDirty){
   cur=id;resetUiState();const p=projects[id];
   const cl=Object.assign({},cells||(p?p.cells:{}));if('Jamlama!C8' in cl){if(!('Jamlama!F12' in cl))cl['Jamlama!F12']=cl['Jamlama!C8'];delete cl['Jamlama!C8']}
