@@ -2115,7 +2115,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794595637';
+const BUILD_ID='1794596033';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
     if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
@@ -3201,6 +3201,13 @@ const MAP=(function(){
   function bars(ctx,x,y,w,U,title,items,hi){txt(ctx,title,x,y,13*U,{w:'700',halo:false,bl:'top'});y+=20*U;const max=Math.max(...items.map(i=>i[1]));const lw=w*0.42,bw=w-lw-58*U,rh=15*U;
     items.forEach(([n,v])=>{const on=n===hi;txt(ctx,n,x+lw-6*U,y+rh/2,10.5*U,{al:'right',halo:false,w:on?'700':'500',col:on?'#b00000':'#333'});
       ctx.fillStyle=on?'#c62828':'#a0703e';ctx.fillRect(x+lw,y+2*U,Math.max(1,bw*v/max),rh-4*U);txt(ctx,fmt(v,1),x+lw+bw*v/max+4*U,y+rh/2,10*U,{halo:false,col:'#555'});y+=rh});return y}
+  function donut(ctx,cx,cy,R,U,title,parts,center){txt(ctx,title,cx,cy-R-14*U,11.5*U,{al:'center',w:'700',halo:false});
+    const tot=parts.reduce((a,p)=>a+p[1],0)||1;let a0=-Math.PI/2;
+    parts.forEach(([n,v,c])=>{const a1=a0+v/tot*Math.PI*2;ctx.beginPath();ctx.arc(cx,cy,R,a0,a1);ctx.arc(cx,cy,R*0.58,a1,a0,true);ctx.closePath();ctx.fillStyle=c;ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2*U;ctx.stroke();a0=a1});
+    const cl=center.split(' ');if(cl.length>1){txt(ctx,cl[0],cx,cy-6*U,13*U,{al:'center',w:'700',halo:false});txt(ctx,cl.slice(1).join(' '),cx,cy+9*U,10*U,{al:'center',halo:false,col:'#555'})}else txt(ctx,center,cx,cy,13*U,{al:'center',w:'700',halo:false});
+    parts.forEach(([n,v,c],i)=>{const ly=cy+R+14*U+i*15*U;ctx.fillStyle=c;ctx.fillRect(cx-R-4*U,ly-5*U,10*U,10*U);txt(ctx,n+' '+pc(v,tot),cx-R+10*U,ly,10.5*U,{halo:false,col:'#333'})})}
+  function donuts(ctx,x,y,w,U,list){const R=Math.min(44*U,w/list.length/2-26*U);list.forEach((d,i)=>donut(ctx,x+w/list.length*(i+0.5),y+R+20*U,R,U,...d));return y+2*R+20*U+18*U+15*U*Math.max(...list.map(d=>d[1].length))}
+  const C_URB='#6d3b1a',C_RUR='#d9b98f',C_WA='#a0703e',C_OTH='#ece2d2',UZ_KM2=448969;
   function demoRegion(ctx,x,y,w,U,H){const r=region(),S=typeof STAT!=='undefined'&&r?STAT.r[r.id]:null;
     if(!S){txt(ctx,"Statistik ma'lumot topilmadi",x,y+10*U,13*U,{halo:false,col:'#777'});return}
     const km2=geomKm2(r.geom),urb=S.p26-S.rur,rank=1+Object.values(STAT.r).filter(o=>o.p26>S.p26).length,nd=Object.keys(S.d).length;
@@ -3210,7 +3217,10 @@ const MAP=(function(){
     y=panel(ctx,x,y,w,U,r.name+' · 2026-yil boshi',[["Ko‘rsatkich",0.5],['Qiymati',0.5,'r']],rows,12);
     const d=district(),items=Object.entries(S.d).sort((a,b)=>b[1].p26-a[1].p26).map(([n,o])=>[n.replace(/ tumani$/,'').replace(/ shahri$/,' sh.'),o.p26]);
     const hi=d?d.name.replace(/ tumani$/,'').replace(/ shahri$/,' sh.'):null,top=items.slice(0,9);if(hi&&!top.some(i=>i[0]===hi)){const f=items.find(i=>i[0]===hi);if(f)top.push(f)}
-    y=bars(ctx,x,y+14*U,w,U,'Eng ko‘p aholi · ming kishi',top,hi);demoNote(ctx,x,y+10*U,w,U,H)}
+    y=donuts(ctx,x,y+14*U,w,U,[['Shahar va qishloq',[['Shahar',urb,C_URB],['Qishloq',S.rur,C_RUR]],fmt(S.p26/1000,2)+' mln'],
+      ['Yosh tarkibi',[['Mehnatga layoqatli',S.wa,C_WA],['Boshqa yoshdagilar',S.p26-S.wa,C_OTH]],pc(S.wa,S.p26)],
+      ['Respublikadagi ulushi',[[r.name.replace(/ (viloyati|Respublikasi)$/,''),S.p26,'#c62828'],['Boshqa hududlar',STAT.uz.p26-S.p26,C_OTH]],pc(S.p26,STAT.uz.p26)]]);
+    y=bars(ctx,x,y+8*U,w,U,'Tuman va shaharlar aholisi · ming kishi',top,hi);demoNote(ctx,x,y+10*U,w,U,H)}
   function demoDistrict(ctx,x,y,w,U,H){const r=region(),d=district(),S=typeof STAT!=='undefined'&&r?STAT.r[r.id]:null,D=S&&d?S.d[d.name]:null;
     if(!D){txt(ctx,"Bu tuman bo‘yicha statistik ma'lumot topilmadi",x,y+10*U,13*U,{halo:false,col:'#777'});return}
     const km2=geomKm2(d.geom),urb=D.p26-D.rur,list=Object.values(S.d).sort((a,b)=>b.p26-a.p26),rank=list.indexOf(D)+1,rkm=geomKm2(r.geom),wa=D.p26*S.wa/S.p26;
@@ -3218,11 +3228,15 @@ const MAP=(function(){
       ['Viloyatdagi ulushi',pc(D.p26,S.p26)+' · '+rank+'-o‘rin ('+list.length+' tadan)'],['Shahar aholisi',th(urb)+' ('+pc(urb,D.p26)+')'],['Qishloq aholisi',th(D.rur)+' ('+pc(D.rur,D.p26)+')'],
       ['Mehnatga layoqatli yoshda','~'+th(wa)+' (taxmin)'],['Maydoni',fmt(km2,0)+' km²'],['Aholi zichligi',fmt(D.p26*1000/km2,0)+' kishi/km²'],['Viloyat o‘rtacha zichligi',fmt(S.p26*1000/rkm,0)+' kishi/km²']];
     y=panel(ctx,x,y,w,U,d.name+' · 2026-yil boshi',[["Ko‘rsatkich",0.5],['Qiymati',0.5,'r']],rows,12);
-    /* town and village shares as one bar */
-    y+=16*U;txt(ctx,'Shahar va qishloq aholisi',x,y,13*U,{w:'700',halo:false,bl:'top'});y+=22*U;const bh=22*U,f=D.p26?urb/D.p26:0;
-    ctx.fillStyle='#6d3b1a';ctx.fillRect(x,y,w*f,bh);ctx.fillStyle='#d9b98f';ctx.fillRect(x+w*f,y,w*(1-f),bh);
-    if(f>0.12)txt(ctx,'shahar '+pc(urb,D.p26),x+6*U,y+bh/2,11*U,{halo:false,col:'#fff',w:'700'});if(f<0.88)txt(ctx,'qishloq '+pc(D.rur,D.p26),x+w-6*U,y+bh/2,11*U,{halo:false,al:'right',col:'#3b2208',w:'700'});
-    y+=bh+12*U;txt(ctx,"Mehnatga layoqatli yoshdagi aholi tuman uchun e'lon qilinmagan — viloyat ulushi bo‘yicha taxmin.",x,y,9.5*U,{halo:false,col:'#888',bl:'top'});
+    y=donuts(ctx,x,y+14*U,w,U,[['Shahar va qishloq',[['Shahar',urb,C_URB],['Qishloq',D.rur,C_RUR]],fmt(D.p26,1)+' ming'],
+      ['Yosh tarkibi (taxmin)',[['Mehnatga layoqatli',wa,C_WA],['Boshqa yoshdagilar',D.p26-wa,C_OTH]],pc(wa,D.p26)],
+      ['Viloyatdagi ulushi',[[d.name.replace(/ tumani$/,''),D.p26,'#c62828'],['Boshqa tumanlar',S.p26-D.p26,C_OTH]],pc(D.p26,S.p26)]]);
+    const dn=D.p26*1000/km2,rn=S.p26*1000/rkm,un=STAT.uz.p26*1000/UZ_KM2,hd=d.name.replace(/ tumani$/,'').replace(/ shahri$/,' sh.');
+    y=bars(ctx,x,y+6*U,w,U,'Aholi zichligi · kishi/km²',[[hd,dn],['Viloyat o‘rtacha',rn],['Respublika o‘rtacha',un]],hd);
+    const items=Object.entries(S.d).sort((a,b)=>b[1].p26-a[1].p26).map(([n,o])=>[n.replace(/ tumani$/,'').replace(/ shahri$/,' sh.'),o.p26]),top=items.slice(0,6);
+    if(!top.some(t=>t[0]===hd)){const f=items.find(t=>t[0]===hd);if(f)top.push(f)}
+    y=bars(ctx,x,y+12*U,w,U,'Viloyatdagi o‘rni · ming kishi',top,hd);
+    txt(ctx,"Mehnatga layoqatli yoshdagi aholi tuman uchun e'lon qilinmagan — viloyat ulushi bo‘yicha taxmin.",x,y+8*U,9.5*U,{halo:false,col:'#888',bl:'top'});y+=8*U;
     demoNote(ctx,x,y+18*U,w,U,H)}
   function render6(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,r=region(),d=district(),p=pop();
     if(!r){placeholder(ctx,W,H,U,"Viloyat tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
