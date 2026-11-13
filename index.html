@@ -2007,7 +2007,7 @@ const LOTEXTRA=[["Avtoturargoh (1 joy)",'joy',4500000],["Kirish darvozasi",'dona
   const c={};LOTCAT.forEach((k,i)=>{c['B'+(1+i)]=[k.rate,6]});
   LOTSITE.forEach((k,i)=>{c['B'+(30+i)]=[k.rate,6]});
   M.sheets.push({name:'LotNarx',rows:40,cols:2,show:2,cells:c,merges:[],dv:[],cf:[],widths:{},hidden:[]});
-  M.sheets.push({name:'Xarita',rows:5,cols:2,show:2,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
+  M.sheets.push({name:'Xarita',rows:6,cols:2,show:2,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
   /* number of lots: investor LOTs plus DXSH objects that carry a LOT number; typed by hand only when there are none */
   const J=M.sheets.find(s=>s.name==='Jamlama');J.cells.F12=[null,6];
   J.cells.C8=['=IF(COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79)>0,COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79),IF(F12="",0,F12))',6];
@@ -2079,7 +2079,7 @@ M.sheets.forEach(sh=>{sh.ed={};sh.dv.forEach(dv=>dv.ranges.forEach(r=>expand(r).
   const BN=SH.Bino;for(let r=3;r<=22;r++){BN.ed['A'+r]={t:'text'};BN.ed['B'+r]={t:'num'}}BN.ed.P1={t:'num'};BN.ed.P2={t:'num'};
   [[30,49],[60,79]].forEach(x=>{for(let r=x[0];r<=x[1];r++){BN.ed['A'+r]={t:'range',s:'Bino',r:'A3:A22'};BN.ed['B'+r]={t:'text'};'CDEFGJN'.split('').forEach(c=>{BN.ed[c+r]={t:'num'}})}});
   const LT=SH.Lot;LOTROWS_ED.forEach(r=>{'ACDEFGIKLNPQ'.split('').forEach(c=>{LT.ed[c+r]={t:'num'}});LT.ed['B'+r]={t:'text'};LT.ed['T'+r]={t:'text'};LT.ed['O'+r]={t:'list',v:LOTSTYLE};LT.ed['S'+r]={t:'list',v:LOTTRADE}});
-  SH.LotNom.ed.A1={t:'text'};['A1','A2','A3','A4','A5'].forEach(a=>{SH.Xarita.ed[a]={t:'text'}});for(let i=1;i<=11;i++)SH.LotNarx.ed['B'+i]={t:'num'};for(let i=30;i<=34;i++)SH.LotNarx.ed['B'+i]={t:'num'};
+  SH.LotNom.ed.A1={t:'text'};['A1','A2','A3','A4','A5','A6'].forEach(a=>{SH.Xarita.ed[a]={t:'text'}});for(let i=1;i<=11;i++)SH.LotNarx.ed['B'+i]={t:'num'};for(let i=30;i<=34;i++)SH.LotNarx.ed['B'+i]={t:'num'};
   for(let r=60;r<=79;r++){BN.ed['R'+r]={t:'num'};BN.ed['T'+r]={t:'num'}}for(let r=30;r<=49;r++)BN.ed['T'+r]={t:'num'};
   const B=SH.Baza,kinds={E:{t:'num'},H:{t:'date'},F:{t:'list',v:['Sayt narxi','≈ Taxminiy']}};
   for(let r=5;r<=304;r++)for(const c of 'BCDEFGHJKLM'){const a=c+r;if(!isFormula(B,a))B.ed[a]=kinds[c]||{t:'text'}}
@@ -2113,7 +2113,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794540545';
+const BUILD_ID='1794541705';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
     if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
@@ -3125,20 +3125,78 @@ const MAP=(function(){
     if(r)draw(ctx,r.geom,P,{fill:COL.fill});UZB.regions.forEach(x=>draw(ctx,x.geom,P,{stroke:COL.inner,width:1.1*U}));
     if(r)draw(ctx,r.geom,P,{stroke:COL.fillStroke,width:1.6*U});draw(ctx,UZB.country,P,{stroke:COL.line,width:2.2*U});
     if(r)placeLabel(ctx,r.name,[r.geom],P,24*U,W,H,box,U);decorations(ctx,P,W,H,U,box)}
-  function render2(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,r=region(),d=district();
+  /* ----- population: settlements of the region from OpenStreetMap (city, town, village, hamlet with population where known).
+     Fetched once per region and kept in Xarita!A6: {r:regionId, p:[[lon,lat,people,kind,name]]}. Drawn as a brown density
+     surface (dark where many people live close together, paler as it thins out). ----- */
+  const KINDW={city:50000,town:8000,village:1200,hamlet:150};
+  const pop=()=>{const t=V(X,'A6'),r=region();if(!t||!r)return null;try{const d=JSON.parse(t);return d&&d.r===r.id&&Array.isArray(d.p)?d.p:null}catch(e){return null}};
+  async function loadPop(){
+    const r=region();if(!r)throw new Error('Viloyat tanlanmagan.');
+    const b=bboxOf([r.geom]),q='[out:json][timeout:90];node["place"~"^(city|town|village|hamlet)$"]('+[b[1],b[0],b[3],b[2]].map(v=>v.toFixed(4)).join(',')+');out qt;';
+    let js=null,err=null;
+    for(const host of ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter','https://maps.mail.ru/osm/tools/overpass/api/interpreter']){
+      try{const res=await fetch(host+'?data='+encodeURIComponent(q));if(!res.ok)throw new Error(String(res.status));js=await res.json();break}catch(e){err=e}}
+    if(!js)throw err||new Error('overpass');
+    const p=[];(js.elements||[]).forEach(e=>{if(e.type!=='node')return;const t=e.tags||{},k=t.place,pt=[r6(e.lon),r6(e.lat)];if(!KINDW[k]||!inGeom(pt,r.geom))return;
+      const n=parseInt(String(t.population||'').replace(/[^\d]/g,''),10);
+      p.push([pt[0],pt[1],n>0&&n<5e6?n:KINDW[k],k,(k==='city'||k==='town'||n>3000)?String(t['name:uz']||t.name||''):'' ])});
+    commit(X,'A6',JSON.stringify({r:r.id,p}));return p.length;
+  }
+  /* biggest settlement inside a district: its centre */
+  function centreOf(d,p){let best=null;(p||[]).forEach(x=>{if(inGeom([x[0],x[1]],d.geom)&&(!best||x[2]>best[2]))best=x});return best}
+  const BROWN=[[244,232,214],[214,180,140],[164,112,66],[110,62,26],[72,36,12]];
+  function brown(t){t=Math.max(0,Math.min(1,t))*(BROWN.length-1);const i=Math.min(BROWN.length-2,Math.floor(t)),f=t-i,a=BROWN[i],b=BROWN[i+1];return a.map((v,k)=>Math.round(v+(b[k]-v)*f))}
+  /* density surface: each settlement spreads its people over a few km (Gaussian), clipped to the given outline */
+  function density(ctx,P,clip,p,box,U,sigmaKm){
+    if(!p||!p.length)return false;const cell=Math.max(3,4*U),gw=Math.ceil(box.w/cell)+1,gh=Math.ceil(box.h/cell)+1,g=new Float32Array(gw*gh);
+    const s=sigmaKm*P.pxPerDegLat/111.32/cell,rad=Math.ceil(s*3),k2=1/(2*s*s);
+    p.forEach(x=>{const [px,py]=P([x[0],x[1]]),cx=(px-box.x)/cell,cy=(py-box.y)/cell,i0=Math.floor(cx),j0=Math.floor(cy);
+      for(let j=Math.max(0,j0-rad);j<=Math.min(gh-1,j0+rad);j++)for(let i=Math.max(0,i0-rad);i<=Math.min(gw-1,i0+rad);i++){const dx=i-cx,dy=j-cy,d2=dx*dx+dy*dy;if(d2<=rad*rad)g[j*gw+i]+=x[2]*Math.exp(-d2*k2)}});
+    const vals=Array.from(g).filter(v=>v>0).sort((a,b)=>a-b);if(!vals.length)return false;const top=vals[Math.floor(vals.length*0.985)]||vals[vals.length-1];
+    const oc=document.createElement('canvas');oc.width=gw;oc.height=gh;const oc2=oc.getContext('2d'),im=oc2.createImageData(gw,gh);
+    for(let q=0;q<gw*gh;q++){const t=Math.sqrt(Math.min(1,g[q]/top));if(t<0.06)continue;const c=brown(t);im.data[q*4]=c[0];im.data[q*4+1]=c[1];im.data[q*4+2]=c[2];im.data[q*4+3]=Math.round(255*Math.min(0.92,0.25+t))}
+    oc2.putImageData(im,0,0);
+    ctx.save();trace(ctx,clip,P);ctx.clip('evenodd');ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(oc,box.x-cell/2,box.y-cell/2,gw*cell,gh*cell);ctx.restore();
+    return true;
+  }
+  function popLegend(ctx,W,H,U,box){
+    const lw=150*U,lh=12*U,lx=box.x+box.w-lw-10*U,ly=H-50*U;
+    for(let i=0;i<lw;i++){const c=brown(i/lw);ctx.fillStyle='rgb('+c.join(',')+')';ctx.fillRect(lx+i,ly,1.5,lh)}
+    ctx.strokeStyle='#777';ctx.lineWidth=1*U;ctx.strokeRect(lx,ly,lw,lh);
+    ctx.fillStyle='#333';ctx.font='600 '+(13*U)+'px '+FONT;ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText('Aholi zichligi',lx,ly-4*U);
+    ctx.font=(11*U)+'px '+FONT;ctx.textBaseline='top';ctx.fillText('kam',lx,ly+lh+3*U);ctx.textAlign='right';ctx.fillText("ko'p",lx+lw,ly+lh+3*U);
+    ctx.textAlign='left';ctx.fillStyle='#888';ctx.fillText('Manba: OpenStreetMap',lx,ly+lh+17*U);
+  }
+  /* rings: yellow round the district centre's built-up area, red round the (tiny) project area */
+  function ring(ctx,x,y,r,col,w,U){ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.lineWidth=w*U+3*U;ctx.strokeStyle='rgba(255,255,255,0.85)';ctx.stroke();ctx.lineWidth=w*U;ctx.strokeStyle=col;ctx.stroke()}
+  function projRing(ctx,P,U,minR){const k=kmz();if(!k)return null;const bb=bboxOf(k),a=P([bb[0],bb[3]]),b=P([bb[2],bb[1]]),cx=(a[0]+b[0])/2,cy=(a[1]+b[1])/2,r=Math.max(minR*U,Math.hypot(b[0]-a[0],b[1]-a[1])/2+8*U);
+    ring(ctx,cx,cy,r,'#e00000',3.2,U);return [cx,cy,r]}
+  function centreRing(ctx,P,U,c,minR){if(!c)return null;const [x,y]=P([c[0],c[1]]),km=Math.max(1.2,Math.min(7,0.022*Math.sqrt(c[2]))),r=Math.max(minR*U,km*P.pxPerDegLat/111.32);
+    ring(ctx,x,y,r,'#f2b705',3.4,U);if(c[4]){ctx.font='700 '+(15*U)+'px '+FONT;ctx.textAlign='left';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.lineWidth=4*U;ctx.strokeStyle='rgba(255,255,255,0.95)';
+      const tx=x+r+6*U;ctx.strokeText(c[4],tx,y);ctx.fillStyle='#5a4300';ctx.fillText(c[4],tx,y)}return [x,y,r]}
+  function keys(ctx,H,U,box,items){let x=box.x+box.w*0.36;const y=H-38*U;ctx.font=(13*U)+'px '+FONT;ctx.textBaseline='middle';ctx.textAlign='left';
+    items.forEach(([col,txt])=>{ring(ctx,x+9*U,y,8*U,col,2.6,U);ctx.fillStyle='#333';ctx.fillText(txt,x+24*U,y);x+=ctx.measureText(txt).width+52*U})}
+  function render2(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,r=region(),d=district(),p=pop();
     if(!r){placeholder(ctx,W,H,U,"Viloyat tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
     const box=frame(ctx,W,H,U,d?r.name+'da '+d.name+' joylashuvi':r.name,'2-rasm'),P=makeProj([r.geom],W,H,box);
-    if(d)draw(ctx,d.geom,P,{fill:COL.fill});r.districts.forEach(x=>draw(ctx,x.geom,P,{stroke:COL.inner,width:1.1*U}));
-    if(d)draw(ctx,d.geom,P,{stroke:COL.fillStroke,width:1.6*U});draw(ctx,r.geom,P,{stroke:COL.line,width:2.2*U});
-    if(d)placeLabel(ctx,d.name,[d.geom],P,24*U,W,H,box,U);decorations(ctx,P,W,H,U,box)}
-  function render3(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,d=district(),k=kmz();
+    const dens=density(ctx,P,r.geom,p,box,U,4);
+    if(d&&!dens)draw(ctx,d.geom,P,{fill:COL.fill});r.districts.forEach(x=>draw(ctx,x.geom,P,{stroke:dens?'rgba(120,120,120,0.55)':COL.inner,width:1.1*U}));
+    if(d)draw(ctx,d.geom,P,{stroke:COL.fillStroke,width:(dens?3:1.6)*U});draw(ctx,r.geom,P,{stroke:COL.line,width:2.2*U});
+    const it=[];if(d){const c=centreRing(ctx,P,U,centreOf(d,p),9);if(c)it.push(['#f2b705','Tuman markazi'])}
+    if(projRing(ctx,P,U,11))it.push(['#e00000','Loyiha hududi']);
+    if(d)placeLabel(ctx,d.name,[d.geom],P,22*U,W,H,box,U);if(dens)popLegend(ctx,W,H,U,box);if(it.length)keys(ctx,H,U,box,it);decorations(ctx,P,W,H,U,box)}
+  function render3(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,d=district(),k=kmz(),p=pop();
     if(!d){placeholder(ctx,W,H,U,"Tuman tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
     const lb=label(),box=frame(ctx,W,H,U,k?d.name+'da '+lb+' joylashuvi':d.name,'3-rasm'),P=makeProj(k?[d.geom,...k]:[d.geom],W,H,box);
-    draw(ctx,d.geom,P,{stroke:COL.line,width:2.2*U});if(!k){decorations(ctx,P,W,H,U,box);return}
-    k.forEach(g=>{if(g.type==='Polygon')draw(ctx,g,P,{fill:COL.projFill,stroke:COL.fillStroke,width:1.8*U});else if(g.type==='LineString')draw(ctx,g,P,{stroke:COL.fillStroke,width:3.5*U});else draw(ctx,g,P,{pt:8*U,fill:'#e53935',stroke:'#7f0000',width:2*U})});
-    const bb=bboxOf(k),a=P([bb[0],bb[3]]),b=P([bb[2],bb[1]]),sz=Math.max(b[0]-a[0],b[1]-a[1]);
-    if(sz<26*U){ctx.beginPath();ctx.arc((a[0]+b[0])/2,(a[1]+b[1])/2,Math.max(16*U,sz),0,7);ctx.strokeStyle=COL.fillStroke;ctx.lineWidth=2.5*U;ctx.stroke()}
-    placeLabel(ctx,'Loyiha hududi',k,P,24*U,W,H,box,U);decorations(ctx,P,W,H,U,box)}
+    const dens=density(ctx,P,d.geom,p,box,U,1.6);
+    draw(ctx,d.geom,P,{stroke:COL.line,width:2.2*U});
+    const it=[];if(centreRing(ctx,P,U,centreOf(d,p),14))it.push(['#f2b705','Tuman markazi']);
+    if(k){k.forEach(g=>{if(g.type==='Polygon')draw(ctx,g,P,{fill:COL.projFill,stroke:COL.fillStroke,width:1.8*U});else if(g.type==='LineString')draw(ctx,g,P,{stroke:COL.fillStroke,width:3.5*U});else draw(ctx,g,P,{pt:8*U,fill:'#e53935',stroke:'#7f0000',width:2*U})});
+      const pr=projRing(ctx,P,U,18);it.push(['#e00000','Loyiha hududi']);
+      /* label below-left of the red ring, clear of the district centre's name on the right */
+      if(pr){const t='Loyiha hududi';ctx.font='700 '+(20*U)+'px '+FONT;const tw=ctx.measureText(t).width,tx=Math.max(box.x+tw/2,pr[0]-pr[2]-tw/2-4*U),ty=pr[1]+pr[2]+16*U;
+        ctx.beginPath();ctx.moveTo(pr[0]-pr[2]*0.7,pr[1]+pr[2]*0.7);ctx.lineTo(tx+tw/2-2*U,ty-6*U);ctx.strokeStyle='#b00000';ctx.lineWidth=1.6*U;ctx.stroke();textLabel(ctx,t,tx,ty,20*U)}}
+    if(dens)popLegend(ctx,W,H,U,box);if(it.length)keys(ctx,H,U,box,it);decorations(ctx,P,W,H,U,box)}
   const RAD=Math.PI/180,WA=6378137,WE2=0.00669437999014;
   function localScale(lat){const s=Math.sin(lat*RAD),w=1-WE2*s*s,Nn=WA/Math.sqrt(w),Mm=WA*(1-WE2)/(w*Math.sqrt(w));return [Nn*Math.cos(lat*RAD)*RAD,Mm*RAD]}
   function hav(a,b){const [kx,ky]=localScale((a[1]+b[1])/2);return Math.hypot((b[0]-a[0])*kx,(b[1]-a[1])*ky)}
@@ -3259,7 +3317,7 @@ const MAP=(function(){
 
   /* the four sheets as JPEG pictures for the PDF (A4 landscape) */
   function images(w,thumb){w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);NOSUB=!!thumb;try{return RENDER.map(fn=>{fn(big);return big.toDataURL('image/jpeg',0.9)})}finally{NOSUB=false}}
-  return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region(),dem,loadDem,relStats,render5,relief};
+  return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region(),dem,loadDem,relStats,render5,relief,pop,loadPop};
 })();
 
 /* first page: region, district and the KMZ outline */
@@ -3267,7 +3325,7 @@ function mapFields(){
   const X=MAP.X,r=MAP.region(),d=MAP.district(),k=MAP.kmz(),out=[];
   const rs=h('select',{id:'f-Xarita-A1',class:'in','aria-label':'Viloyat'},h('option',{value:''},'Viloyatni tanlang'),
     UZB.regions.slice().sort((a,b)=>a.name.localeCompare(b.name,'uz')).map(x=>h('option',{value:x.id},x.name)));
-  rs.value=r?r.id:'';rs.addEventListener('change',()=>{commit(X,'A1',rs.value||null);commit(X,'A2',null)});
+  rs.value=r?r.id:'';rs.addEventListener('change',()=>{commit(X,'A1',rs.value||null);commit(X,'A2',null);setTimeout(autoMapData,0)});
   out.push(qrow('Viloyat',rs,{for:'f-Xarita-A1',icon:'xarita'}));
   const ds=h('select',{id:'f-Xarita-A2',class:'in','aria-label':'Tuman',disabled:!r},h('option',{value:''},r?'Tumanni tanlang':'Avval viloyatni tanlang'),
     r?r.districts.slice().sort((a,b)=>a.name.localeCompare(b.name,'uz')).map(x=>h('option',{value:x.name},x.name)):null);
@@ -3275,7 +3333,7 @@ function mapFields(){
   out.push(qrow('Tuman (shahar)',ds,{for:'f-Xarita-A2',icon:'pin'}));
   const fi=h('input',{type:'file',accept:'.kmz,.kml',hidden:true,id:'kmzfile'});
   const take=async f=>{if(!f)return;ui.kmzMsg='O‘qilmoqda…';ui.kmzErr=false;ui.demMsg='';render();try{ui.kmzMsg='✓ '+await MAP.load(f)+'.'}catch(e){ui.kmzMsg=e&&e.message||String(e);ui.kmzErr=true;render();return}
-    render();getRelief()};
+    render();autoMapData();getRelief()};
   fi.addEventListener('change',()=>{take(fi.files[0]);fi.value=''});
   const drop=h('div',{class:'kdrop',tabindex:'0',role:'button',onclick:()=>fi.click(),onkeydown:e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fi.click()}}},
     h('b',null,icon('upload',1),k?'Boshqa KMZ fayl yuklash':'KMZ faylni tanlang'),h('small',null,"yoki shu yerga tashlang · .kmz / .kml (Google Earth)"));
@@ -3289,14 +3347,23 @@ function mapFields(){
   return out;
 }
 /* fetch the heights of the project area (needs internet once; the result stays with the project) */
+async function getPop(){if(getPop.busy||!MAP.region())return;getPop.busy=true;ui.popMsg="Aholi punktlari ma'lumoti olinmoqda…";ui.popErr=false;render();
+  try{const n=await MAP.loadPop();ui.popMsg='✓ Aholi zichligi uchun '+nUz(n)+' ta aholi punkti olindi.'}catch(e){ui.popMsg="Aholi punktlari ma'lumotini olib bo'lmadi — internetni tekshirib, «Aholi zichligini olish» tugmasini bosing.";ui.popErr=true}
+  getPop.busy=false;render()}
+/* when the map data is missing, fetch it once by itself */
+function autoMapData(){const key=cur+'|'+(V('Xarita','A1')||'')+'|'+(V('Xarita','A4')||'');if(autoMapData.done===key)return;autoMapData.done=key;
+  setTimeout(()=>{if(MAP.region()&&!MAP.pop())getPop();if(MAP.kmz()&&!MAP.dem())getRelief()},50)}
 async function getRelief(){if(getRelief.busy)return;getRelief.busy=true;ui.demMsg="Relyef ma'lumoti olinmoqda…";ui.demErr=false;render();
   try{ui.demMsg='✓ '+await MAP.loadDem()+'.'}catch(e){ui.demMsg="Relyef ma'lumotini olib bo'lmadi — internetni tekshirib, «Relyefni olish» tugmasini qayta bosing.";ui.demErr=true}
   getRelief.busy=false;render()}
 function xaritaPage(p){
-  const r=MAP.region(),d=MAP.district(),k=MAP.kmz();
+  const r=MAP.region(),d=MAP.district(),k=MAP.kmz();autoMapData();
   const out=[h('div',{class:'pagehead'},h('h2',null,p.title,icon(p.k)),h('p',null,"Viloyat, tuman va KMZ fayl «",h('a',{href:'#umumiy'},"Loyiha birlamchi ma'lumotlari"),"» bo'limidan olinadi. Bu 4 ta xarita ikkala PDF hisobotga diagrammalardan keyin qo'shiladi."))];
   const miss=[!r?'viloyat':null,!d?'tuman':null,!k?'KMZ fayl':null].filter(Boolean);
   if(miss.length)out.push(h('p',{class:'note'},icon('warn',1),'Kiritilmagan: '+miss.join(', ')+'. ',h('a',{href:'#umumiy'},"«Loyiha birlamchi ma'lumotlari»"),' bo\'limida kiriting.'));
+  if(r)out.push(h('div',{class:'mapact'},h('button',{class:'btn',type:'button',disabled:!!getPop.busy,onclick:getPop},icon('refresh',1),MAP.pop()?'Aholi zichligini qayta olish':'Aholi zichligini olish'),
+    h('span',{class:'fine'},"2- va 3-rasmda: jigarrang — aholi zich yashaydigan joylar (OpenStreetMap aholi punktlari bo'yicha), sariq doira — tuman markazi, qizil doira — loyiha hududi."),
+    ui.popMsg?h('span',{class:'kmsg'+(ui.popErr?' err':'')},ui.popMsg):null));
   ['1-rasm · O‘zbekiston Respublikasi','2-rasm · Viloyat','3-rasm · Tuman va loyiha hududi','4-rasm · Loyiha hududi o‘lchamlari'].forEach((t,i)=>{
     const cv=h('canvas',{width:'1200',height:'849',class:'mapcv','aria-label':t});MAP.RENDER[i](cv);
     out.push(h('section',{class:'card mapc'},h('h3',null,icon('xarita',1),t),cv))});
@@ -3627,7 +3694,7 @@ async function refresh(){
   catch(e){loadErr=e&&(e.status===401||e.status===403)?"Loyihalarni yuklab bo'lmadi: kirish kaliti yaroqsiz yoki muddati tugagan.":"Loyihalarni yuklab bo'lmadi. Internetni tekshirib, qayta urinib ko'ring."}
   loaded=true;if(!cur)render();
 }
-function resetUiState(){Object.assign(ui,{kmzMsg:'',kmzErr:false,demMsg:'',demErr:false,lotOpen:{},lots:0,areas:1,pipes:{},segs:{},objs:{b:1,p:0},zones:1,showAll:{},q:'',cat:'',old:false,pe:null,leave:false,del:null})}
+function resetUiState(){Object.assign(ui,{kmzMsg:'',kmzErr:false,demMsg:'',demErr:false,popMsg:'',popErr:false,lotOpen:{},lots:0,areas:1,pipes:{},segs:{},objs:{b:1,p:0},zones:1,showAll:{},q:'',cat:'',old:false,pe:null,leave:false,del:null})}
 function openProject(id,cells,isDirty){
   cur=id;resetUiState();const p=projects[id];
   const cl=Object.assign({},cells||(p?p.cells:{}));if('Jamlama!C8' in cl){if(!('Jamlama!F12' in cl))cl['Jamlama!F12']=cl['Jamlama!C8'];delete cl['Jamlama!C8']}
