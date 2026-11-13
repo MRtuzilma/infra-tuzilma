@@ -2116,7 +2116,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794597142';
+const BUILD_ID='1794598235';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const m=/const BUILD_ID='(\d+)'/.exec(t);
     if(m&&m[1]!==BUILD_ID){let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}if(Date.now()-k<60000)return;
@@ -3162,13 +3162,18 @@ const MAP=(function(){
     ctx.save();trace(ctx,clip,P);ctx.clip('evenodd');ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';ctx.drawImage(oc,box.x-cell/2,box.y-cell/2,gw*cell,gh*cell);ctx.restore();
     return true;
   }
-  function popLegend(ctx,W,H,U,box){
+  /* without OpenStreetMap settlements: shade each district by its density from the built-in statistics (works offline) */
+  function statShade(ctx,P,r,only,U){const S=typeof STAT!=='undefined'?STAT.r[r.id]:null;if(!S)return false;
+    const ds=r.districts.map(x=>{const o=S.d[x.name],a=geomKm2(x.geom);return o&&a?[x,o.p26*1000/a]:null}).filter(Boolean);if(!ds.length)return false;
+    const lo=Math.log(Math.max(5,Math.min(...ds.map(x=>x[1])))),hi=Math.log(Math.max(...ds.map(x=>x[1]))),f=v=>hi>lo?0.12+0.88*(Math.log(Math.max(5,v))-lo)/(hi-lo):0.6;
+    ds.forEach(([x,v])=>{if(only&&x!==only)return;const c=brown(f(v));draw(ctx,x.geom,P,{fill:'rgba('+c.join(',')+',0.88)'})});return true}
+  function popLegend(ctx,W,H,U,box,src){
     const lw=150*U,lh=12*U,lx=box.x+box.w-lw-10*U,ly=H-50*U;
     for(let i=0;i<lw;i++){const c=brown(i/lw);ctx.fillStyle='rgb('+c.join(',')+')';ctx.fillRect(lx+i,ly,1.5,lh)}
     ctx.strokeStyle='#777';ctx.lineWidth=1*U;ctx.strokeRect(lx,ly,lw,lh);
     ctx.fillStyle='#333';ctx.font='600 '+(13*U)+'px '+FONT;ctx.textAlign='left';ctx.textBaseline='bottom';ctx.fillText('Aholi zichligi',lx,ly-4*U);
     ctx.font=(11*U)+'px '+FONT;ctx.textBaseline='top';ctx.fillText('kam',lx,ly+lh+3*U);ctx.textAlign='right';ctx.fillText("ko'p",lx+lw,ly+lh+3*U);
-    ctx.textAlign='left';ctx.fillStyle='#888';ctx.fillText('Manba: OpenStreetMap',lx,ly+lh+17*U);
+    ctx.textAlign='left';ctx.fillStyle='#888';ctx.fillText(src||'Manba: OpenStreetMap',lx,ly+lh+17*U);
   }
   /* rings: yellow round the district centre's built-up area, red round the (tiny) project area */
   function ring(ctx,x,y,r,col,w,U){ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.lineWidth=w*U+3*U;ctx.strokeStyle='rgba(255,255,255,0.85)';ctx.stroke();ctx.lineWidth=w*U;ctx.strokeStyle=col;ctx.stroke()}
@@ -3323,20 +3328,18 @@ const MAP=(function(){
     demoNote(ctx,x,y+18*U,w,U,H)}
   function render6(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,r=region(),d=district(),p=pop();
     if(!r){placeholder(ctx,W,H,U,"Viloyat tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
-    if(!p){placeholder(ctx,W,H,U,"Aholi zichligi ma'lumoti olinmagan");return}
     const fb=frame(ctx,W,H,U,r.name+'da aholi zichligi va demografik ko‘rsatkichlar','6-rasm'),box={x:fb.x-20*U,y:fb.y,w:fb.w*0.58,h:fb.h},P=makeProj([r.geom],W,H,box);
-    const dens=density(ctx,P,r.geom,p,box,U,4);
-    if(d&&!dens)draw(ctx,d.geom,P,{fill:COL.fill});r.districts.forEach(x=>draw(ctx,x.geom,P,{stroke:dens?'rgba(120,120,120,0.55)':COL.inner,width:1.1*U}));
-    if(d)draw(ctx,d.geom,P,{stroke:COL.fillStroke,width:(dens?3:1.6)*U});draw(ctx,r.geom,P,{stroke:COL.line,width:2.2*U});
+    const dens=density(ctx,P,r.geom,p,box,U,4),shade=!dens&&statShade(ctx,P,r,null,U);
+    if(d&&!dens&&!shade)draw(ctx,d.geom,P,{fill:COL.fill});r.districts.forEach(x=>draw(ctx,x.geom,P,{stroke:dens||shade?'rgba(255,255,255,0.8)':COL.inner,width:1.1*U}));
+    if(d)draw(ctx,d.geom,P,{stroke:COL.fillStroke,width:(dens||shade?3:1.6)*U});draw(ctx,r.geom,P,{stroke:COL.line,width:2.2*U});
     const it=[];if(d){const c=centreRing(ctx,P,U,centreOf(d,p),9);if(c)it.push(['#f2b705','Tuman markazi'])}
     if(projRing(ctx,P,U,11))it.push(['#e00000','Loyiha hududi']);
-    if(d)placeLabel(ctx,d.name,[d.geom],P,22*U,W,H,box,U);if(dens)popLegend(ctx,W,H,U,box);if(it.length)keys(ctx,H,U,box,it);decorations(ctx,P,W,H,U,box);
+    if(d)placeLabel(ctx,d.name,[d.geom],P,22*U,W,H,box,U);if(dens)popLegend(ctx,W,H,U,box);else if(shade)popLegend(ctx,W,H,U,box,'Manba: stat.uz, tumanlar o‘rtachasi');if(it.length)keys(ctx,H,U,box,it);decorations(ctx,P,W,H,U,box);
     demoRegion(ctx,box.x+box.w+28*U,fb.y-6*U,W-(box.x+box.w+28*U)-30*U,U,H)}
   function render7(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,d=district(),k=kmz(),p=pop();
     if(!d){placeholder(ctx,W,H,U,"Tuman tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
-    if(!p){placeholder(ctx,W,H,U,"Aholi zichligi ma'lumoti olinmagan");return}
     const fb=frame(ctx,W,H,U,d.name+'da aholi zichligi va demografik ko‘rsatkichlar','7-rasm'),box={x:fb.x-20*U,y:fb.y,w:fb.w*0.58,h:fb.h},P=makeProj(k?[d.geom,...k]:[d.geom],W,H,box);
-    const dens=density(ctx,P,d.geom,p,box,U,1.6);
+    const dens=density(ctx,P,d.geom,p,box,U,1.6),shade=!dens&&region()&&statShade(ctx,P,region(),d,U);
     draw(ctx,d.geom,P,{stroke:COL.line,width:2.2*U});
     const it=[];if(centreRing(ctx,P,U,centreOf(d,p),14))it.push(['#f2b705','Tuman markazi']);
     if(k){k.forEach(g=>{if(g.type==='Polygon')draw(ctx,g,P,{fill:COL.projFill,stroke:COL.fillStroke,width:1.8*U});else if(g.type==='LineString')draw(ctx,g,P,{stroke:COL.fillStroke,width:3.5*U});else draw(ctx,g,P,{pt:8*U,fill:'#e53935',stroke:'#7f0000',width:2*U})});
@@ -3344,7 +3347,7 @@ const MAP=(function(){
       /* label below-left of the red ring, clear of the district centre's name on the right */
       if(pr){const t='Loyiha hududi';ctx.font='700 '+(20*U)+'px '+FONT;const tw=ctx.measureText(t).width,tx=Math.max(box.x+tw/2,pr[0]-pr[2]-tw/2-4*U),ty=pr[1]+pr[2]+16*U;
         ctx.beginPath();ctx.moveTo(pr[0]-pr[2]*0.7,pr[1]+pr[2]*0.7);ctx.lineTo(tx+tw/2-2*U,ty-6*U);ctx.strokeStyle='#b00000';ctx.lineWidth=1.6*U;ctx.stroke();textLabel(ctx,t,tx,ty,20*U)}}
-    if(dens)popLegend(ctx,W,H,U,box);if(it.length)keys(ctx,H,U,box,it);decorations(ctx,P,W,H,U,box);
+    if(dens)popLegend(ctx,W,H,U,box);else if(shade)popLegend(ctx,W,H,U,box,'Manba: stat.uz, tuman o‘rtachasi (viloyatga nisbatan)');if(it.length)keys(ctx,H,U,box,it);decorations(ctx,P,W,H,U,box);
     demoDistrict(ctx,box.x+box.w+28*U,fb.y-6*U,W-(box.x+box.w+28*U)-30*U,U,H)}
   const RAD=Math.PI/180,WA=6378137,WE2=0.00669437999014;
   function localScale(lat){const s=Math.sin(lat*RAD),w=1-WE2*s*s,Nn=WA/Math.sqrt(w),Mm=WA*(1-WE2)/(w*Math.sqrt(w));return [Nn*Math.cos(lat*RAD)*RAD,Mm*RAD]}
@@ -3744,11 +3747,17 @@ async function siatGet(id){const u='https://api.siat.stat.uz/sdmx/'+id+'/table/d
   for(const f of ['json','csv']){try{const r=await fetch(u+f,{cache:'no-store'});if(!r.ok){last=r.status;continue}return await r.text()}catch(e){last=e}}throw new Error('net')}
 async function statUpdate(){if(statUpdate.busy)return;statUpdate.busy=true;ui.statMsg="stat.uz'dan olinmoqda…";ui.statErr=false;ui.statManual=false;render();
   try{const [a,b,c]=await Promise.all([siatGet(SIAT.tot),siatGet(SIAT.rur),siatGet(SIAT.wa).catch(()=>null)]);statApply(a,b,c)}
-  catch(e){if(e&&e.message==='net'){ui.statMsg="Brauzer stat.uz'ga to‘g‘ridan-to‘g‘ri ulana olmadi. Quyidagi havolalardan jadvallarni CSV yoki JSON ko‘rinishida yuklab olib, shu yerda tanlang.";ui.statManual=true}
+  catch(e){if(e&&e.message==='net'&&await statMirror()){statUpdate.busy=false;render();return}
+    if(e&&e.message==='net'){ui.statMsg="Brauzer stat.uz'ga ulana olmadi — saytdagi "+(STAT.y||2026)+"-yil ma'lumotlari ishlashda davom etadi. Yangilash uchun quyidagi havolalardan jadvallarni CSV yoki JSON ko‘rinishida yuklab olib, shu yerda tanlang.";ui.statManual=true}
     else ui.statMsg="Yangilab bo‘lmadi: "+(e&&e.message||e);ui.statErr=true}
   statUpdate.busy=false;render()}
+/* a copy the site's own server refreshes from stat.uz every month (GitHub, «stat.json»): used when the browser cannot reach stat.uz itself */
+async function statMirror(){for(const u of ['stat.json','https://mrtuzilma.github.io/infra-tuzilma/stat.json']){try{const r=await fetch(u+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)continue;const o=await r.json();
+    if(!o||!o.r||!o.uz||!o.y||Object.keys(o.r).length<14)continue;const prev=STAT;o.src='stat.uz';o.at=o.at||new Date().toISOString().slice(0,10);
+    if((o.y||0)<(prev.y||0))continue;stSave(o);ui.statErr=false;ui.statManual=false;
+    ui.statMsg=(o.y>(prev.y||0)?'✓ Yangilandi: ':'✓ Tekshirildi: ')+o.y+"-yil 1-yanvar holati (stat.uz ma'lumoti, saytning oylik nusxasidan). Endi internetsiz ham ishlaydi.";return true}catch(e){}}return false}
 function statApply(a,b,c){const prev=STAT,o=stBuild(a,b,c);stSave(o);ui.statErr=false;ui.statManual=false;ui.statFiles={};
-  ui.statMsg=(o.y>(prev.y||0)?'✓ Yangilandi: ':'✓ Tekshirildi: ')+o.y+"-yil 1-yanvar holati, 14 hudud, "+o.nd+" ta tuman va shahar."+(o.waNew?'':" Mehnatga layoqatli aholi jadvali olinmadi — oldingisi qoldi.")}
+  ui.statMsg=(o.y>(prev.y||0)?'✓ Yangilandi: ':'✓ Tekshirildi: ')+o.y+"-yil 1-yanvar holati, 14 hudud, "+o.nd+" ta tuman va shahar."+(o.waNew?'':" Mehnatga layoqatli aholi jadvali olinmadi — oldingisi qoldi.")+" Endi internetsiz ham ishlaydi."}
 async function statFile(kind,f){if(!f)return;ui.statFiles=ui.statFiles||{};ui.statFiles[kind]=await f.text();ui.statNames=ui.statNames||{};ui.statNames[kind]=f.name;
   const F=ui.statFiles;if(F.tot&&F.rur){try{statApply(F.tot,F.rur,F.wa||null)}catch(e){ui.statMsg="Fayllardan o‘qib bo‘lmadi: "+(e&&e.message||e)+". To‘g‘ri jadval tanlanganini tekshiring.";ui.statErr=true}}render()}
 function statRow(){const own=STAT!==STAT0&&STAT.src==='stat.uz',y=STAT.y||2026;
@@ -3765,7 +3774,7 @@ function statRow(){const own=STAT!==STAT0&&STAT.src==='stat.uz',y=STAT.y||2026;
 
 /* fetch the heights of the project area (needs internet once; the result stays with the project) */
 async function getPop(){if(getPop.busy||!MAP.region())return;getPop.busy=true;ui.popMsg="Aholi punktlari ma'lumoti olinmoqda…";ui.popErr=false;render();
-  try{const n=await MAP.loadPop();ui.popMsg='✓ Aholi zichligi uchun '+nUz(n)+' ta aholi punkti olindi.'}catch(e){ui.popMsg="Aholi punktlari ma'lumotini olib bo'lmadi — internetni tekshirib, «Aholi zichligini olish» tugmasini bosing.";ui.popErr=true}
+  try{const n=await MAP.loadPop();ui.popMsg='✓ Aholi zichligi uchun '+nUz(n)+' ta aholi punkti olindi.'}catch(e){ui.popMsg="OpenStreetMap'ga ulanib bo'lmadi — 6- va 7-rasmda zichlik saytdagi stat.uz ma'lumoti bo'yicha (tumanlar o'rtachasi) ko'rsatildi. Batafsil xarita uchun keyinroq «Aholi zichligini olish»ni bosing.";ui.popErr=false}
   getPop.busy=false;render()}
 async function getRoads(){if(getRoads.busy||!MAP.region()||!MAP.site())return;getRoads.busy=true;ui.roadMsg="Yo'llar hisoblanmoqda…";ui.roadErr=false;render();
   try{const d=await MAP.loadRoads(st=>{ui.roadMsg="Yo'llar hisoblanmoqda… ("+st+')';const e=document.getElementById('roadmsg');if(e)e.textContent=ui.roadMsg});
