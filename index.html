@@ -1228,7 +1228,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794671665';
+const BUILD_ID='1794672075';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname.replace(/[^/]*$/,'')+'version.txt?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const v=(t.match(/\d{9,}/)||[])[0];
     if(!v||+v<=+BUILD_ID)return;let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}
@@ -2874,7 +2874,7 @@ const MAP=(function(){
     const x0=fb.x-20*U,tw=W-30*U-x0,gap=14*U,cw=(tw-3*gap)/4,ch=212*U,y0=fb.y-6*U;
     const f0=v=>fmt(v,v<10?2:v<100?1:0);
     const cards=[
-      ['elektr','#f2a516','Elektr ta’minoti',f0(L.P)+' kVt','hisobiy quvvat',[['Talab qilinadigan transformator',f0(L.Sreq)+' kVA'],['To‘liq quvvat (cos φ 0,92)',f0(L.S)+' kVA'],['Bir vaqtlilik koeffitsienti','0,8']],
+      ['elektr','#f2a516','Elektr ta’minoti',f0(L.P)+' kVt','hisobiy quvvat',[['Talab qilinadigan transformator',f0(L.Sreq)+' kVA'],['To‘liq quvvat (cos φ 0,92)',f0(L.S)+' kVA'],L.flats?['Xonadonga (gaz plita)',fmt(L.pfl,2)+' kVt × '+nUz(L.flats,'#,##0')]:['Qo‘shish koeffitsienti','0,8']],
         L.inst?(L.ok?['✓ Loyihadagi '+L.trN+' × '+L.kva+' kVA = '+f0(L.inst)+' kVA — yetarli','#2e7d32']:['✗ Loyihadagi '+f0(L.inst)+' kVA yetarli emas: yana ~'+f0(L.Sreq-L.inst)+' kVA kerak','#c62828']):['Loyihada transformator tanlanmagan','#7a8496'],LOADN.src.el],
       ['suv','#2d8fd5','Suv ta’minoti',f0(L.Wsut)+' m³/sut','o‘rtacha sutkalik',[['Eng ko‘p sutkalik (×1,2)',f0(L.Wmax)+' m³/sut'],['Eng ko‘p soatlik',f0(L.Wh)+' m³/soat · '+fmt(L.Wls,1)+' l/s'],['Shundan sug‘orish',f0(L.gr*1.1/1000)+' m³/sut']],
         ['Hisobga olinmagan sarflar +10%','#7a8496'],LOADN.src.w],
@@ -2902,11 +2902,11 @@ const MAP=(function(){
     cols.forEach(([t,w,r],j)=>{txt(ctx,tv[j],r?cx+w*tw-8*U:cx+8*U,ty+rh/2,10.5*U,{al:r?'right':'left',halo:false,col:'#1b2a44',w:'800'});cx+=w*tw});
     /* the norms used, so the figures can be checked */
     ty+=rh+26*U;if(ty<H-140*U){txt(ctx,'Qo‘llanilgan me’yorlar',x0,ty,13*U,{halo:false,w:'800',bl:'top',col:'#1b2a44'});ty+=22*U;
-      const E=LOADN.el.m2,nm=[['Aholi: elektr','0,35 kVt/kishi (RD 34.20.185-94)'],['Aholi: suv','250 l/kishi·sut (ShNQ 2.04.02-19)'],['Aholi: gaz','300 m³/kishi·yil (KMK 2.04.08-96)'],['Ishchilar: suv','25 l/smena, ishlab chiqarishda 45 l (KMK 2.04.01-98)'],
+      const E=LOADN.el.m2,nm=[['Aholi: elektr','xonadonga '+fmt(L.pfl||0.67,2)+' kVt ('+nUz(L.flats||0,'#,##0')+' xonadon, 4 kishidan; RD 34.20.185-94, 2.1.1-jadval)'],['Aholi: suv','250 l/kishi·sut (ShNQ 2.04.02-19)'],['Aholi: gaz','300 m³/kishi·yil (KMK 2.04.08-96)'],['Ishchilar: suv','25 l/smena, ishlab chiqarishda 45 l (KMK 2.04.01-98)'],
         ['Savdo / supermarket','0,12 / 0,20 kVt/m²'],['Ovqatlanish / mehmonxona','0,20 / 0,06 kVt/m²'],['Ishlab chiqarish / ombor','0,10 kVt/m²'],['Ofis va xizmat / ta’lim','0,055 / 0,06 kVt/m²'],
-        ['Ko‘kalamzorni sug‘orish','4 l/m²·sut (ShNQ 2.04.02-19)'],['Koeffitsientlar','bir vaqtlilik 0,8; sutkalik 1,2; soatlik 1,6; +10% hisobga olinmagan']];
+        ['Ko‘kalamzorni sug‘orish','4 l/m²·sut (ShNQ 2.04.02-19)'],['Koeffitsientlar','eng katta yuklamaga boshqalari ×0,8 (RD 2.3); suv: sutkalik 1,2, soatlik 1,6, +10%']];
       const half=Math.ceil(nm.length/2),cw2=tw/2;nm.forEach(([a,b],i)=>{const cx=x0+(i<half?0:cw2),yy=ty+(i%half)*17*U;txt(ctx,a,cx,yy,10*U,{halo:false,col:'#5d6a82',w:'600',bl:'top'});txt(ctx,b,cx+170*U,yy,10*U,{halo:false,col:'#1b2a44',bl:'top'})})}
-    txt(ctx,'Hisob me’yorlarning odatiy jadval qiymatlari bo‘yicha (elektr: m² ga solishtirma quvvat, aholiga 0,35 kVt/kishi; suv: aholiga 250 l/sut, ishchiga 25–45 l/smena). Loyiha-smeta bosqichida texnik shartlar bilan aniqlashtiriladi.',x0,H-20*U,9.5*U,{halo:false,col:'#8a94a6'})}
+    txt(ctx,'Me’yorlarning odatiy jadval qiymatlari bo‘yicha. Loyiha-smeta bosqichida texnik shartlar bilan aniqlashtiriladi.',x0,H-20*U,9.5*U,{halo:false,col:'#8a94a6'})}
   const RENDER=[render1,render2,render3,render4];
 
   /* ----- relief: heights of the project area from open satellite elevation data (SRTM / Copernicus, ~30 m cells).
@@ -3470,25 +3470,28 @@ function workParts(s){try{return workText(s,true)}catch(e){return []}}
 /* ===== engineering loads from the master plan, by the national norms (ShNQ/KMK) and the guide for town power networks.
    The figures are the usual table values of these norms; each is listed with its source so it can be checked and changed. ===== */
 const LOADN={
-  el:{res:0.35,ko:0.8,cos:0.92,load:0.8,
+  /* flats: specific load per flat by how many flats there are (RD 34.20.185-94 table 2.1.1 = SP 31-110-2003 table 6.1, gas stoves); 4 people per flat */
+  flat:{pp:4,tab:[[1,4.5],[3,4.5],[6,2.8],[9,2.3],[12,2.0],[15,1.8],[18,1.65],[24,1.4],[40,1.2],[60,1.05],[100,0.85],[200,0.77],[400,0.71],[600,0.69],[1000,0.67]]},
+  el:{ko:0.8,cos:0.92,load:0.8,
     m2:{savdo:0.12,giper:0.20,ovqat:0.20,mehmon:0.06,yengil:0.03,sport:0.07,ishlab:0.10,avto:0.10,tibbiy:0.08,talim:0.06,xizmat:0.055}},
   w:{res:250,worker:25,workerHot:45,hotel:200,food:25,sport:50,green:4,extra:0.10,kday:1.2,khour:1.6},
   gas:{res:300,hours:2000},
   src:{el:'RD 34.20.185-94 (shahar elektr tarmoqlari), ShNQ 2.07.01-03',w:'ShNQ 2.04.02-19 (tashqi suv ta’minoti), KMK 2.04.01-98 (ichki suv quvuri)',s:'KMK 2.04.03-97 (kanalizatsiya, tashqi tarmoqlar)',g:'KMK 2.04.08-96 (gaz ta’minoti)'}};
 const LCATN={savdo:"Savdo",giper:'Supermarket, savdo markazi',ovqat:'Ovqatlanish',mehmon:'Mehmonxona',yengil:'Yengil inshootlar',sport:'Sport',ishlab:'Ishlab chiqarish, ombor',avto:'Avtoxizmat',tibbiy:'Tibbiyot',talim:"Ta'lim",xizmat:'Xizmat va ofis'};
-function loadsCalc(){let x;try{x=info()}catch(e){return null}const N_=LOADN,rs=MAP.residents().n,groups={};
+function flatKw(n){const t=LOADN.flat.tab;if(n<=t[0][0])return t[0][1];if(n>=t[t.length-1][0])return t[t.length-1][1];for(let i=1;i<t.length;i++)if(n<=t[i][0]){const [a,pa]=t[i-1],[b,pb]=t[i];return pa+(pb-pa)*(n-a)/(b-a)}return t[t.length-1][1]}
+function loadsCalc(){let x;try{x=info()}catch(e){return null}const N_=LOADN,rs=MAP.residents().n,groups={},flats=rs?Math.ceil(rs/N_.flat.pp):0,pfl=flats?flatKw(flats):0;
   const add=(k,t,o)=>{const g=groups[k]=groups[k]||{t,m2:0,jobs:0,cap:0,kw:0,w:0};g.m2+=o.m2||0;g.jobs+=o.jobs||0;g.cap+=o.cap||0;g.kw+=o.kw||0;g.w+=o.w||0};
   const water=(k,jobs,cap)=>(k==='ishlab'?N_.w.workerHot:N_.w.worker)*(jobs||0)+(k==='mehmon'?N_.w.hotel*(cap||0):0)+(k==='ovqat'?N_.w.food*(cap||0):0)+(k==='sport'?N_.w.sport*(cap||0):0);
   x.lots.forEach(l=>{const k=l.cat.k,m2=l.floor||0;add(k,LCATN[k]||k,{m2,jobs:l.jobs,cap:l.cap,kw:m2*(N_.el.m2[k]||0.06),w:water(k,l.jobs,l.cap)})});
   x.bud.concat(x.dx).forEach(b=>{const k=lotCat(b.type).k,m2=b.area||0;add('obj',"Byudjet va DXSH obyektlari",{m2,jobs:b.jobs,cap:b.cap,kw:m2*(N_.el.m2[k]||0.06),w:(b.jobs||0)*N_.w.worker+(/maktab|bog'cha|bog‘cha|maktabgacha/i.test(b.type)?(b.cap||0)*15:0)+(/poliklinika|kasalxona|shifoxona|tibbiy/i.test(b.type)?(b.cap||0)*13:0)})});
-  if(rs)add('res','Aholi (ko‘chib keladigan)',{cap:rs,kw:rs*N_.el.res,w:rs*N_.w.res});
+  if(rs)add('res','Aholi (ko‘chib keladigan) · '+nUz(flats,'#,##0')+' xonadon',{cap:rs,kw:flats*pfl,w:rs*N_.w.res});
   const gr=(x.green||0)*N_.w.green;
-  const list=Object.values(groups),P0=list.reduce((a,g)=>a+g.kw,0),P=P0*N_.el.ko,S=P/N_.el.cos,Sreq=S/N_.el.load;
+  const list=Object.values(groups),P0=list.reduce((a,g)=>a+g.kw,0),Pm=Math.max(0,...list.map(g=>g.kw)),P=Pm+(P0-Pm)*N_.el.ko,S=P/N_.el.cos,Sreq=S/N_.el.load;
   const tr=String(V('Elektr','C7')||''),trN=N('Elektr','C8')||0,kva=+((tr.match(/(\d+)\s*kVA/i)||[])[1]||0),inst=kva*trN;
   const wl=list.reduce((a,g)=>a+g.w,0),Wsut=(wl+gr)*(1+N_.w.extra)/1000,Wmax=Wsut*N_.w.kday,Wh=Wmax/24*N_.w.khour,Wls=Wh/3.6;
   const Ssut=wl*(1+N_.w.extra)/1000,Smax=Ssut*N_.w.kday;
   const Gyear=rs*N_.gas.res,Gh=Gyear/N_.gas.hours;
-  return {x,rs,list,green:x.green||0,gr,P0,P,S,Sreq,tr,trN,kva,inst,ok:inst?inst>=Sreq:null,Wsut,Wmax,Wh,Wls,Ssut,Smax,Gyear,Gh}}
+  return {x,rs,flats,pfl,list,green:x.green||0,gr,P0,P,S,Sreq,tr,trN,kva,inst,ok:inst?inst>=Sreq:null,Wsut,Wmax,Wh,Wls,Ssut,Smax,Gyear,Gh}}
 
 function reportDoc(full,only){
   const J='Jamlama',H='Hisobot',O='Obod',NAVY='#1f3864',SOFT='#e9eef8',MUT='#5d6a82',LINE='#d5dce8';
@@ -3837,7 +3840,7 @@ async function wordReport(){
   if(secs.length){D.H(2,'5.1. Infratuzilma bo‘limlari bo‘yicha xarajatlar');D.T([['Bo‘lim','Bajariladigan ishlar','Summa, mln so‘m','Ulushi']].concat(secs.map(z=>[{t:z.s.title,b:1},z.w?cap1s(z.w):'',mln(z.am),pct(z.am,x.infra)])).concat([[{t:'Jami',b:1},'',{t:mln(x.infra),b:1},'100%']]),{widths:[1.3,3.2,1,0.7],right:[2,3],sz:9})}
   {const L=loadsCalc();if(L&&(L.list.length||L.green)){const f=v=>nUz(v,v<100?'#,##0.0':'#,##0');D.H(2,'Muhandislik yuklamalari (ShNQ/KMK bo‘yicha)');
     D.P('Master rejadagi LOTlar, byudjet va DXSH obyektlari, ko‘kalamzorlar va ko‘chib keladigan aholi uchun muhandislik tarmoqlariga talab me’yorlar bo‘yicha hisoblandi. Natijalar texnik shartlarni olish va tarmoqlarni loyihalash uchun dastlabki asos bo‘ladi.');
-    D.T([['Ko‘rsatkich','Qiymati','Asos'],['Elektr: hisobiy quvvat',f(L.P)+' kVt','bir vaqtlilik 0,8; '+LOADN.src.el],['Elektr: talab qilinadigan transformator quvvati',f(L.Sreq)+' kVA','cos φ 0,92, yuklanish 80%'],
+    D.T([['Ko‘rsatkich','Qiymati','Asos'],['Elektr: hisobiy quvvat',f(L.P)+' kVt','eng katta yuklama + boshqalari ×0,8; aholi: xonadonga '+nUz(L.pfl,'#,##0.00')+' kVt × '+nUz(L.flats,'#,##0')+'; '+LOADN.src.el],['Elektr: talab qilinadigan transformator quvvati',f(L.Sreq)+' kVA','cos φ 0,92, yuklanish 80%'],
       ['Elektr: loyihadagi transformatorlar',L.inst?L.trN+' × '+L.kva+' kVA = '+f(L.inst)+' kVA':'tanlanmagan',L.inst?(L.ok?'yetarli':'yetarli emas (yana ~'+f(L.Sreq-L.inst)+' kVA)'):''],
       ['Suv: o‘rtacha sutkalik',f(L.Wsut)+' m³/sut',LOADN.src.w],['Suv: eng ko‘p sutkalik / soatlik',f(L.Wmax)+' m³/sut · '+f(L.Wh)+' m³/soat',(L.Wls).toFixed(1).replace('.',',')+' l/s'],
       ['Kanalizatsiya: o‘rtacha / eng ko‘p sutkalik',f(L.Ssut)+' / '+f(L.Smax)+' m³/sut',LOADN.src.s],['Gaz: eng ko‘p soatlik',L.rs?f(L.Gh)+' m³/soat':'—',L.rs?'yillik '+f(L.Gyear/1000)+' ming m³; '+LOADN.src.g:'aholi kiritilmagan']],{widths:[1.6,1.3,1.8],right:[1],sz:9});
