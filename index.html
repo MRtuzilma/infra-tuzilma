@@ -539,6 +539,7 @@ a.srch{text-decoration-style:dotted;color:var(--ink)}
 .nav a .dot{flex:none;width:7px;height:7px;border-radius:50%;border:1.5px solid var(--field-line);margin-right:9px;transition:background .2s,border-color .2s}
 .nav a.done .dot{background:var(--ok);border-color:var(--ok)}
 .nav a.done .amt{color:var(--ink);font-weight:600}
+@media (max-width:920px){.nav a.done[aria-current="page"] .amt{color:var(--on-brand-soft)}}
 .idle{padding:12px 0 4px;color:var(--muted);font-size:12.5px;line-height:1.6}
 .idle b{color:var(--ink);font-weight:600}
 .lnk{font:inherit;border:0;background:none;color:var(--accent);text-decoration:underline;cursor:pointer;margin-left:8px;padding:0}
@@ -662,9 +663,9 @@ function fmtNum(v,nf){
   let t=v.toFixed(maxd);
   if(maxd>mind){let cut=maxd-mind;while(cut>0&&t.endsWith('0')){t=t.slice(0,-1);cut--}if(t.endsWith('.'))t=t.slice(0,-1)}
   let [ip,fp]=t.split('.');
-  if(m[0].split('.')[0].includes(','))ip=ip.replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  if(m[0].split('.')[0].includes(','))ip=ip.replace(/\B(?=(\d{3})+(?!\d))/g,' ');
   if(neg&&+t!==0)ip='-'+ip;
-  return pre+ip+(fp?'.'+fp:'')+post;
+  return pre+ip+(fp?','+fp:'')+post;
 }
 function registerXText(H){
   if(registerXText.done)return;registerXText.done=true;
@@ -1228,7 +1229,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794672430';
+const BUILD_ID='1794674073';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname.replace(/[^/]*$/,'')+'version.txt?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const v=(t.match(/\d{9,}/)||[])[0];
     if(!v||+v<=+BUILD_ID)return;let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}
@@ -1276,7 +1277,7 @@ function numIn(sheet,a,o){
   o=o||{};const v=o.val!==undefined?o.val:N(sheet,a),mul=o.pct?100:(o.mul||1);const disp=v===null?'':fmtNum(+(v*mul).toPrecision(12),'#,##0.######');
   const inp=h('input',{type:'text',inputmode:'decimal',id:'f-'+sheet+'-'+a,class:'in num',value:disp,'aria-label':o.label,placeholder:o.ph,autocomplete:'off',enterkeyhint:'done'});
   let sent=false;
-  inp.addEventListener('focus',()=>{inp.value=inp.value.replace(/,/g,'');inp.select()});
+  inp.addEventListener('focus',()=>{inp.value=inp.value.replace(/\s/g,'');inp.select()});
   inp.addEventListener('keydown',e=>{if(e.key==='Enter')inp.blur()});
   inp.addEventListener('change',()=>{
     const s=inp.value.trim();let out;
@@ -1637,7 +1638,7 @@ function overviewPage(){
   return out;
 }
 
-const nUz=(v,f)=>v===null||v===undefined?'—':fmtNum(v,f||'#,##0.##').replace(/,/g,' ').replace('.',',');
+const nUz=(v,f)=>v===null||v===undefined?'—':fmtNum(v,f||'#,##0.##');
 function earthCard(){
   const O='Obod',lvl=N(O,'H2'),zr=[];let shown=Math.max(1,ui.zones||1);
   for(let r=10;r<=17;r++)if(N(O,'H'+r)!==null||N(O,'I'+r)!==null)shown=Math.max(shown,r-9);
@@ -1937,7 +1938,7 @@ function extrasEditor(sheet,cell,sumCell,key){
       items:()=>extraBase().map(x=>({v:x.v,sub:x.u+' · '+som(x.p)+" so'm · "+x.g})),onPick:v=>upd('n',v)});
     const q=h('input',{type:'text',class:'in num',inputmode:'decimal',value:e.q?String(e.q):'','aria-label':'Soni',placeholder:'Soni',id:'xq-'+key+'-'+i});q.addEventListener('change',()=>{const v=parseNum(q.value);upd('q',v===null?0:v)});
     const p=h('input',{type:'text',class:'in num',inputmode:'decimal',value:e.p?fmtNum(e.p,'#,##0'):'','aria-label':"Narxi, so'm",placeholder:"Narxi, so'm",id:'xp-'+key+'-'+i});
-    p.addEventListener('focus',()=>{p.value=p.value.replace(/,/g,'')});p.addEventListener('change',()=>{const v=parseNum(p.value);upd('p',v)});
+    p.addEventListener('focus',()=>{p.value=p.value.replace(/\s/g,'')});p.addEventListener('change',()=>{const v=parseNum(p.value);upd('p',v)});
     return h('div',{class:'rowx'},n,h('div',{class:'qtyin'},q,h('span',{class:'unit'},e.u)),p,h('b',{class:'xs'},som(e.s)),
       h('button',{class:'xbtn',type:'button',title:"O'chirish",'aria-label':"Qo'shimcha obyektni o'chirish",onclick:()=>{const a=list();a.splice(i,1);save(a)}},'×'));
   });
