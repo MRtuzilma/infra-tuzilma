@@ -1228,7 +1228,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794668664';
+const BUILD_ID='1794669286';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname.replace(/[^/]*$/,'')+'version.txt?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const v=(t.match(/\d{9,}/)||[])[0];
     if(!v||+v<=+BUILD_ID)return;let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}
@@ -2813,7 +2813,10 @@ const MAP=(function(){
   function popData(){if(typeof POPH==='undefined')return null;const r=region();if(!r||!POPH.r[r.id])return null;const d=district(),R=POPH.r[r.id],D=d&&R.d[d.name]?R.d[d.name]:null;
     const v=D||R.v,y0=POPH.y0,last=y0+v.length-1,base=v[v.length-6],end=v[v.length-1],g=base>0&&end>0?Math.pow(end/base,1/5)-1:0;
     const fact=[];for(let y=last-4;y<=last;y++)fact.push([y,v[y-y0]]);const fc=[];let cur=end;for(let i=1;i<=5;i++){cur*=1+g;fc.push([last+i,cur])}
-    const rs=residents(),cum=[];let acc=0;QSPLIT.forEach(f=>{acc+=f;cum.push(rs.n*acc/1000)});return {r,d:D?d:null,R,v,y0,last,g,fact,fc,rs,cum,name:D?d.name:r.name}}
+    /* people do not move in when building starts: what is built in year c (20/45/25/8/2 % from the first year) is lived in from
+       year c+2 and shows in the count at 1 January of year c+3 */
+    const rs=residents(),start=last,LAG=2,cum=fc.map(([Y])=>{let f=0;QSPLIT.forEach((s,k)=>{if(start+k+LAG+1<=Y)f+=s});return rs.n*f/1000});
+    return {r,d:D?d:null,R,v,y0,last,g,fact,fc,rs,cum,start,moveIn:start+LAG,share5:cum.length&&rs.n?cum[4]*1000/rs.n:0,name:D?d.name:r.name}}
   function render12(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,Q=popData();
     if(!Q){placeholder(ctx,W,H,U,"Viloyat tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
     const fb=frame(ctx,W,H,U,'Aholi sonining taxminiy o‘sish diagrammasi','12-rasm · '+Q.name+' · doimiy aholi, ming kishi (yil boshiga)');
@@ -2833,9 +2836,9 @@ const MAP=(function(){
       txt(ctx,(Q.last-5)+'–'+Q.last+' o‘rtachasi; prognoz shu sur’atda',lx+12*U,y+61*U,9.5*U,{halo:false,col:'#7a8496'})});
     card(100*U,y=>{txt(ctx,'MASTER REJADA YASHOVCHILAR',lx+12*U,y+16*U,9.5*U,{halo:false,w:'800',col:'#7a8496'});txt(ctx,nUz(Q.rs.n,'#,##0')+' kishi',lx+12*U,y+46*U,22*U,{halo:false,w:'800',col:C.add});
       txt(ctx,Q.rs.manual?'qo‘lda kiritilgan':Q.rs.cnt?Q.rs.cnt+' ta turar joy · '+nUz(Q.rs.area,'#,##0')+' m²':'turar joy loyihalanmagan',lx+12*U,y+66*U,9.5*U,{halo:false,col:'#7a8496'});
-      txt(ctx,Q.rs.manual?'':Q.rs.cnt?'(har kishiga ~'+M2PP+' m² hisobida)':'',lx+12*U,y+82*U,9.5*U,{halo:false,col:'#7a8496'})});
+      txt(ctx,Q.rs.n?'ko‘chib kelish '+Q.moveIn+'-yildan boshlanadi':'',lx+12*U,y+82*U,9.5*U,{halo:false,col:'#7a8496',w:'700'})});
     card(70*U,y=>{txt(ctx,(Q.fc[4][0])+'-YILGACHA QO‘SHIMCHA AHOLI',lx+12*U,y+16*U,9.5*U,{halo:false,w:'800',col:'#7a8496'});txt(ctx,'+'+fmt(last5?add5/last5*100:0,2)+'%',lx+12*U,y+44*U,24*U,{halo:false,w:'800',col:'#e0533d'});
-      txt(ctx,'+'+fmt(add5,1)+' ming kishi, prognozga nisbatan',lx+12*U,y+61*U,9.5*U,{halo:false,col:'#7a8496'})});
+      txt(ctx,'+'+fmt(add5,1)+' ming kishi ('+Math.round(Q.share5*100)+'% joylashgan)',lx+12*U,y+61*U,9.5*U,{halo:false,col:'#7a8496'})});
     card(70*U,y=>{txt(ctx,'JAMI AHOLI '+Q.fc[4][0]+'-YIL',lx+12*U,y+16*U,9.5*U,{halo:false,w:'800',col:'#7a8496'});txt(ctx,f1(last5+add5)+' ming kishi',lx+12*U,y+44*U,20*U,{halo:false,w:'800',col:C.navy});
       txt(ctx,'master rejasiz: '+f1(last5)+' ming kishi',lx+12*U,y+61*U,9.5*U,{halo:false,col:'#7a8496'})});
     /* chart: population bars, the newcomers stacked on top of the forecast */
@@ -2861,7 +2864,7 @@ const MAP=(function(){
     [[C.fact,'Aholi (fakt / prognoz)',i=>i<5?Q.fact[i][1]:Q.fc[i-5][1],2],[C.add,'Ko‘chib keladiganlar (jami)',i=>i<5?0:Q.cum[i-5],3],[C.line,'Jami aholi',i=>tot[i],1]].forEach(([c,t,fn,dd],k)=>{
       ctx.fillStyle=k%2?'#fff':'#f5f7fb';ctx.fillRect(lx,ry,cx1-lx,18*U);ctx.fillStyle=c;ctx.fillRect(lx+6*U,ry+5*U,10*U,8*U);txt(ctx,t,lx+22*U,ry+9*U,10*U,{halo:false,col:'#333',w:k===2?'800':'600'});
       for(let i=0;i<n;i++){const v=fn(i);txt(ctx,v?fmt(v,v<10&&k===1?2:1):'0',cx0+bw*(i+0.5),ry+9*U,10*U,{al:'center',halo:false,w:k===2?'800':'500',col:'#222'})}ry+=18*U});
-    txt(ctx,'Manba: stat.uz (SIAT 246). (p) — prognoz: oxirgi 5 yildagi o‘rtacha o‘sish sur’atida. Master rejadagi turar joylarda yashovchilarning hammasi ko‘chib keladi deb, 5 yilda 20/45/25/8/2% bo‘yicha joylashadi (yig‘ilib boradi).',lx,H-20*U,9.5*U,{halo:false,col:'#8a94a6'})}
+    txt(ctx,'Manba: stat.uz (SIAT 246). (p) — prognoz: oxirgi 5 yilning o‘rtacha o‘sishida. Uylar '+Q.start+'–'+(Q.start+4)+' yillarda 20/45/25/8/2% bo‘yicha quriladi, har biriga 2 yildan keyin ko‘chib kirishadi; son keyingi yil 1-yanvarida hisobga olinadi.',lx,H-20*U,9.5*U,{halo:false,col:'#8a94a6'})}
   const RENDER=[render1,render2,render3,render4];
 
   /* ----- relief: heights of the project area from open satellite elevation data (SRTM / Copernicus, ~30 m cells).
@@ -3782,7 +3785,7 @@ async function wordReport(){
     D.T([['Yil','Statistika / prognoz','Investor (LOTlar)','Byudjet','Jami']].concat(Q.fact.map(z=>[z[0]+' (fakt)',nUz(z[1],'#,##0.0'),'—','—',nUz(z[1],'#,##0.0')])).concat(Q.fc.map((z,i)=>[z[0]+' (prognoz)',nUz(z[1],'#,##0.0'),nUz(Q.mp[i][0],'#,##0.0'),nUz(Q.mp[i][1],'#,##0.0'),{t:nUz(z[1]+Q.mp[i][0]+Q.mp[i][1],'#,##0.0'),b:1}])),{widths:[1.2,1,1,1,1],right:[1,2,3,4]});
     D.landscape(sheet(MAP.render11),'11-rasm. Qurilish sohasida taxminiy o‘sish diagrammasi')}}
   {const Q=MAP.popData();if(Q){D.H(2,'Aholi soniga ta’siri');const l5=Q.fc[4][1],a5=Q.cum[4];
-    D.P(Q.name+'da '+Q.last+'-yil boshida '+nUz(Q.v[Q.v.length-1],'#,##0.0')+' ming kishi yashaydi; oxirgi 5 yilda aholi yiliga o‘rtacha '+nUz(Q.g*100,'#,##0.00')+'% ga o‘sgan. Shu sur’atda '+Q.fc[4][0]+'-yil boshiga aholi '+nUz(l5,'#,##0.0')+' ming kishiga yetadi. Master rejadagi turar joylarda '+nUz(Q.rs.n,'#,##0')+' kishi yashashi '+(Q.rs.manual?'(kiritilgan qiymat)':'(maydon bo‘yicha taxmin)')+' va ularning barchasi boshqa joydan ko‘chib kelishi hisobga olinsa, aholi '+nUz(l5+a5,'#,##0.0')+' ming kishiga (+'+nUz(l5?a5/l5*100:0,'#,##0.00')+'%) yetadi.');
+    D.P(Q.name+'da '+Q.last+'-yil boshida '+nUz(Q.v[Q.v.length-1],'#,##0.0')+' ming kishi yashaydi; oxirgi 5 yilda aholi yiliga o‘rtacha '+nUz(Q.g*100,'#,##0.00')+'% ga o‘sgan. Shu sur’atda '+Q.fc[4][0]+'-yil boshiga aholi '+nUz(l5,'#,##0.0')+' ming kishiga yetadi. Master rejadagi turar joylarda '+nUz(Q.rs.n,'#,##0')+' kishi yashashi '+(Q.rs.manual?'(kiritilgan qiymat)':'(maydon bo‘yicha taxmin)')+'; ularning hammasi boshqa joydan ko‘chib keladi va ko‘chib kelish uylar qurila boshlagandan 2 yil o‘tib — '+Q.moveIn+'-yildan boshlanadi deb olinsa, '+Q.fc[4][0]+'-yil boshiga ulardan '+Math.round(Q.share5*100)+'% joylashib, aholi '+nUz(l5+a5,'#,##0.0')+' ming kishiga (+'+nUz(l5?a5/l5*100:0,'#,##0.00')+'%) yetadi.');
     D.T([['Yil (1-yanvar)','Aholi (fakt / prognoz), ming','Master reja — yangi aholi, ming','Jami, ming']].concat(Q.fact.map(z=>[z[0]+' (fakt)',nUz(z[1],'#,##0.0'),'—',nUz(z[1],'#,##0.0')])).concat(Q.fc.map((z,i)=>[z[0]+' (prognoz)',nUz(z[1],'#,##0.0'),nUz(Q.cum[i],'#,##0.00'),{t:nUz(z[1]+Q.cum[i],'#,##0.0'),b:1}])),{widths:[1.2,1.2,1.2,1],right:[1,2,3]});
     D.landscape(sheet(MAP.render12),'12-rasm. Aholi sonining taxminiy o‘sish diagrammasi')}}
   /* conclusions */
