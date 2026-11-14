@@ -1228,7 +1228,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794670727';
+const BUILD_ID='1794671095';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname.replace(/[^/]*$/,'')+'version.txt?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const v=(t.match(/\d{9,}/)||[])[0];
     if(!v||+v<=+BUILD_ID)return;let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}
@@ -2746,11 +2746,11 @@ const MAP=(function(){
     ctx.font='600 '+(11*U)+'px '+FONT;txt(ctx,t,lx,y,11*U,{halo:false,col:'#333',w:'600'});lx+=ctx.measureText(t).width+20*U})}
   function qurData(){if(typeof QUR==='undefined')return null;const r=region();if(!r||!QUR.r[r.id])return null;const d=district(),R=QUR.r[r.id],D=d&&R.d[d.name]?R.d[d.name]:null;
     /* the newest year of the table is a first estimate (stat.uz marks it with *): the chart and the growth rate use only full years */
-    const v=D||R.v,y0=QUR.y0,last=y0+v.length-1,b1=last-1,b0=b1-5,base=v[b0-y0],end=v[b1-y0],g=base>0&&end>0?Math.pow(end/base,1/5)-1:0;
-    const fact=[];for(let y=b1-4;y<=b1;y++)fact.push([y,v[y-y0]]);const fc=[];let cur=end;for(let y=b1+1;y<=last+5;y++){cur*=1+g;fc.push([y,cur])}
+    const v=D||R.v,y0=QUR.y0,last=y0+v.length-1,b1=last-1,b0=b1-4,base=v[b0-y0],end=v[b1-y0],inc=(end-base)/4,g=end>0?inc/end:0;
+    const fact=[];for(let y=b0;y<=b1;y++)fact.push([y,v[y-y0]]);const fc=[];let cur=end;for(let y=b1+1;y<=last+5;y++){cur=Math.max(0,cur+inc);fc.push([y,cur])}
     let inv=0,bud=0;try{const x=info();inv=(x.invCost||0)/1e9;bud=(x.budCost||0)/1e9}catch(e){}
     const man=+String(V(X,'A9')||'').replace(/[^0-9.]/g,'');let manual=false;if(man>0){manual=true;const t=inv+bud;if(t>0){inv=man/1e9*inv/t;bud=man/1e9*bud/t}else{inv=man/1e9;bud=0}}
-    const mp=fc.map(([y])=>{const k=y-(last+1);return k>=0&&k<5?[inv*QSPLIT[k],bud*QSPLIT[k]]:[0,0]});return {r,d:D?d:null,R,v,y0,last,b0,b1,g,fact,fc,mp,inv,bud,manual,name:D?d.name:r.name}}
+    const mp=fc.map(([y])=>{const k=y-(last+1);return k>=0&&k<5?[inv*QSPLIT[k],bud*QSPLIT[k]]:[0,0]});return {r,d:D?d:null,R,v,y0,last,b0,b1,g,inc,fact,fc,mp,inv,bud,manual,name:D?d.name:r.name}}
   function render11(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,Q=qurData();
     if(!Q){placeholder(ctx,W,H,U,"Viloyat tanlanmagan («Loyiha birlamchi ma'lumotlari»)");return}
     const fb=frame(ctx,W,H,U,'Qurilish sohasida taxminiy o‘sish diagrammasi','11-rasm · '+Q.name+' · qurilish ishlari hajmi, milliard so‘m');
@@ -2766,8 +2766,8 @@ const MAP=(function(){
     /* --- left: what it means --- */
     const top=ty+rh*(hrows.length+1)+22*U,lx=tx,lw=236*U,mpT=Q.inv+Q.bud,fcT=Q.fc.filter((z,i)=>Q.mp[i][0]+Q.mp[i][1]>0||z[0]>Q.last).reduce((a,z)=>a+z[1],0),imp=Q.mp.map((m,i)=>(m[0]+m[1])/Q.fc[i][1]),pk=imp.indexOf(Math.max(...imp));
     let ly=top;const card=(h,fn)=>{rr(lx,ly,lw,h,10*U);ctx.fillStyle='#f5f7fb';ctx.fill();fn(ly);ly+=h+10*U};
-    card(70*U,y=>{txt(ctx,'QURILISH HAJMINING YILLIK O‘SISHI',lx+12*U,y+16*U,9.5*U,{halo:false,w:'800',col:'#7a8496'});txt(ctx,(Q.g>=0?'+':'')+fmt(Q.g*100,1)+'% yiliga',lx+12*U,y+44*U,22*U,{halo:false,w:'800',col:C.fact});
-      txt(ctx,Q.b0+'–'+Q.b1+' o‘rtachasi; prognoz shu sur’atda',lx+12*U,y+61*U,9.5*U,{halo:false,col:'#7a8496'})});
+    card(70*U,y=>{txt(ctx,'QURILISH HAJMINING YILLIK O‘SISHI',lx+12*U,y+16*U,9.5*U,{halo:false,w:'800',col:'#7a8496'});txt(ctx,(Q.inc>=0?'+':'')+f1(Q.inc)+' mlrd/yil',lx+12*U,y+44*U,22*U,{halo:false,w:'800',col:C.fact});
+      txt(ctx,Q.b0+'–'+Q.b1+' o‘rtachasi; har yili shuncha qo‘shiladi',lx+12*U,y+61*U,9.5*U,{halo:false,col:'#7a8496'})});
     card(118*U,y=>{txt(ctx,'MASTER REJA QURILISHINING',lx+12*U,y+16*U,9.5*U,{halo:false,w:'800',col:'#7a8496'});txt(ctx,'UMUMIY TAXMINIY QIYMATI',lx+12*U,y+28*U,9.5*U,{halo:false,w:'800',col:'#7a8496'});
       txt(ctx,nUz(Math.round(mpT*1e9),'#,##0')+' so‘m'+(Q.manual?' *':''),lx+12*U,y+54*U,(String(Math.round(mpT*1e9)).length>12?15:17)*U,{halo:false,w:'800',col:C.navy});
       [[C.inv,'Investor (LOTlar)',Q.inv],[C.bud,'Byudjet hisobidan',Q.bud]].forEach(([c,t,v],i)=>{const yy=y+78*U+i*18*U;ctx.fillStyle=c;ctx.fillRect(lx+12*U,yy-5*U,10*U,10*U);txt(ctx,t,lx+28*U,yy,10.5*U,{halo:false,col:'#333'});txt(ctx,f1(v)+' mlrd so‘m',lx+lw-12*U,yy,10.5*U,{halo:false,al:'right',w:'700',col:'#222'})})});
@@ -2784,16 +2784,17 @@ const MAP=(function(){
     for(let v=0;v<=max;v+=nice){ctx.strokeStyle=v?'#eef1f6':'#9aa5b8';ctx.lineWidth=1*U;ctx.beginPath();ctx.moveTo(cx0,Y(v));ctx.lineTo(cx1,Y(v));ctx.stroke();txt(ctx,fmt(v,0),cx0-8*U,Y(v),10*U,{al:'right',halo:false,col:'#7a8496'})}
     const lab=(t,x,y,col,bold)=>{ctx.font=(bold?'800 ':'600 ')+(10*U)+'px '+FONT;const w=ctx.measureText(t).width+10*U;rr(x-w/2,y-9*U,w,17*U,4*U);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=1*U;ctx.stroke();txt(ctx,t,x,y,10*U,{al:'center',halo:false,col:bold?'#1b2a44':'#333',w:bold?'800':'600'})};
     const pts=[];
-    for(let i=0;i<n;i++){const xm=cx0+bw*(i+0.5),isF=i>=NF,v=isF?Q.fc[i-NF][1]:Q.fact[i][1],w1=bw*(isF?0.34:0.46),xa=isF?xm-w1-2*U:xm-w1/2;
+    for(let i=0;i<n;i++){const xm=cx0+bw*(i+0.5),isF=i>=NF,v=isF?Q.fc[i-NF][1]:Q.fact[i][1],w1=bw*0.5,xa=xm-w1/2;
       const g=ctx.createLinearGradient(0,Y(v),0,cy1);g.addColorStop(0,isF?C.fc:'#5b9be3');g.addColorStop(1,isF?'#b9d4f3':C.fact);ctx.fillStyle=g;rr(xa,Y(v),w1,cy1-Y(v),4*U);ctx.fill();
       if(isF){ctx.save();rr(xa,Y(v),w1,cy1-Y(v),4*U);ctx.clip();ctx.strokeStyle='rgba(255,255,255,0.55)';ctx.lineWidth=2*U;for(let k=-40;k<40;k++){ctx.beginPath();ctx.moveTo(xa+k*8*U,cy1);ctx.lineTo(xa+k*8*U+(cy1-cy0),cy0);ctx.stroke()}ctx.restore();
-        const [a,b]=Q.mp[i-NF],xb=xm+2*U;if(a+b>0){ctx.fillStyle=C.inv;rr(xb,Y(a),w1,cy1-Y(a),3*U);ctx.fill();if(b>0){ctx.fillStyle=C.bud;ctx.fillRect(xb,Y(a+b),w1,Y(a)-Y(a+b))}
-          lab(f1(a+b),xb+w1/2,Y(a+b)-13*U,C.inv,false)}}
-      if(isF&&cy1-Y(v)>26*U)txt(ctx,f1(v),xa+w1/2,Y(v)+12*U,(w1<44*U?8.5:10)*U,{al:'center',halo:false,col:'#1b4f8f',w:'700'});pts.push([xm,Y(tot[i]),tot[i]]);
+        /* the master plan sits on top of the forecast: investor, then budget */
+        const [a,b]=Q.mp[i-NF];if(a>0){ctx.fillStyle=C.inv;ctx.fillRect(xa,Y(v+a),w1,Y(v)-Y(v+a))}if(b>0){ctx.fillStyle=C.bud;ctx.fillRect(xa,Y(v+a+b),w1,Y(v+a)-Y(v+a+b))}
+        if(a+b>0&&Y(v)-Y(v+a+b)>15*U)txt(ctx,'+'+f1(a+b),xm,(Y(v)+Y(v+a+b))/2,9.5*U,{al:'center',halo:false,col:'#fff',w:'800'})}
+      if(isF&&cy1-Y(v)>26*U)txt(ctx,f1(v),xa+w1/2,Y(v)+12*U,(w1<44*U?8.5:9.5)*U,{al:'center',halo:false,col:'#1b4f8f',w:'700'});pts.push([xm,Y(tot[i]),tot[i]]);
       txt(ctx,(isF?Q.fc[i-NF][0]:Q.fact[i][0])+'-y',xm,cy1+12*U,10.5*U,{al:'center',halo:false,w:'700',col:isF?'#5d6a82':'#222'})}
     /* forecast zone */
-    ctx.fillStyle='rgba(31,56,100,0.04)';ctx.fillRect(cx0+bw*5,cy0-14*U,bw*5,cy1-cy0+14*U);txt(ctx,'PROGNOZ',cx0+bw*7.5,cy0-6*U,10*U,{al:'center',halo:false,w:'800',col:'#7a8496'});
-    ctx.setLineDash([4*U,4*U]);ctx.strokeStyle='#9aa5b8';ctx.lineWidth=1*U;ctx.beginPath();ctx.moveTo(cx0+bw*5,cy0-14*U);ctx.lineTo(cx0+bw*5,cy1);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='rgba(31,56,100,0.04)';ctx.fillRect(cx0+bw*NF,cy0-14*U,bw*(n-NF),cy1-cy0+14*U);txt(ctx,'PROGNOZ',cx0+bw*(NF+n)/2,cy0-6*U,10*U,{al:'center',halo:false,w:'800',col:'#7a8496'});
+    ctx.setLineDash([4*U,4*U]);ctx.strokeStyle='#9aa5b8';ctx.lineWidth=1*U;ctx.beginPath();ctx.moveTo(cx0+bw*NF,cy0-14*U);ctx.lineTo(cx0+bw*NF,cy1);ctx.stroke();ctx.setLineDash([]);
     ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.strokeStyle=C.line;ctx.lineWidth=5*U;ctx.lineJoin='round';ctx.stroke();
     pts.forEach((p,i)=>{ctx.beginPath();ctx.arc(p[0],p[1],5*U,0,7);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#6b7480';ctx.lineWidth=2*U;ctx.stroke();lab(f1(p[2]),p[0],p[1]-18*U,i<NF?C.fact:'#6b7480',true)});
     /* --- table under the chart, aligned with the years --- */
@@ -2801,7 +2802,8 @@ const MAP=(function(){
     const rows=[[C.fact,'Qurilish hajmi (fakt / prognoz)',i=>i<NF?Q.fact[i][1]:Q.fc[i-NF][1]],[C.inv,'Master reja: investor (LOTlar)',i=>i<NF?0:Q.mp[i-NF][0]],[C.bud,'Master reja: byudjet',i=>i<NF?0:Q.mp[i-NF][1]],[C.line,'Jami',i=>tot[i]]];
     rows.forEach(([c,t,fn],k)=>{ctx.fillStyle=k%2?'#fff':'#f5f7fb';ctx.fillRect(lx,ry,cx1-lx,18*U);ctx.fillStyle=c;ctx.fillRect(lx+6*U,ry+5*U,10*U,8*U);txt(ctx,t,lx+22*U,ry+9*U,10*U,{halo:false,col:'#333',w:k===3?'800':'600'});
       for(let i=0;i<n;i++){const v=fn(i);txt(ctx,v?f1(v):'0',cx0+bw*(i+0.5),ry+9*U,10*U,{al:'center',halo:false,w:k===3?'800':'500',col:'#222'})}ry+=18*U});
-    txt(ctx,'Manba: stat.uz (SIAT 2402). * '+Q.last+' — dastlabki ma’lumot, hisobga olinmadi. (p) — prognoz: '+Q.b0+'–'+Q.b1+' o‘rtacha o‘sishida. Master reja summasi 5 yilga 20/45/25/8/2% bo‘yicha taqsimlangan'+(Q.manual?'; * — qo‘lda kiritilgan summa':'')+'. Barcha qiymatlar taxminiy.',lx,H-20*U,9.5*U,{halo:false,col:'#8a94a6'})}
+    txt(ctx,'Manba: stat.uz (SIAT 2402). * '+Q.last+'-yil — dastlabki ma’lumot, hisobga olinmadi. (p) — prognoz: '+Q.b0+'–'+Q.b1+' yillardagi o‘rtacha yillik o‘sish (+'+f1(Q.inc)+' mlrd so‘m) har yili qo‘shiladi.',lx,H-27*U,9.5*U,{halo:false,col:'#8a94a6'});
+    txt(ctx,'Master reja prognoz ustiga qo‘shiladi, 5 yilga 20/45/25/8/2% bo‘yicha'+(Q.manual?'; summa yonidagi * — qo‘lda kiritilgan':'')+'. Barcha qiymatlar taxminiy.',lx,H-14*U,9.5*U,{halo:false,col:'#8a94a6'})}
   /* ===== sheet 12: population of the region / district (stat.uz, SIAT 246, thousand people at 1 January) carried five years on
      at the growth of the last five, plus everyone living in the master plan's housing, all counted as newcomers, moving in
      over five years on the same 20/45/25/8/2 % schedule ===== */
@@ -3778,7 +3780,7 @@ async function wordReport(){
   D.P('Investorning har 1 so‘m mablag‘iga byudjetdan '+(x.invCost?nUz(x.budCost/x.invCost,'#,##0.00'):'—')+' so‘m to‘g‘ri keladi.');
   D.landscape(sheet(MAP.render10),'10-rasm. Byudjet hisobidan amalga oshiriladigan infratuzilma');
   {const Q=MAP.qurData();if(Q){D.H(2,'Qurilish sohasiga ta’siri');const mpT=Q.inv+Q.bud,fcT=Q.fc.filter(z=>z[0]>Q.last).reduce((a,z)=>a+z[1],0);
-    D.P(Q.name+'da qurilish ishlari hajmi '+Q.b1+'-yilda '+nUz(Q.v[Q.b1-Q.y0],'#,##0.0')+' mlrd so‘mni tashkil etgan ('+Q.last+'-yil uchun dastlabki ma’lumot '+nUz(Q.v[Q.last-Q.y0],'#,##0.0')+' mlrd so‘m, hisobga olinmadi); '+Q.b0+'–'+Q.b1+' yillarda o‘rtacha yillik o‘sish '+nUz(Q.g*100,'#,##0.0')+'%. Shu sur’at saqlansa, keyingi 5 yilda qurilish hajmi jami '+nUz(fcT,'#,##0.0')+' mlrd so‘m bo‘lishi kutiladi. Master reja bo‘yicha qurilishlar ('+nUz(mpT,'#,##0.0')+' mlrd so‘m: investor '+nUz(Q.inv,'#,##0.0')+', byudjet '+nUz(Q.bud,'#,##0.0')+') bu hajmga '+nUz(fcT?mpT/fcT*100:0,'#,##0.0')+'% qo‘shimcha beradi.');
+    D.P(Q.name+'da qurilish ishlari hajmi '+Q.b1+'-yilda '+nUz(Q.v[Q.b1-Q.y0],'#,##0.0')+' mlrd so‘mni tashkil etgan ('+Q.last+'-yil uchun dastlabki ma’lumot '+nUz(Q.v[Q.last-Q.y0],'#,##0.0')+' mlrd so‘m, hisobga olinmadi); '+Q.b0+'–'+Q.b1+' yillarda qurilish hajmi har yili o‘rtacha '+nUz(Q.inc,'#,##0.0')+' mlrd so‘mga oshgan. Shu o‘sish saqlansa, keyingi 5 yilda qurilish hajmi jami '+nUz(fcT,'#,##0.0')+' mlrd so‘m bo‘lishi kutiladi. Master reja bo‘yicha qurilishlar ('+nUz(mpT,'#,##0.0')+' mlrd so‘m: investor '+nUz(Q.inv,'#,##0.0')+', byudjet '+nUz(Q.bud,'#,##0.0')+') bu hajmga '+nUz(fcT?mpT/fcT*100:0,'#,##0.0')+'% qo‘shimcha beradi.');
     D.T([['Yil','Statistika / prognoz','Investor (LOTlar)','Byudjet','Jami']].concat(Q.fact.map(z=>[z[0]+' (fakt)',nUz(z[1],'#,##0.0'),'—','—',nUz(z[1],'#,##0.0')])).concat(Q.fc.map((z,i)=>[z[0]+' (prognoz)',nUz(z[1],'#,##0.0'),nUz(Q.mp[i][0],'#,##0.0'),nUz(Q.mp[i][1],'#,##0.0'),{t:nUz(z[1]+Q.mp[i][0]+Q.mp[i][1],'#,##0.0'),b:1}])),{widths:[1.2,1,1,1,1],right:[1,2,3,4]});
     D.landscape(sheet(MAP.render11),'11-rasm. Qurilish sohasida taxminiy o‘sish diagrammasi')}}
   {const Q=MAP.popData();if(Q){D.H(2,'Aholi soniga ta’siri');const l5=Q.fc[4][1],a5=Q.cum[4];
