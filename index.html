@@ -1239,7 +1239,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794676278';
+const BUILD_ID='1794677560';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname.replace(/[^/]*$/,'')+'version.txt?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const v=(t.match(/\d{9,}/)||[])[0];
     if(!v||+v<=+BUILD_ID)return;let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}
@@ -1749,7 +1749,7 @@ function binoPage(p){
         fld("Yo'l va avtoturargoh maydoni, m²",'yol',id('W'),numIn(B,'W'+r,{ph:'0'})),
         d&&d.typed?ro('Hovli (qolgan maydon)','obodonlashtirish',nUz(d.yard,'#,##0')+' m²'):null,
         fld('Quyosh panellari, kW (ixtiyoriy)','yoritish',id('X'),numIn(B,'X'+r,{ph:"yo'q"})),
-        fld("Sig'imi, o'rin",'hash',id('G'),numIn(B,'G'+r,{whole:true,ph:d&&d.capEst?'taxmin: '+d.capEst:'—'})),
+        fld("Sig'imi, o'rin",'hash',id('G'),numIn(B,'G'+r,{whole:true,ph:d&&d.capEst?(d.capSrc?'ShNQ: ':'taxmin: ')+d.capEst:'—'}),d&&d.capSrc&&N(B,'G'+r)===null?h('span',{class:'hint'},d.capSrc):null),
         fld("Ishchi o'rinlari",'project',id('T'),numIn(B,'T'+r,{whole:true,ph:d&&d.jobsEst?'taxmin: '+d.jobsEst:'—'})),
         fld("1 m² qurilish narxi, so'm",'money',id('J'),numIn(B,'J'+r,{ph:rate?som(rate):"turiga qarab"})),
         fld("Arxitektura uslubi",'obyektlar',id('Y'),selIn(B,'Y'+r,{empty:'Tanlang'})),
@@ -1876,15 +1876,28 @@ function lotNos(){const items=[],taken=new Set(),out={};
 function lotDup(n,key){return n!==null&&lotNumbers().some(x=>x.n===n&&x.k!==key)}
 function nextLotNo(){const t=new Set(Object.values(lotNos()));let n=1;while(t.has(n))n++;return n}
 const lotLabel=n=>n===null||n===undefined?'LOT':'LOT-'+n;
+/* capacity from the land plot, by ShNQ 2.07.01-23 (land per place): schools 41-jadval, kindergartens 543-band, hotels 51-jadval, clubs and cinemas 48-jadval.
+   Where a land size fits more than one band, the band closest to the estimate from the floor area is taken. */
+function capShnq(type,land,est){const r=capShnq0(type,land,est);if(!r||!r.n)return null;
+  /* the land norm is a minimum plot per place: a bigger plot does not make the building hold more, so the smaller of the two is taken */
+  if(est&&est<r.n)return {n:est,src:r.src.replace(/^(ShNQ[^:]+):.*$/,'$1 bo‘yicha yer '+r.n+' o‘ringa yetadi; bino maydoni '+est+' o‘ringa — kichigi olindi')};return r}
+function capShnq0(type,land,est){type=String(type||'');if(!(land>0))return null;
+  const pick=bands=>{const ok=bands.map(([lo,hi,m])=>{const n=Math.floor(land/m);return n>=lo&&n<=hi?n:0}).filter(Boolean);if(!ok.length)return 0;return est?ok.reduce((a,b)=>Math.abs(b-est)<Math.abs(a-est)?b:a):Math.min(...ok)};
+  if(/maktabgacha|bog'cha|bog‘cha/i.test(type)){const n=Math.floor(land/40);return {n:n<=100?n:Math.floor(land/35),src:'ShNQ 2.07.01-23, 543-band: 1 o‘ringa 40 m² (100 o‘ringacha), 35 m² (100 dan ortiq) yer'}}
+  if(/maktab|umumta|litsey/i.test(type)&&!/musiqa|san'at|sport/i.test(type)){const n=pick([[40,660,20],[661,989,15],[990,1e6,10]]);return n?{n,src:'ShNQ 2.07.01-23, 41-jadval: 1 o‘quvchiga 20 / 15 / 10 m² yer'}:null}
+  if(/mehmonxona|hotel|motel|hostel/i.test(type)){const n=pick([[1,100,55],[101,500,30],[501,1000,20]]);return n?{n,src:'ShNQ 2.07.01-23, 51-jadval: 1 o‘ringa 55 / 30 / 20 m² yer'}:null}
+  if(/kinoteatr/i.test(type))return {n:Math.floor(land/5),src:'ShNQ 2.07.01-23, 48-jadval: 1 o‘ringa 5 m² yer'};
+  if(/klub|madaniyat/i.test(type))return {n:Math.floor(land/6),src:'ShNQ 2.07.01-23, 48-jadval: 1 o‘ringa 5–7 m² yer'};
+  return null}
 function lotData(r){
   const g=c=>N('Lot',c+r),s=c=>V('Lot',c+r),P2=N('Bino','P2')||3.3;
   const name=s('B')?String(s('B')):'',cat=lotCat(name),area=g('C')||0,fp=g('D')||0,fl=g('E')||0,fh=g('F')||P2,par=g('G')===null?1.2:g('G');
   const floor=fp*fl,vol=fp*(fl*fh+par),gp=g('I')||0,green=area*gp,pool=g('K')||0,road=g('L')||0,trot=Math.max(0,area-fp-green-pool-road),solar=g('N')||0;
-  const capEst=floor&&cat.k!=='ishlab'?Math.round(floor/cat.cap):0,jobsEst=floor?Math.max(1,Math.round(floor/cat.job)):0;
+  const capF=floor&&cat.k!=='ishlab'?Math.round(floor/cat.cap):0,capN=cat.k==='ishlab'?null:capShnq(name,area,capF),capEst=capN?capN.n:capF,capSrc=capN?capN.src:'',jobsEst=floor?Math.max(1,Math.round(floor/cat.job)):0;
   const ex=extrasOf(lotExtras(r));
   const c={build:floor*catRate(cat.k)*(fh/P2),green:green*siteRate('yashil'),pool:pool*siteRate('hovuz'),road:road*siteRate('yol'),trot:trot*siteRate('trot'),solar:solar*siteRate('quyosh'),extra:ex.reduce((a,e)=>a+e.s,0)};
   const total=Object.values(c).reduce((a,b)=>a+b,0),no=lotNos()['Lot!'+r];
-  return {r,num:g('A'),no:no===undefined?nextLotNo():no,name,cat,area,fp,fl,fh,par,floor,vol,gp,green,pool,road,trot,solar,style:s('O'),jobs:g('P')===null?jobsEst:g('P'),jobsEst,cap:g('Q')===null?capEst:g('Q'),capEst,trade:s('S'),ex,c,total,
+  return {r,num:g('A'),no:no===undefined?nextLotNo():no,name,cat,area,fp,fl,fh,par,floor,vol,gp,green,pool,road,trot,solar,style:s('O'),jobs:g('P')===null?jobsEst:g('P'),jobsEst,cap:g('Q')===null?capEst:g('Q'),capEst,capSrc,trade:s('S'),ex,c,total,
     over:fp+green+pool+road>area+0.001&&area>0};
 }
 /* budget objects and DXSH objects: capacity and jobs, estimated from the type and floor area unless typed */
@@ -1894,11 +1907,11 @@ const BINOEST=[[/maktab|umumta/i,10,o=>o.cap/12,'t'],[/bog'cha|maktabgacha/i,16,
 function binoData(r){
   const B='Bino',type=V(B,'A'+r);if(!type)return null;
   const g=c=>N(B,c+r),area=g('H')||0,e=BINOEST.find(x=>x[0].test(String(type)));
-  const capEst=area?Math.round(area/e[1]):0,cap=g('G')===null?capEst:g('G');
+  const capF=area?Math.round(area/e[1]):0,capN=capShnq(type,g('C')||0,capF),capEst=capN?capN.n:capF,capSrc=capN?capN.src:'',cap=g('G')===null?capEst:g('G');
   const jobsEst=area?Math.max(1,Math.round(e[2]({area,cap}))):0,jobs=g('T')===null?jobsEst:g('T');
   const cost=g('M')||0,share=r>=60?(g('N')||0):1,land=g('C')||0,fp=g('D')||0,gp=g('U')||0,green=land*gp,pool=g('V')||0,road=g('W')||0,solar=g('X')||0;
   const typed=g('U')!==null||g('V')!==null||g('W')!==null,yard=Math.max(0,land-fp-green-pool-road),ex=extrasOf(parseList(V(B,'AA'+r)));
-  return {r,type:String(type),name:V(B,'B'+r),land,fp,fl:g('E')||0,fh:g('F')===null?(N(B,'P2')||3.3):g('F'),par:g('AC')||0,area,vol:g('Q')||0,cap,capEst,jobs,jobsEst,sec:e[3],cost,share,bud:cost*share,inv:cost*(1-share),
+  return {r,type:String(type),name:V(B,'B'+r),land,fp,fl:g('E')||0,fh:g('F')===null?(N(B,'P2')||3.3):g('F'),par:g('AC')||0,area,vol:g('Q')||0,cap,capEst,capSrc,jobs,jobsEst,sec:e[3],cost,share,bud:cost*share,inv:cost*(1-share),
     no:r>=60?lotNos()['Bino!'+r]:null,num:r>=60?g('R'):null,gp,green,pool,road,yard,typed,solar,style:V(B,'Y'+r),trade:r>=60?V(B,'Z'+r):null,ex,rate:g('I'),
     c:{build:g('K')||0,yard:typed?yard*(N(B,'P1')||0):(g('L')||0),green:typed?green*siteRate('yashil'):0,pool:typed?pool*siteRate('hovuz'):0,road:typed?road*siteRate('yol'):0,solar:solar*siteRate('quyosh'),extra:g('AB')||0}};
 }
@@ -2000,7 +2013,7 @@ function lotCard(r){
       fld('Quyosh panellari, kW (ixtiyoriy)','yoritish','N',numIn(L,'N'+r,{ph:"yo'q"})),
       fld("Arxitektura uslubi",'obyektlar','O',selIn(L,'O'+r,{empty:'Tanlang'})),
       fld("Yangi ishchi o'rinlari",'project','P',numIn(L,'P'+r,{whole:true,val:N(L,'P'+r),ph:d.jobsEst?'taxmin: '+d.jobsEst:'0'})),
-      fld('Bir vaqtda foydalanuvchilar','hash','Q',numIn(L,'Q'+r,{whole:true,val:N(L,'Q'+r),ph:d.capEst?'taxmin: '+d.capEst:'0'}),"Bo'sh qolsa, taxmin olinadi."),
+      fld('Bir vaqtda foydalanuvchilar','hash','Q',numIn(L,'Q'+r,{whole:true,val:N(L,'Q'+r),ph:d.capEst?(d.capSrc?'ShNQ: ':'taxmin: ')+d.capEst:'0'}),d.capSrc?"Bo'sh qolsa: "+d.capSrc:"Bo'sh qolsa, taxmin olinadi."),
       fld("Savdoga chiqarilishi",'money','S',selIn(L,'S'+r,{empty:'Tanlang'}))),
     d.over?h('p',{class:'errmsg'},"Bino, yashil hudud, hovuz va yo'l maydonlari yig'indisi LOT maydonidan oshib ketdi."):null,
     extrasEditor(L,'T'+r,null,r),
