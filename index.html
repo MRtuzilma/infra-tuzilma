@@ -1228,7 +1228,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794668241';
+const BUILD_ID='1794668664';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname.replace(/[^/]*$/,'')+'version.txt?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const v=(t.match(/\d{9,}/)||[])[0];
     if(!v||+v<=+BUILD_ID)return;let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}
@@ -2804,11 +2804,12 @@ const MAP=(function(){
   /* ===== sheet 12: population of the region / district (stat.uz, SIAT 246, thousand people at 1 January) carried five years on
      at the growth of the last five, plus everyone living in the master plan's housing, all counted as newcomers, moving in
      over five years on the same 20/45/25/8/2 % schedule ===== */
-  const RESRX=/turar|uy-joy|uy joy|ko['‘’]p qavatli uy|kvartira|xonadon|yotoqxona|hovlili uy|mahalla|ko['‘’]p xonadonli/i,M2PP=20;
-  function residents(){const t=V(X,'A10');if(t!=null&&String(t).trim()!==''&&!isNaN(+t))return {n:+t,manual:true,area:0,cnt:0};let n=0,area=0,cnt=0;
-    try{const x=info();x.lots.forEach(l=>{const fa=(l.fp||0)*(l.fl||0);if(RESRX.test(l.name||'')&&fa){n+=fa/M2PP;area+=fa;cnt++}});
-      x.bud.concat(x.dx).forEach(b=>{const s=(b.type||'')+' '+(b.name||'');if(RESRX.test(s)&&(b.area||b.cap)){n+=b.area?b.area/M2PP:b.cap;area+=b.area||0;cnt++}})}catch(e){}
-    return {n:Math.round(n),manual:false,area,cnt}}
+  const RESRX=/turar[ -]?joy|uy-joy|uy joy|ko['‘’]p qavatli (turar|uy)|kvartira|xonadon|yotoqxona|hovlili uy|ko['‘’]p xonadonli/i,M2PP=20;
+  /* who will live in the master plan: LOTs and budget / DXSH buildings whose name says they are housing (not «avtoturargoh») */
+  function residents(){const t=V(X,'A10');if(t!=null&&String(t).trim()!==''&&!isNaN(+t))return {n:+t,manual:true,area:0,cnt:0,list:[]};let n=0,area=0,cnt=0;const list=[];
+    try{const x=info();x.lots.forEach(l=>{const fa=(l.fp||0)*(l.fl||0);if(RESRX.test(l.name||'')&&fa){n+=fa/M2PP;area+=fa;cnt++;list.push([(l.no||'LOT')+' '+l.name,Math.round(fa/M2PP)])}});
+      x.bud.concat(x.dx).forEach(b=>{const s=(b.type||'')+' '+(b.name||'');if(RESRX.test(s)&&(b.area||b.cap)){const k=b.area?b.area/M2PP:b.cap;n+=k;area+=b.area||0;cnt++;list.push([String(b.name||b.type),Math.round(k)])}})}catch(e){}
+    return {n:Math.round(n),manual:false,area,cnt,list}}
   function popData(){if(typeof POPH==='undefined')return null;const r=region();if(!r||!POPH.r[r.id])return null;const d=district(),R=POPH.r[r.id],D=d&&R.d[d.name]?R.d[d.name]:null;
     const v=D||R.v,y0=POPH.y0,last=y0+v.length-1,base=v[v.length-6],end=v[v.length-1],g=base>0&&end>0?Math.pow(end/base,1/5)-1:0;
     const fact=[];for(let y=last-4;y<=last;y++)fact.push([y,v[y-y0]]);const fc=[];let cur=end;for(let i=1;i<=5;i++){cur*=1+g;fc.push([last+i,cur])}
@@ -3186,7 +3187,10 @@ function mapFields(){
       i.addEventListener('change',()=>{const n=+String(i.value).replace(/[^0-9]/g,'');commit(X,cell,n>0?String(n):null)});return i};
     let auto=0;try{const x=info();auto=x.cost||0}catch(e){}const rs=MAP.residents();
     out.push(qrow('Master reja umumiy qiymati, so‘m',numIn('A9','avtomatik: '+nUz(Math.round(auto),'#,##0')),{for:'f-Xarita-A9',icon:'money',opt:true,hint:"11-rasm uchun. Bo‘sh qoldirilsa, loyihadagi barcha summalar (LOTlar, byudjet, DXSH) yig‘indisi olinadi."}));
-    out.push(qrow('Master rejadagi turar joylarda yashovchilar, kishi',numIn('A10',rs.manual?'':'avtomatik: '+nUz(rs.n,'#,##0')),{for:'f-Xarita-A10',icon:'pin',opt:true,hint:"12-rasm uchun. Bo‘sh qoldirilsa, nomida «turar joy», «uy-joy», «ko‘p qavatli uy» va h.k. bo‘lgan obyektlar maydonidan har kishiga ~20 m² hisobida topiladi. Hammasi ko‘chib keladi deb olinadi."}))}
+    out.push(qrow('Master rejadagi turar joylarda yashovchilar, kishi',numIn('A10',rs.manual?'':rs.n?'avtomatik: '+nUz(rs.n,'#,##0'):'turar joy yo‘q — 0'),{for:'f-Xarita-A10',icon:'pin',opt:true,
+      hint:rs.manual?"12-rasm uchun. Kiritilgan son ishlatiladi; o‘chirsangiz, LOTlar va binolardan qayta hisoblanadi.":
+        rs.cnt?"12-rasm uchun. LOTlar va byudjet/DXSH binolaridan topildi ("+rs.list.map(z=>z[0]+' — '+nUz(z[1],'#,##0')+' kishi').join('; ')+"), har kishiga ~20 m² qavat maydoni hisobida. Hammasi ko‘chib keladi deb olinadi.":
+        "12-rasm uchun. LOTlar va byudjet/DXSH binolari orasida turar joy (nomida «turar joy», «uy-joy», «ko‘p qavatli uy», «kvartira» va h.k.) yo‘q — yashovchilar 0. Kerak bo‘lsa, sonni shu yerga yozing."}))}
   return out;
 }
 /* ----- population statistics: the copy built into the site, or a newer one fetched from stat.uz (SIAT) and kept in this browser ----- */
