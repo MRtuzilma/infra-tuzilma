@@ -582,7 +582,10 @@ table.um td,table.um th{overflow-wrap:break-word}
 .kinfo>span{display:flex;align-items:center;gap:5px}
 .kmsg{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
 .kmsg.err{color:var(--bad)}
-.mrbox{grid-column:1/-1}.klist{display:flex;flex-direction:column;gap:6px}.kinfo.tot{font-weight:700}.kdrop.off{opacity:.55;cursor:default}.mrgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:10px}
+.mrbox{grid-column:1/-1}.mkbox,.mkctl{display:flex;flex-direction:column;gap:10px;min-width:0}.mkrow{display:flex;flex-wrap:wrap;gap:8px}.mkrow .in{flex:1 1 200px;min-width:0}
+.mkcv{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);display:block}.mkcv.pick{cursor:crosshair;outline:3px solid var(--brand)}
+.mklist{display:flex;flex-wrap:wrap;gap:6px}.mkchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 4px 3px 10px;font-size:12.5px;background:var(--surface)}
+.mkchip button{border:0;background:transparent;font-size:16px;cursor:pointer;color:var(--muted);padding:0 6px}.mknum{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#f5c518;color:#1b2a44;font-size:12px;margin-right:6px}.klist{display:flex;flex-direction:column;gap:6px}.kinfo.tot{font-weight:700}.kdrop.off{opacity:.55;cursor:default}.mrgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:10px}
 .mrf{display:flex;flex-direction:column;gap:6px;min-width:0}.mrf.wide{grid-column:1/-1}.mrf>label{font-weight:600;font-size:13.5px}
 .mr4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}.mrside{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted)}
 .imged{grid-column:1/-1;border:1px dashed var(--field-line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;margin-top:6px}
@@ -1146,7 +1149,7 @@ const LOTEXTRA=[["Avtoturargoh (1 joy)",'joy',4500000],["Kirish darvozasi",'dona
   const c={};LOTCAT.forEach((k,i)=>{c['B'+(1+i)]=[k.rate,6]});
   LOTSITE.forEach((k,i)=>{c['B'+(30+i)]=[k.rate,6]});
   M.sheets.push({name:'LotNarx',rows:40,cols:2,show:2,cells:c,merges:[],dv:[],cf:[],widths:{},hidden:[]});
-  M.sheets.push({name:'Xarita',rows:20,cols:2,show:2,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
+  M.sheets.push({name:'Xarita',rows:24,cols:2,show:2,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
   /* number of lots: investor LOTs plus DXSH objects that carry a LOT number; typed by hand only when there are none */
   const J=M.sheets.find(s=>s.name==='Jamlama');J.cells.F12=[null,6];
   J.cells.C8=['=IF(COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79)>0,COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79),IF(F12="",0,F12))',6];
@@ -1218,7 +1221,7 @@ M.sheets.forEach(sh=>{sh.ed={};sh.dv.forEach(dv=>dv.ranges.forEach(r=>expand(r).
   const BN=SH.Bino;for(let r=3;r<=22;r++){BN.ed['A'+r]={t:'text'};BN.ed['B'+r]={t:'num'}}BN.ed.P1={t:'num'};BN.ed.P2={t:'num'};
   [[30,49],[60,79]].forEach(x=>{for(let r=x[0];r<=x[1];r++){BN.ed['A'+r]={t:'range',s:'Bino',r:'A3:A22'};BN.ed['B'+r]={t:'text'};'CDEFGJN'.split('').forEach(c=>{BN.ed[c+r]={t:'num'}})}});
   const LT=SH.Lot;LOTROWS_ED.forEach(r=>{'ACDEFGIKLNPQ'.split('').forEach(c=>{LT.ed[c+r]={t:'num'}});LT.ed['B'+r]={t:'text'};LT.ed['T'+r]={t:'text'};LT.ed['O'+r]={t:'list',v:LOTSTYLE};LT.ed['S'+r]={t:'list',v:LOTTRADE}});
-  SH.LotNom.ed.A1={t:'text'};['A1','A2','A3','A4','A5','A6','A7','A8','A9','A10','A11','A12','A13','A14','A15','A16','A17','A18','A19'].forEach(a=>{SH.Xarita.ed[a]={t:'text'}});for(let i=1;i<=11;i++)SH.LotNarx.ed['B'+i]={t:'num'};for(let i=30;i<=34;i++)SH.LotNarx.ed['B'+i]={t:'num'};
+  SH.LotNom.ed.A1={t:'text'};['A1','A2','A3','A4','A5','A6','A7','A8','A9','A10','A11','A12','A13','A14','A15','A16','A17','A18','A19','A20','A21','A22'].forEach(a=>{SH.Xarita.ed[a]={t:'text'}});for(let i=1;i<=11;i++)SH.LotNarx.ed['B'+i]={t:'num'};for(let i=30;i<=34;i++)SH.LotNarx.ed['B'+i]={t:'num'};
   for(let r=60;r<=79;r++){BN.ed['R'+r]={t:'num'};BN.ed['T'+r]={t:'num'}}for(let r=30;r<=49;r++)BN.ed['T'+r]={t:'num'};
   const B=SH.Baza,kinds={E:{t:'num'},H:{t:'date'},F:{t:'list',v:['Sayt narxi','≈ Taxminiy']}};
   for(let r=5;r<=304;r++)for(const c of 'BCDEFGHJKLM'){const a=c+r;if(!isFormula(B,a))B.ed[a]=kinds[c]||{t:'text'}}
@@ -1252,7 +1255,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1795377984';
+const BUILD_ID='1795381827';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname.replace(/[^/]*$/,'')+'version.txt?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const v=(t.match(/\d{9,}/)||[])[0];
     if(!v||+v<=+BUILD_ID)return;let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}
@@ -2010,9 +2013,40 @@ function mrFields(){const T=mrText(),out=[];
       inp('web','Sayt yoki ijtimoiy tarmoq','masalan: @smartbuilding_official'))));
   out.push(h('div',{class:'qh'},'Master reja (MR) albomi uchun rasmlar'));
   out.push(qrow('Albom muqovasi',imgEditor('Xarita','A19','Muqova rasmi',"Albomning birinchi varag‘i foni (eng chiroyli umumiy ko‘rinish). Bo‘sh bo‘lsa, birinchi umumiy ko‘rinish rasmi olinadi.",1,3200),{icon:'xarita',opt:true}));
-  out.push(qrow('Hudud bosh rejasi',imgEditor('Xarita','A16','Bosh reja chizmasi',"«Bosh reja» varag‘ida qaydnoma bilan chiqadi.",1,3200),{icon:'xarita',opt:true}));
+  out.push(qrow('Hudud bosh rejasi',imgEditor('Xarita','A16','Bosh reja chizmasi',"«Taqdimot plansheti» va «Bosh reja» varaqlarida chiqadi.",1,3200),{icon:'xarita',opt:true}));
+  out.push(...boardFields());
   out.push(qrow('Umumiy ko‘rinish',imgEditor('Xarita','A15','Umumiy ko‘rinish renderlari',"Har biri alohida to‘liq varaqda (12 tagacha).",12,2800),{icon:'xarita',opt:true}));
   out.push(qrow('Lavhalar',imgEditor('Xarita','A17','Lavha rasmlari',"Nechta rasm qo‘shilsa, albomda shuncha «Lavhalar» varag‘i bo‘ladi (40 tagacha).",40,2600),{icon:'xarita',opt:true}));
+  return out}
+/* ===== MR board inputs: labels on the satellite map, building numbers on the master plan ===== */
+const jsonCell=(c,def)=>{try{const v=JSON.parse(V('Xarita',c)||'null');return v==null?def:v}catch(e){return def}};
+const mapMarks=()=>{const a=jsonCell('A21',[]);return Array.isArray(a)?a:[]};
+function boardBuildings(){if(window.__boardFake)return window.__boardFake;let P=[];try{P=passportData()}catch(e){}return P.map(p=>{const z=(p.imgs||[])[0];return {key:p.key,name:p.name,im:z&&PL.img[z.k]||null}})}
+function planNums(){const m=jsonCell('A22',{});return boardBuildings().map((b,i)=>m[b.key]?{n:i+1,x:m[b.key][0],y:m[b.key][1]}:null).filter(Boolean)}
+/* a picture with marks, clickable: the click goes back as a point between 0 and 1 */
+function markCanvas(imgCell,draw,onPick,picking){const z=imgList('Xarita',imgCell)[0],im=z&&PL.img[z.k];if(z)PL.need(z.k);if(!im)return h('div',{class:'fine'},z?'Rasm yuklanmoqda…':'');
+  const W=1100,Hh=Math.min(1000,Math.round(W*im.naturalHeight/im.naturalWidth)),cv=h('canvas',{width:String(W),height:String(Hh),class:'mkcv'+(picking?' pick':'')}),ctx=cv.getContext('2d'),f=[(W-Math.min(W,Hh*im.naturalWidth/im.naturalHeight))/2,0,Math.min(W,Hh*im.naturalWidth/im.naturalHeight),Hh];
+  ctx.fillStyle='#f2f4f7';ctx.fillRect(0,0,W,Hh);ctx.drawImage(im,f[0],f[1],f[2],f[3]);draw(ctx,f,W/1100);
+  cv.addEventListener('click',e=>{if(!picking)return;const r=cv.getBoundingClientRect(),x=((e.clientX-r.left)/r.width*W-f[0])/f[2],y=((e.clientY-r.top)/r.height*Hh-f[1])/f[3];if(x<0||x>1||y<0||y>1)return;onPick(Math.round(x*1000)/1000,Math.round(y*1000)/1000)});return cv}
+function boardFields(){const out=[],mk=ui.mk||null,marks=mapMarks();
+  /* satellite map and its labels */
+  const ti=h('input',{class:'in',type:'text',id:'mk-t',placeholder:'masalan: Navoiy viloyat markazi',value:ui.mkT||'',oninput:e=>{ui.mkT=e.target.value}});
+  const ks=h('select',{class:'in',id:'mk-k',onchange:e=>{ui.mkK=e.target.value}},h('option',{value:'pt'},'Oddiy nuqta'),h('option',{value:'site'},'Loyiha hududi (qizil halqa)'));ks.value=ui.mkK||'pt';
+  const msg=mk&&mk.c==='map'?(mk.step===1?'1-qadam: xaritada joyni bosing.':'2-qadam: yozuv turadigan joyni bosing.'):'';
+  const cv=markCanvas('A20',(ctx,f,U)=>MAP.drawMapMarks(ctx,f,marks.concat(mk&&mk.c==='map'&&mk.x!=null?[{t:mk.t,k:mk.k,x:mk.x,y:mk.y}]:[]),U*1.4),(x,y)=>{
+    if(mk.step===1){ui.mk=Object.assign({},mk,{x,y,step:2});render();return}const a=mapMarks();a.push({t:mk.t,k:mk.k,x:mk.x,y:mk.y,lx:x,ly:y});commit('Xarita','A21',JSON.stringify(a));ui.mk=null;ui.mkT='';render()},!!(mk&&mk.c==='map'));
+  out.push(qrow('Planshet: joylashuv xaritasi',h('div',{class:'mkbox'},imgEditor('Xarita','A20','Sun’iy yo‘ldosh xaritasi',"Google xarita yoki Google Earth’dan olingan surat (skrinshot). Planshetning chap yuqori qismida chiqadi.",1,3000),
+    imgList('Xarita','A20').length?h('div',{class:'mkctl'},h('div',{class:'mkrow'},ti,ks,
+      h('button',{class:'btn primary',type:'button',onclick:()=>{const t=(ui.mkT||'').trim();if(!t){$('mk-t').focus();return}ui.mk={c:'map',t,k:ui.mkK||'pt',step:1};render()}},icon('pin',1),'Xaritaga qo‘yish'),
+      mk&&mk.c==='map'?h('button',{class:'btn ghost',type:'button',onclick:()=>{ui.mk=null;render()}},'Bekor qilish'):null),
+      msg?h('div',{class:'kmsg'},msg):null,cv,
+      marks.length?h('div',{class:'mklist'},...marks.map((m,i)=>h('span',{class:'mkchip'},(m.k==='site'?'◎ ':'• ')+m.t,h('button',{type:'button','aria-label':'O‘chirish',onclick:()=>{const a=mapMarks();a.splice(i,1);commit('Xarita','A21',a.length?JSON.stringify(a):null);render()}},'×')))):h('span',{class:'fine'},"Belgi nomini yozing, «Xaritaga qo‘yish»ni bosing, so‘ng xaritada avval joyni, keyin yozuv turadigan joyni bosing.")):null),{icon:'xarita',opt:true}));
+  /* building numbers on the master plan */
+  const B=boardBuildings(),pm=jsonCell('A22',{});
+  if(imgList('Xarita','A16').length&&B.length){const cv2=markCanvas('A16',(ctx,f,U)=>MAP.drawPlanNums(ctx,f,planNums(),U*1.6),(x,y)=>{const m=jsonCell('A22',{});m[mk.key]=[x,y];commit('Xarita','A22',JSON.stringify(m));ui.mk=null;render()},!!(mk&&mk.c==='plan'));
+    out.push(qrow('Bosh rejada binolar raqami',h('div',{class:'mkbox'},h('span',{class:'fine'},'Planshetdagi raqamlangan rasmlar LOTlardan olinadi (birinchi rasmi va nomi). Har bir bino raqamini bosh rejada joylashtiring: tugmani bosing, so‘ng chizmada binoni bosing.'),
+      h('div',{class:'mklist'},...B.map((b,i)=>h('button',{type:'button',class:'btn'+(mk&&mk.c==='plan'&&mk.key===b.key?' on':''),onclick:()=>{ui.mk=mk&&mk.key===b.key?null:{c:'plan',key:b.key};render()}},h('b',{class:'mknum'},String(i+1)),b.name.length>28?b.name.slice(0,27)+'…':b.name,pm[b.key]?' ✓':''))),
+      mk&&mk.c==='plan'?h('div',{class:'kmsg'},'Chizmada '+(B.findIndex(b=>b.key===mk.key)+1)+'-binoni bosing.'):null,cv2),{icon:'xarita',opt:true}))}
   return out}
 function extrasEditor(sheet,cell,sumCell,key){
   const list=()=>parseList(V(sheet,cell)),ex=extrasOf(list());
@@ -3216,6 +3250,9 @@ const MAP=(function(){
     const ex=x+sz/2,ey=y+sz/2,c=dark?MRC.NV:'#fff',q=sz/90;ctx.strokeStyle=c;ctx.lineWidth=3*q;ctx.lineJoin='round';ctx.beginPath();ctx.arc(ex,ey,sz*0.46,0,7);ctx.stroke();ctx.beginPath();
     ctx.moveTo(ex-22*q,ey+14*q);ctx.lineTo(ex-22*q,ey-4*q);ctx.lineTo(ex-7*q,ey-17*q);ctx.lineTo(ex+8*q,ey-4*q);ctx.lineTo(ex+8*q,ey+14*q);ctx.moveTo(ex+8*q,ey-4*q);ctx.lineTo(ex+16*q,ey-11*q);ctx.lineTo(ex+24*q,ey-4*q);ctx.lineTo(ex+24*q,ey+14*q);ctx.moveTo(ex-27*q,ey+14*q);ctx.lineTo(ex+29*q,ey+14*q);ctx.stroke()}
   /* header with the section title, footer with the page number */
+  function mrFoot(ctx,W,H,U,no){const fy=H-42*U;ctx.fillStyle=MRC.NV;ctx.fillRect(0,fy,W,42*U);ctx.fillStyle=MRC.AC;ctx.fillRect(0,fy,W,2.5*U);
+    txt(ctx,'Master reja',40*U,fy+22*U,17*U,{halo:false,col:'#fff',w:'800'});ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(W-150*U,fy+42*U);ctx.lineTo(W-120*U,fy+2.5*U);ctx.lineTo(W,fy+2.5*U);ctx.lineTo(W,fy+42*U);ctx.closePath();ctx.fill();
+    txt(ctx,String(no),W-50*U,fy+22*U,19*U,{al:'center',halo:false,col:MRC.NV,w:'800'})}
   function mrChrome(ctx,W,H,U,title,no){ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
     ctx.fillStyle=MRC.NV;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(250*U,0);ctx.lineTo(205*U,96*U);ctx.lineTo(0,96*U);ctx.closePath();ctx.fill();
     ctx.fillStyle=MRC.AC;ctx.beginPath();ctx.moveTo(250*U,0);ctx.lineTo(262*U,0);ctx.lineTo(217*U,96*U);ctx.lineTo(205*U,96*U);ctx.closePath();ctx.fill();
@@ -3320,6 +3357,7 @@ const MAP=(function(){
       if(!fn)return;const probe=document.createElement('canvas');probe.width=240;probe.height=170;PH=false;try{NOSUB=true;fn(probe)}catch(e){PH=true}finally{NOSUB=false}if(PH)return;
       add(t,(ctx,W,H,U)=>{mrSheet(ctx,fn,mrBox(W,H,U),U)},{toc:1})});
     /* bosh reja with its key */
+    add('Taqdimot plansheti',(ctx,W,H,U)=>mrBoard(ctx,W,H,U),{toc:1,bare:1});
     add('Bosh reja',(ctx,W,H,U)=>{const b=mrBox(W,H,U);let y=mrPara(ctx,I.title,b.x+b.w/2,b.y-6*U,b.w*0.84,15*U,{w:'800',al:'center',max:3,col:MRC.INK});
       const bh=b.y+b.h-y-10*U,lw=b.w*0.7,pl=imgList('Xarita','A16')[0],pi=pl&&PL.img[pl.k];
       if(pi){const s=Math.min(lw/pi.naturalWidth,bh/pi.naturalHeight),iw=pi.naturalWidth*s,ih=pi.naturalHeight*s;ctx.drawImage(pi,b.x+(lw-iw)/2,y+6*U+(bh-ih)/2,iw,ih);ctx.strokeStyle=MRC.LN;ctx.lineWidth=1*U;ctx.strokeRect(b.x+(lw-iw)/2,y+6*U+(bh-ih)/2,iw,ih)}
@@ -3343,7 +3381,6 @@ const MAP=(function(){
           cols.forEach(([t,w,r],j)=>{txt(ctx,j===1?clipLines(ctx,v[j],w*b.w-20*U,1,'600 '+(14*U)+'px '+FONT)[0]:v[j],r?cx+w*b.w-12*U:cx+12*U,y+rh/2,14*U,{al:r?'right':'left',halo:false,col:j===0?MRC.AC:MRC.INK,w:j<2?'700':'500'});cx+=w*b.w});y+=rh});
         if(p0+per>=OB.length){const tot=OB.reduce((a,P)=>a+(P.sum||0),0);ctx.fillStyle='#fdf1de';ctx.fillRect(b.x,y,b.w,rh);txt(ctx,'Jami: '+OB.length+' ta obyekt · yer '+nUz(OB.reduce((a,P)=>a+(P.land||0),0),'#,##0')+' m² · ish o‘rni '+nUz(OB.reduce((a,P)=>a+(P.jobs||0),0))+' ta',b.x+12*U,y+rh/2,14*U,{halo:false,col:'#8a4406',w:'800'});txt(ctx,plMlrd(tot)+' so‘m',b.x+b.w-12*U,y+rh/2,14*U,{al:'right',halo:false,col:'#8a4406',w:'800'})}},{toc:!p0})}}
     /* the board */
-    if(PL.has())add('Arxitektura-badiiy yechimlar',(ctx,W,H,U)=>{mrSheet(ctx,render13,mrBox(W,H,U),U)},{toc:1});
     /* renders: one per page, then four per page */
     const gal=imgList('Xarita','A15').map(z=>PL.img[z.k]).filter(Boolean);const views=gal.length?gal:(mrMainRender()?[mrMainRender()]:[]);
     views.forEach((im,i)=>add('Umumiy ko‘rinish',(ctx,W,H,U)=>{mrCover(ctx,im,0,96*U,W,H-96*U-42*U,0)},{toc:i===0,group:'view'}));
@@ -3360,9 +3397,67 @@ const MAP=(function(){
   async function mrBuild(W,onPage){NOLOT=true;try{return await mrBuild0(W,onPage)}finally{NOLOT=false}}
   async function mrBuild0(W,onPage){const pages=mrPlan(),I=mrInfo(),H=Math.round(W/1.41421),U=W/1350,out=[];
     for(let i=0;i<pages.length;i++){const p=pages[i],cv=document.createElement('canvas');cv.width=W;cv.height=H;const ctx=cv.getContext('2d');
-      if(p.cover)p.draw(ctx,W,H,U);else{mrChrome(ctx,W,H,U,p.t,i+1);if(p.contents)mrContents(ctx,W,H,U,pages,I);else p.draw(ctx,W,H,U)}
+      if(p.cover)p.draw(ctx,W,H,U);else if(p.bare){p.draw(ctx,W,H,U);mrFoot(ctx,W,H,U,i+1)}else{mrChrome(ctx,W,H,U,p.t,i+1);if(p.contents)mrContents(ctx,W,H,U,pages,I);else p.draw(ctx,W,H,U)}
       out.push(cv.toDataURL('image/jpeg',0.86));if(onPage)onPage(i+1,pages.length);await new Promise(r=>setTimeout(r,0))}
     return out}
+  /* ===== MR presentation board: satellite map with labels, numbered building pictures, general views and the master plan ===== */
+  /* where an image lands when it covers a box: the same transform places the markers */
+  const coverFit=(im,x,y,w,h)=>{const s=Math.max(w/im.naturalWidth,h/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;return [x+(w-iw)/2,y+(h-ih)/2,iw,ih]};
+  const containFit=(im,x,y,w,h)=>{const s=Math.min(w/im.naturalWidth,h/im.naturalHeight),iw=im.naturalWidth*s,ih=im.naturalHeight*s;return [x+(w-iw)/2,y+(h-ih)/2,iw,ih]};
+  function drawMapMarks(ctx,r,list,U,clip){ctx.save();if(clip){ctx.beginPath();ctx.rect(clip[0],clip[1],clip[2],clip[3]);ctx.clip()}
+    const P=m=>[r[0]+m.x*r[2],r[1]+m.y*r[3]],fs=10.5*U;
+    list.forEach(m=>{if(m.x==null)return;const p=P(m);if(m.lx==null)return;const l=[r[0]+m.lx*r[2],r[1]+m.ly*r[3]];ctx.font='800 '+fs+'px '+FONT;const t=String(m.t||'').toUpperCase(),tw=ctx.measureText(t).width+14*U,th=fs+10*U;
+      const bx=Math.max(clip?clip[0]+2*U:-1e9,Math.min(l[0]-tw/2,clip?clip[0]+clip[2]-tw-2*U:1e9)),by=l[1]-th/2,cx=Math.max(bx,Math.min(p[0],bx+tw)),cy=p[1]<by?by:p[1]>by+th?by+th:by+th/2;
+      ctx.strokeStyle='#c0262d';ctx.lineWidth=1.6*U;ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(cx,cy);ctx.stroke()});
+    list.forEach(m=>{if(m.x==null)return;const p=P(m);
+      if(m.k==='site'){ctx.lineWidth=3*U;ctx.strokeStyle='#fff';ctx.beginPath();ctx.arc(p[0],p[1],15*U,0,7);ctx.stroke();ctx.strokeStyle='#e0262d';ctx.lineWidth=2.2*U;ctx.beginPath();ctx.arc(p[0],p[1],15*U,0,7);ctx.stroke();ctx.beginPath();ctx.arc(p[0],p[1],9*U,0,7);ctx.stroke()}
+      else{ctx.beginPath();ctx.arc(p[0],p[1],5.5*U,0,7);ctx.fillStyle='#fff';ctx.fill();ctx.beginPath();ctx.arc(p[0],p[1],3.8*U,0,7);ctx.fillStyle='#e0262d';ctx.fill()}
+      if(m.lx==null)return;const l=[r[0]+m.lx*r[2],r[1]+m.ly*r[3]];ctx.font='800 '+fs+'px '+FONT;const t=String(m.t||'').toUpperCase(),tw=ctx.measureText(t).width+14*U,th=fs+10*U;
+      const bx=Math.max(clip?clip[0]+2*U:-1e9,Math.min(l[0]-tw/2,clip?clip[0]+clip[2]-tw-2*U:1e9)),by=l[1]-th/2;ctx.fillStyle='#fff';ctx.fillRect(bx,by,tw,th);ctx.strokeStyle='#c0262d';ctx.lineWidth=1.4*U;ctx.strokeRect(bx,by,tw,th);
+      txt(ctx,t,bx+tw/2,by+th/2,fs,{al:'center',halo:false,col:'#1b2a44',w:'800'})});ctx.restore()}
+  /* building numbers on the master plan */
+  function drawPlanNums(ctx,r,nums,U,clip){ctx.save();if(clip){ctx.beginPath();ctx.rect(clip[0],clip[1],clip[2],clip[3]);ctx.clip()}
+    nums.forEach(z=>{if(z.x==null)return;const x=r[0]+z.x*r[2],y=r[1]+z.y*r[3],rr=11*U;ctx.beginPath();ctx.arc(x,y,rr,0,7);ctx.fillStyle='#f5c518';ctx.fill();ctx.lineWidth=1.6*U;ctx.strokeStyle='#1b2a44';ctx.stroke();txt(ctx,String(z.n),x,y+0.5*U,12*U,{al:'center',halo:false,col:'#1b2a44',w:'800'})});ctx.restore()}
+  function numBadge(ctx,x,y,n,U){const r=14*U;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fillStyle='#f5c518';ctx.fill();ctx.lineWidth=2*U;ctx.strokeStyle='#1b2a44';ctx.stroke();txt(ctx,String(n),x,y+0.5*U,15*U,{al:'center',halo:false,col:'#1b2a44',w:'800'})}
+  function mrBoard(ctx,W,H,U){const I=mrInfo();ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    let y=mrPara(ctx,I.title,W/2,14*U,W-80*U,13.5*U,{w:'700',al:'center',max:2,col:MRC.INK})+6*U;
+    const g=8*U,x0=14*U,bot=H-42*U-10*U,rw=W*0.25,lw=W-2*x0-rw-g,lh=bot-y,rx=x0+lw+g;
+    /* right: the master plan with building numbers */
+    {const pl=imgList('Xarita','A16')[0],pi=pl&&PL.img[pl.k];ctx.save();rrect(ctx,rx,y,rw,lh,6*U);ctx.clip();ctx.fillStyle='#f2f4f7';ctx.fillRect(rx,y,rw,lh);
+      if(pi){const f=containFit(pi,rx,y,rw,lh);ctx.drawImage(pi,f[0],f[1],f[2],f[3]);drawPlanNums(ctx,f,planNums(),U,[rx,y,rw,lh])}
+      else txt(ctx,'Bosh reja chizmasi yuklanmagan',rx+rw/2,y+lh/2,13*U,{al:'center',halo:false,col:MRC.MU,w:'700'});ctx.restore();rrect(ctx,rx,y,rw,lh,6*U);ctx.strokeStyle='#c9d2e0';ctx.lineWidth=1*U;ctx.stroke()}
+    /* left: map, then numbered buildings, then the general views */
+    const B=boardBuildings(),views=imgList('Xarita','A15').map(z=>PL.img[z.k]).filter(Boolean),n=B.length;
+    /* grid: k columns; the map takes the left columns of the first two rows, the buildings fill the rest; rows without tiles are dropped and tiles in a row share its width */
+    let k=4,mid=0,nv=0,found=false;
+    for(k=4;k<=8&&!found;k++){const mapC=k<=5?k-2:k-3,topCap=2*(k-mapC);for(mid=0;mid<=2&&!found;mid++)for(const v of [Math.min(2,views.length),Math.min(1,views.length)]){const bc=v?k-2*v:(n>topCap+mid*k?k:0);if(n<=topCap+mid*k+bc){nv=v;found=true;break}}}
+    if(found){k--;mid--}else{k=8;mid=2;nv=Math.min(1,views.length)}
+    const mapC=!n&&!views.length?k:k<=5?k-2:k-3,topCap=2*(k-mapC),tTop=Math.min(n,topCap),tMid=[],rem0=n-tTop;let rem=rem0;for(let r=0;r<mid;r++){const t=Math.min(k,rem);tMid.push(t);rem-=t}
+    const tBot=rem,hasBot=nv>0||tBot>0,R=2+tMid.filter(t=>t>0).length+(hasBot?1:0),rh=(lh-(R-1)*g)/R,cw=(lw-(k-1)*g)/k,mw0=mapC*cw+(mapC-1)*g;
+    const cell=(c,r,sc,sr)=>[x0+c*(cw+g),y+r*(rh+g),sc*cw+(sc-1)*g,sr*rh+(sr-1)*g];
+    const rowSplit=(x,yy,w,hh,cnt,weights)=>{const ws=weights||Array(cnt).fill(1),tot=ws.reduce((a,b)=>a+b,0),free=w-(cnt-1)*g;let cx=x;return ws.map(q=>{const ww=free*q/tot,r=[cx,yy,ww,hh];cx+=ww+g;return r})};
+    const slots=[],vs=[];{const ax=x0+mw0+g,aw=lw-mw0-g;if(tTop){const r1=Math.ceil(tTop/2),r2=tTop-r1;if(!r2)slots.push(...rowSplit(ax,y,aw,2*rh+g,r1));else{slots.push(...rowSplit(ax,y,aw,rh,r1));slots.push(...rowSplit(ax,y+rh+g,aw,rh,r2))}}}
+    let ry=y+2*(rh+g);tMid.filter(t=>t>0).forEach(t=>{slots.push(...rowSplit(x0,ry,lw,rh,t));ry+=rh+g});
+    if(hasBot){const parts=rowSplit(x0,ry,lw,rh,nv+tBot,Array(nv).fill(2).concat(Array(tBot).fill(1)));vs.push(...parts.slice(0,nv));slots.push(...parts.slice(nv))}
+    /* the map */
+    {const [mx,my,mw,mh]=[x0,y,mw0,2*rh+g],mi=imgList('Xarita','A20')[0],im=mi&&PL.img[mi.k];ctx.save();rrect(ctx,mx,my,mw,mh,6*U);ctx.clip();
+      if(im){const f=coverFit(im,mx,my,mw,mh);ctx.drawImage(im,f[0],f[1],f[2],f[3]);drawMapMarks(ctx,f,mapMarks(),U,[mx,my,mw,mh])}
+      else{ctx.fillStyle='#e8edf4';ctx.fillRect(mx,my,mw,mh);txt(ctx,'Sun’iy yo‘ldosh xaritasi yuklanmagan',mx+mw/2,my+mh/2,13*U,{al:'center',halo:false,col:MRC.MU,w:'700'})}
+      /* distances, north arrow and land figures in a white box at the bottom right */
+      const rows=plDist(),bw=Math.min(mw*0.46,330*U),lines=rows.length+5,bh=Math.min(mh*0.62,(lines*19+60)*U),bx=mx+mw-bw-8*U,by=my+mh-bh-8*U;ctx.fillStyle='rgba(255,255,255,0.94)';ctx.fillRect(bx,by,bw,bh);ctx.strokeStyle='#1b2a44';ctx.lineWidth=1*U;ctx.strokeRect(bx,by,bw,bh);
+      let ty=by+16*U;txt(ctx,'Masofaviy ko‘rsatkichlar',bx+bw/2,ty,11.5*U,{al:'center',halo:false,col:MRC.INK,w:'800'});ty+=18*U;
+      rows.forEach(([nm,km,est])=>{txt(ctx,clipLines(ctx,nm.toUpperCase(),bw*0.72,1,'700 '+(8.5*U)+'px '+FONT)[0],bx+8*U,ty,8.5*U,{halo:false,col:MRC.INK,w:'700'});txt(ctx,(est?'≈':'')+fmt(km,1)+' km',bx+bw-8*U,ty,9*U,{al:'right',halo:false,col:MRC.INK,w:'800'});ty+=16*U});
+      ty+=4*U;ctx.strokeStyle='#c9d2e0';ctx.beginPath();ctx.moveTo(bx+8*U,ty-8*U);ctx.lineTo(bx+bw-8*U,ty-8*U);ctx.stroke();
+      const F=boardFigures(I);/* north arrow */const ax=bx+24*U,ay=ty+30*U;ctx.fillStyle=MRC.NV;ctx.beginPath();ctx.moveTo(ax,ay-24*U);ctx.lineTo(ax+8*U,ay+8*U);ctx.lineTo(ax,ay+2*U);ctx.lineTo(ax-8*U,ay+8*U);ctx.closePath();ctx.fill();txt(ctx,'Sh',ax,ay-32*U,9*U,{al:'center',halo:false,col:MRC.INK,w:'800'});
+      F.forEach(([a,v],i)=>{txt(ctx,a,bx+52*U,ty+i*15*U,8.5*U,{halo:false,col:MRC.INK,w:'700'});txt(ctx,v,bx+bw-8*U,ty+i*15*U,8.5*U,{al:'right',halo:false,col:MRC.INK,w:'800'})});ctx.restore();rrect(ctx,mx,my,mw,mh,6*U);ctx.strokeStyle='#c9d2e0';ctx.stroke()}
+    /* slots: right of the map (2 rows), a full row, then the bottom row with the views */
+    const tile=(r,im,label,num)=>{const [x,y2,w,h]=r;ctx.save();rrect(ctx,x,y2,w,h,6*U);ctx.clip();if(im){const f=coverFit(im,x,y2,w,h);ctx.drawImage(im,f[0],f[1],f[2],f[3])}else{ctx.fillStyle='#e8edf4';ctx.fillRect(x,y2,w,h);txt(ctx,'rasm yuklanmagan',x+w/2,y2+h/2+8*U,10*U,{al:'center',halo:false,col:MRC.MU,w:'600'})}
+      ctx.font='700 '+(11*U)+'px '+FONT;const t=clipLines(ctx,label,w-(num!=null?56*U:24*U),1,'700 '+(11*U)+'px '+FONT)[0],tw=ctx.measureText(t).width+16*U,lx=x+(num!=null?36*U:8*U);rrect(ctx,lx,y2+10*U,tw,22*U,11*U);ctx.fillStyle='rgba(255,255,255,0.88)';ctx.fill();txt(ctx,t,lx+8*U,y2+21*U,11*U,{halo:false,col:MRC.INK,w:'700'});
+      ctx.restore();if(num!=null)numBadge(ctx,x+20*U,y2+21*U,num,U);rrect(ctx,x,y2,w,h,6*U);ctx.strokeStyle='#c9d2e0';ctx.lineWidth=1*U;ctx.stroke()};
+    B.slice(0,slots.length).forEach((b,i)=>tile(slots[i],b.im,b.name,i+1));
+    vs.forEach((r,i)=>tile(r,views[i],'Umumiy ko‘rinish',null))}
+  function boardFigures(I){const P=I.P,bud=I.x?I.x.bud:[],ga=v=>nUz(v/10000,'#,##0.####')+' ga';const fp=P.reduce((a,p)=>a+(p.fp||0),0)+bud.reduce((a,o)=>a+(o.fp||0),0),gr=P.reduce((a,p)=>a+(p.green||0),0)+bud.reduce((a,o)=>a+(o.green||0),0),rd=P.reduce((a,p)=>a+(p.road||0)+(p.trot||0),0)+bud.reduce((a,o)=>a+(o.road||0),0);
+    return [['Umumiy yer maydoni',I.land?ga(I.land):'—'],['Qurilish osti maydoni',fp?ga(fp):'—'],['Ko‘kalamzor maydoni',gr?ga(gr):'—'],['Yo‘l va yo‘laklar',rd?ga(rd):'—']]}
   const RENDER=[render1,render2,render3,render4];
 
   /* ----- relief: heights of the project area from open satellite elevation data (SRTM / Copernicus, ~30 m cells).
@@ -3657,7 +3752,7 @@ const MAP=(function(){
 
   /* the four sheets as JPEG pictures for the PDF (A4 landscape) */
   function images(w,thumb){w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);NOSUB=!!thumb;try{return RENDER.map(fn=>{fn(big);return big.toDataURL('image/jpeg',0.9)})}finally{NOSUB=false}}
-  return {X,region,district,kmz,kmzFiles,kmzRemove,KMZMAX,label,load,area,RENDER,images,ready:()=>!!region(),dem,loadDem,relStats,render5,relief,pop,loadPop,render6,render7,extra,render8,render9,render10,render11,render12,render13,passport,mrBuild,qurData,popData,residents,roads,loadRoads,site,cover,climate,loadClimate,facts,sunInfo,relStats2:()=>relStats()};
+  return {X,region,district,kmz,kmzFiles,kmzRemove,KMZMAX,label,load,area,RENDER,images,ready:()=>!!region(),dem,loadDem,relStats,render5,relief,pop,loadPop,render6,render7,extra,render8,render9,render10,render11,render12,render13,passport,mrBuild,mrBoard,drawMapMarks,drawPlanNums,qurData,popData,residents,roads,loadRoads,site,cover,climate,loadClimate,facts,sunInfo,relStats2:()=>relStats()};
 })();
 
 /* first page: region, district and the KMZ outline */
@@ -3861,7 +3956,7 @@ const PL={img:{},busy:{},err:'',
     if(v)this.idbPut(k,v);return v},
   /* the picture as an <img>, loaded once; the board is drawn again when it arrives */
   need(k){if(!k||this.img[k]||this.busy[k])return;this.busy[k]=this.get(k).then(u=>new Promise(ok=>{if(!u){ok();return}const i=new Image();i.onload=()=>{this.img[k]=i;ok()};i.onerror=()=>ok();i.src=u})).finally(()=>{delete this.busy[k];scheduleRender()})},
-  keys(){const m=plMeta(),out=[m.m&&m.m.k].concat(m.it.map(i=>i.k));['A13','A15','A16','A17','A19'].forEach(c=>imgList('Xarita',c).forEach(z=>out.push(z.k)));LOTROWS.forEach(r=>imgList('Lot','X'+r).forEach(z=>out.push(z.k)));for(let r=30;r<=79;r++)imgList('Bino','AD'+r).forEach(z=>out.push(z.k));return out.filter(Boolean)},
+  keys(){const m=plMeta(),out=[m.m&&m.m.k].concat(m.it.map(i=>i.k));['A13','A15','A16','A17','A19','A20'].forEach(c=>imgList('Xarita',c).forEach(z=>out.push(z.k)));LOTROWS.forEach(r=>imgList('Lot','X'+r).forEach(z=>out.push(z.k)));for(let r=30;r<=79;r++)imgList('Bino','AD'+r).forEach(z=>out.push(z.k));return out.filter(Boolean)},
   async ready(){const ks=this.keys();ks.forEach(k=>this.need(k));await Promise.all(ks.map(k=>this.busy[k]).filter(Boolean))},
   has(){const m=plMeta();return !!(m.m&&this.img[m.m.k])}};
 async function plPrep(file,max){const u=URL.createObjectURL(file);try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('img'));i.src=u});
@@ -4003,10 +4098,10 @@ function workParts(s){try{return workText(s,true)}catch(e){return []}}
 
 /* one record per LOT for its passport: investor LOTs and DXSH objects, in LOT number order */
 function passportData(){const x=info();
-  const L=x.lots.map(l=>({no:l.no,name:l.name||'Nomsiz LOT',cat:l.cat.t,dx:false,land:l.area,fp:l.fp,fl:l.fl,fh:l.fh,par:l.par,floor:l.floor,vol:l.vol,gp:l.gp,green:l.green,pool:l.pool,road:l.road,trot:l.trot,solar:l.solar,style:l.style,
+  const L=x.lots.map(l=>({key:'L'+l.r,no:l.no,name:l.name||'Nomsiz LOT',cat:l.cat.t,dx:false,land:l.area,fp:l.fp,fl:l.fl,fh:l.fh,par:l.par,floor:l.floor,vol:l.vol,gp:l.gp,green:l.green,pool:l.pool,road:l.road,trot:l.trot,solar:l.solar,style:l.style,
     jobs:l.jobs,cap:l.cap,capSrc:!!l.capSrc&&N('Lot','Q'+l.r)===null,trade:l.trade,total:l.total,ex:l.ex,imgs:imgList('Lot','X'+l.r),
     costs:[['Bino (qurilish va pardozlash)',l.c.build],['Yashil hudud',l.c.green],['Hovuz / basseyn',l.c.pool],["Yo‘l va avtoturargoh",l.c.road],['Trotuar',l.c.trot],['Quyosh elektr stansiyasi',l.c.solar],['Qo‘shimcha obyektlar',l.c.extra]]}));
-  const D=x.dx.map(o=>({no:o.no,name:String(o.type)+(o.name?' — '+o.name:''),cat:'Davlat-xususiy sheriklik obyekti',dx:true,land:o.land,fp:o.fp,fl:o.fl,fh:o.fh,par:o.par,floor:o.area,vol:o.vol,gp:o.gp,green:o.green,pool:o.pool,road:o.road,trot:0,solar:o.solar,style:o.style,
+  const D=x.dx.map(o=>({key:'B'+o.r,no:o.no,name:String(o.type)+(o.name?' — '+o.name:''),cat:'Davlat-xususiy sheriklik obyekti',dx:true,land:o.land,fp:o.fp,fl:o.fl,fh:o.fh,par:o.par,floor:o.area,vol:o.vol,gp:o.gp,green:o.green,pool:o.pool,road:o.road,trot:0,solar:o.solar,style:o.style,
     jobs:o.jobs,cap:o.cap,capSrc:!!o.capSrc&&N('Bino','G'+o.r)===null,trade:o.trade,total:o.cost,share:o.share,bud:o.bud,inv:o.inv,ex:o.ex,imgs:imgList('Bino','AD'+o.r),
     costs:[['Bino (qurilish va pardozlash)',o.c.build],[o.typed?'Hovli':'Hovlini obodonlashtirish',o.c.yard],['Yashil hudud',o.c.green],['Hovuz / basseyn',o.c.pool],["Yo‘l va avtoturargoh",o.c.road],['Quyosh elektr stansiyasi',o.c.solar],['Qo‘shimcha obyektlar',o.c.extra]]}));
   return L.concat(D).sort((a,b)=>a.no-b.no)}
@@ -4432,7 +4527,7 @@ function mapDoc(){
   return {pageSize:'A4',pageOrientation:'landscape',pageMargins:[20,20,20,20],info:{title:proj+' — xaritada joylashuv'},defaultStyle:{font:'Roboto'},
     content:[{image:MAP.cover(2339,1654,coverInfo('Xaritada joylashuv')),width:841.89,height:595.28,absolutePosition:{x:0,y:0}}].concat(MAP.images().concat(MAP.extra()).map(im=>({image:im,fit:[802,555],alignment:'center',pageBreak:'before'})))};
 }
-window.infraMapDoc=mapDoc;window.infraPlan={ready:()=>PL.ready(),render:c=>MAP.render13(c),extra:(w,t)=>MAP.extra(w,t).length};window.infraCell={V,N};
+window.infraMapDoc=mapDoc;window.infraPlan={board:c=>MAP.mrBoard(c.getContext('2d'),c.width,c.height,c.width/1350),ready:()=>PL.ready(),render:c=>MAP.render13(c),extra:(w,t)=>MAP.extra(w,t).length};window.infraCell={V,N};
 let dl=null;const PDFLIB=['lib/pdfmake-0.2.12.min.js','lib/vfs_fonts-0.2.12.js'];
 function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>{s.remove();no(new Error('load'))};document.head.appendChild(s)})}
 function pdfMsg(t){const e=$('pdfmsg');e.textContent=t;e.hidden=!t}
