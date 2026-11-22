@@ -1153,7 +1153,7 @@ const LOTEXTRA=[["Avtoturargoh (1 joy)",'joy',4500000],["Kirish darvozasi",'dona
 })();
 const SH={};M.sheets.forEach(s=>SH[s.name]=s);
 const LOTROWS_ED=Array.from({length:100},(_,i)=>5+i);
-const KINDS=[['sanoat zonasi','sanoat zonasiga'],['kichik sanoat zonasi','kichik sanoat zonasiga'],['erkin iqtisodiy zona','erkin iqtisodiy zonaga'],['texnopark','texnoparkka'],['logistika markazi','logistika markaziga'],['agrosanoat klasteri','agrosanoat klasteriga'],['savdo-xizmat ko\'rsatish majmuasi','savdo-xizmat ko\'rsatish majmuasiga'],['yo\'lbo\'yi servis hududi','yo\'lbo\'yi servis hududiga'],['turar joy massivi','turar joy massiviga'],['yangi mahalla','yangi mahallaga'],['aralash foydalanish hududi','aralash foydalanish hududiga'],['turizm zonasi','turizm zonasiga'],['dam olish va rekreatsiya zonasi','dam olish va rekreatsiya zonasiga'],['ta\'lim klasteri','ta\'lim klasteriga'],['tibbiyot klasteri','tibbiyot klasteriga'],['sport majmuasi','sport majmuasiga'],['ma\'muriy-ishbilarmonlik markazi','ma\'muriy-ishbilarmonlik markaziga'],['hudud','hududga']];
+const KINDS=[['sanoat zonasi','sanoat zonasiga'],['kichik sanoat zonasi','kichik sanoat zonasiga'],['erkin iqtisodiy zona','erkin iqtisodiy zonaga'],['texnopark','texnoparkka'],['IT-park','IT-parkka'],['ishlab chiqarish majmuasi','ishlab chiqarish majmuasiga'],['logistika markazi','logistika markaziga'],['ombor majmuasi','ombor majmuasiga'],['agrosanoat klasteri','agrosanoat klasteriga'],['qishloq xo\'jaligi klasteri','qishloq xo\'jaligi klasteriga'],['issiqxona majmuasi','issiqxona majmuasiga'],['chorvachilik majmuasi','chorvachilik majmuasiga'],['baliqchilik majmuasi','baliqchilik majmuasiga'],['“Service area” toifasidagi yo\'lbo\'yi servis obyekti','“Service area” toifasidagi yo\'lbo\'yi servis obyektiga'],['“Service point” toifasidagi yo\'lbo\'yi servis obyekti','“Service point” toifasidagi yo\'lbo\'yi servis obyektiga'],['yo\'lbo\'yi servis hududi','yo\'lbo\'yi servis hududiga'],['avtomobilga yoqilg\'i quyish shoxobchasi','avtomobilga yoqilg\'i quyish shoxobchasiga'],['avtovokzal','avtovokzalga'],['savdo-xizmat ko\'rsatish majmuasi','savdo-xizmat ko\'rsatish majmuasiga'],['savdo markazi','savdo markaziga'],['dehqon bozori','dehqon bozoriga'],['hunarmandchilik markazi','hunarmandchilik markaziga'],['kichik biznes markazi','kichik biznes markaziga'],['ma\'muriy-ishbilarmonlik markazi','ma\'muriy-ishbilarmonlik markaziga'],['turar joy massivi','turar joy massiviga'],['yangi mahalla','yangi mahallaga'],['ko\'p qavatli turar joy majmuasi','ko\'p qavatli turar joy majmuasiga'],['kottej shaharchasi','kottej shaharchasiga'],['aralash foydalanish hududi','aralash foydalanish hududiga'],['aqlli shahar (Smart City) hududi','aqlli shahar (Smart City) hududiga'],['turizm zonasi','turizm zonasiga'],['ekoturizm hududi','ekoturizm hududiga'],['mehmonxona majmuasi','mehmonxona majmuasiga'],['dam olish va rekreatsiya zonasi','dam olish va rekreatsiya zonasiga'],['madaniyat va istirohat bog\'i','madaniyat va istirohat bog\'iga'],['ko\'ngilochar park','ko\'ngilochar parkka'],['ta\'lim klasteri','ta\'lim klasteriga'],['tibbiyot klasteri','tibbiyot klasteriga'],['sport majmuasi','sport majmuasiga'],['hudud','hududga']];
 /* key, sheet, short name, page title, intro, total cell */
 const PAGES=[
  {k:'umumiy',name:"Loyiha birlamchi ma'lumotlari"},
@@ -1252,7 +1252,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1795374975';
+const BUILD_ID='1795377984';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname.replace(/[^/]*$/,'')+'version.txt?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const v=(t.match(/\d{9,}/)||[])[0];
     if(!v||+v<=+BUILD_ID)return;let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}
@@ -1997,7 +1997,7 @@ function mrFields(){const T=mrText(),out=[];
     h('p',{class:'fine'},"«Yuklab olish» → «Master reja (MR)» tugmasi A3 yotiq taqdimot tayyorlaydi. Bo‘sh qolgan maydonlar avtomatik to‘ldiriladi yoki taqdimotda chiqmaydi."),
     h('div',{class:'mrgrid'},
       inp('mfy','Mahalla (MFY) nomi','masalan: “Bulakrabot” MFY'),
-      inp('obj','Taklif etilayotgan obyektlar','bo‘sh qolsa: LOTlar va obyektlar nomidan',{hint:'Masalan: “Service area” yoki “Service point” yo‘lbo‘yi servis obyektlari'}),
+      inp('obj','Taklif etilayotgan obyektlar','bo‘sh qolsa: loyiha hududi turi olinadi',{hint:'Masalan: zamonaviy “Service area” yoki “Service point” toifalaridagi yo‘lbo‘yi servis obyektlari'}),
       inp('asos','Hujjat asosi','masalan: Vazirlar Mahkamasining 2022-yil 14-fevraldagi 71-son qarori'),
       inp('t','Master rejaning to‘liq nomi','bo‘sh qolsa: viloyat, tuman, mahalla, raqam va maydondan tuziladi',{wide:1,area:1,rows:2}),
       h('div',{class:'mrf wide'},h('label',null,'Hudud chegaralari'),h('div',{class:'mr4'},
@@ -2329,7 +2329,7 @@ const MAP=(function(){
     const pxPerKm=P.pxPerDegLat/111.32,km=niceKm((mb.w*0.18)/pxPerKm),len=km*pxPerKm,sx=mb.x+20*U,sy=H-46*U;
     ctx.fillStyle='#222';ctx.fillRect(sx,sy,len/2,8*U);ctx.strokeStyle='#222';ctx.lineWidth=1.5*U;ctx.strokeRect(sx,sy,len,8*U);
     ctx.font=(16*U)+'px '+FONT;ctx.textBaseline='bottom';ctx.textAlign='left';ctx.fillText('0',sx-4*U,sy-4*U);ctx.textAlign='center';ctx.fillText((km>=1?km:km*1000)+' '+(km>=1?'km':'m'),sx+len,sy-4*U)}
-  let NOSUB=false,PH=false;
+  let NOSUB=false,PH=false,NOLOT=false;
   function frame(ctx,W,H,U,title,sub){if(NOSUB)sub=String(sub).replace(/^\d-rasm( · )?/,'');
     ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.fillStyle='#1a1a1a';ctx.textAlign='left';ctx.textBaseline='alphabetic';
     let fs=34*U;ctx.font='700 '+fs+'px '+FONT;while(ctx.measureText(title).width>W-72*U&&fs>18*U){fs-=1*U;ctx.font='700 '+fs+'px '+FONT}ctx.fillText(title,36*U,58*U);
@@ -2871,7 +2871,7 @@ const MAP=(function(){
       txt(ctx,Q.b0+'–'+Q.b1+' o‘rtachasi; har yili shuncha qo‘shiladi',lx+12*U,y+61*U,9.5*U,{halo:false,col:'#7a8496'})});
     card(118*U,y=>{txt(ctx,'MASTER REJA QURILISHINING',lx+12*U,y+16*U,9.5*U,{halo:false,w:'800',col:'#7a8496'});txt(ctx,'UMUMIY TAXMINIY QIYMATI',lx+12*U,y+28*U,9.5*U,{halo:false,w:'800',col:'#7a8496'});
       txt(ctx,nUz(Math.round(mpT*1e9),'#,##0')+' so‘m'+(Q.manual?' *':''),lx+12*U,y+54*U,(String(Math.round(mpT*1e9)).length>12?15:17)*U,{halo:false,w:'800',col:C.navy});
-      [[C.inv,'Investor (LOTlar)',Q.inv],[C.bud,'Byudjet hisobidan',Q.bud]].forEach(([c,t,v],i)=>{const yy=y+78*U+i*18*U;ctx.fillStyle=c;ctx.fillRect(lx+12*U,yy-5*U,10*U,10*U);txt(ctx,t,lx+28*U,yy,10.5*U,{halo:false,col:'#333'});txt(ctx,f1(v)+' mlrd so‘m',lx+lw-12*U,yy,10.5*U,{halo:false,al:'right',w:'700',col:'#222'})})});
+      [[C.inv,NOLOT?'Investor mablag‘lari':'Investor (LOTlar)',Q.inv],[C.bud,'Byudjet hisobidan',Q.bud]].forEach(([c,t,v],i)=>{const yy=y+78*U+i*18*U;ctx.fillStyle=c;ctx.fillRect(lx+12*U,yy-5*U,10*U,10*U);txt(ctx,t,lx+28*U,yy,10.5*U,{halo:false,col:'#333'});txt(ctx,f1(v)+' mlrd so‘m',lx+lw-12*U,yy,10.5*U,{halo:false,al:'right',w:'700',col:'#222'})})});
     card(70*U,y=>{txt(ctx,'5 YILDA QO‘SHIMCHA QURILISH',lx+12*U,y+16*U,9.5*U,{halo:false,w:'800',col:'#7a8496'});txt(ctx,'+'+fmt(fcT?mpT/fcT*100:0,1)+'%',lx+12*U,y+44*U,24*U,{halo:false,w:'800',col:C.bud});
       txt(ctx,'prognoz hajmiga nisbatan ('+f1(mpT)+' / '+f1(fcT)+' mlrd)',lx+12*U,y+61*U,9.5*U,{halo:false,col:'#7a8496'})});
     card(70*U,y=>{txt(ctx,'ENG KATTA TA’SIR YILI',lx+12*U,y+16*U,9.5*U,{halo:false,w:'800',col:'#7a8496'});txt(ctx,Q.fc[pk][0]+'-yil: +'+fmt(imp[pk]*100,1)+'%',lx+12*U,y+44*U,20*U,{halo:false,w:'800',col:C.inv});
@@ -2900,7 +2900,7 @@ const MAP=(function(){
     pts.forEach((p,i)=>{ctx.beginPath();ctx.arc(p[0],p[1],5*U,0,7);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle='#6b7480';ctx.lineWidth=2*U;ctx.stroke();lab(f1(p[2]),p[0],p[1]-18*U,i<NF?C.fact:'#6b7480',true)});
     /* --- table under the chart, aligned with the years --- */
     let ry=cy1+26*U;ctx.fillStyle='#1f3864';ctx.fillRect(lx,ry,cx1-lx,18*U);txt(ctx,'Ko‘rsatkich, mlrd so‘m',lx+8*U,ry+9*U,10*U,{halo:false,col:'#fff',w:'800'});for(let i=0;i<n;i++)txt(ctx,(i<NF?Q.fact[i][0]:Q.fc[i-NF][0])+(i<NF?'':' (p)'),cx0+bw*(i+0.5),ry+9*U,10*U,{al:'center',halo:false,col:'#fff',w:'700'});ry+=18*U;
-    const rows=[[C.fact,'Qurilish hajmi (fakt / prognoz)',i=>i<NF?Q.fact[i][1]:Q.fc[i-NF][1]],[C.inv,'Master reja: investor (LOTlar)',i=>i<NF?0:Q.mp[i-NF][0]],[C.bud,'Master reja: byudjet',i=>i<NF?0:Q.mp[i-NF][1]],[C.line,'Jami',i=>tot[i]]];
+    const rows=[[C.fact,'Qurilish hajmi (fakt / prognoz)',i=>i<NF?Q.fact[i][1]:Q.fc[i-NF][1]],[C.inv,NOLOT?'Master reja: investor mablag‘lari':'Master reja: investor (LOTlar)',i=>i<NF?0:Q.mp[i-NF][0]],[C.bud,'Master reja: byudjet',i=>i<NF?0:Q.mp[i-NF][1]],[C.line,'Jami',i=>tot[i]]];
     rows.forEach(([c,t,fn],k)=>{ctx.fillStyle=k%2?'#fff':'#f5f7fb';ctx.fillRect(lx,ry,cx1-lx,18*U);ctx.fillStyle=c;ctx.fillRect(lx+6*U,ry+5*U,10*U,8*U);txt(ctx,t,lx+22*U,ry+9*U,10*U,{halo:false,col:'#333',w:k===3?'800':'600'});
       for(let i=0;i<n;i++){const v=fn(i);txt(ctx,v?f1(v):'0',cx0+bw*(i+0.5),ry+9*U,10*U,{al:'center',halo:false,w:k===3?'800':'500',col:'#222'})}ry+=18*U});
     txt(ctx,'Manba: stat.uz (SIAT 2402). * '+Q.last+'-yil — dastlabki ma’lumot, hisobga olinmadi. (p) — prognoz: '+Q.b0+'–'+Q.b1+' yillardagi o‘rtacha yillik o‘sish (+'+f1(Q.inc)+' mlrd so‘m) har yili qo‘shiladi.',lx,H-27*U,9.5*U,{halo:false,col:'#8a94a6'});
@@ -3014,7 +3014,7 @@ const MAP=(function(){
       if(area)y=kv('Master reja hududi –',nUz(area,'#,##0.##')+' ga',c.x,y,c.w);
       if(x&&x.cost)y=kv('Loyihaning umumiy qiymati –',plMlrd(x.cost),c.x,y,c.w);
       if(T.b)y=kv('Buyurtmachi –',T.b,c.x,y,c.w);
-      if(x&&(x.lots.length+x.dx.length))y=kv('Ajratilgan LOTlar soni –',nUz(x.lots.length+x.dx.length)+' ta',c.x,y,c.w);
+      if(x&&(x.lots.length+x.dx.length))y=NOLOT?kv('Loyihalangan binolar –',nUz(Object.values(x.bldg).reduce((a,b)=>a+b,0))+' ta',c.x,y,c.w):kv('Ajratilgan LOTlar soni –',nUz(x.lots.length+x.dx.length)+' ta',c.x,y,c.w);
       if(y===c.y)kv('Ma’lumot kiritilmagan',null,c.x,y,c.w)}
     {const c=card(L+c1w+G,top,c2w,ch1,'Hududning joriy drayverlari');
       if(T.d)para(T.d,c.x,c.y,c.w,c.b);else para('13-rasm ostidagi «Hududning joriy drayverlari» maydoniga yozing. Masalan: Tarixiy obida: ekskursiya va fototurizm uchun muntazam tashrif buyuriladi.',c.x,c.y,c.w,c.b,10.5*U)}
@@ -3188,10 +3188,10 @@ const MAP=(function(){
   function mrInfo(){const J='Jamlama',T=mrText(),r=region(),d=district(),k=kmz(),a=k?area(k):0,x=(()=>{try{return info()}catch(e){return null}})(),land=a||(x?x.land:0);
     const ga=land?nUz(land/10000,'#,##0.###'):'',place=[r?r.name:'',d?d.name:'',T.mfy||''].filter(Boolean).join(', ');
     const P=(()=>{try{return passportData()}catch(e){return []}})(),names=[...new Set(P.map(p=>p.name).concat(x?x.bud.map(b=>b.type):[]))];
-    const obj=T.obj||(names.length?names.slice(0,6).join(', ')+(names.length>6?' va boshqa obyektlar':''):'');
-    const proj=String(V(J,'C5')||'').trim(),kind=String(V(J,'F11')||'').trim();
+    const proj=String(V(J,'C5')||'').trim(),kind=String(V(J,'F11')||KINDS[0][0]).trim();
+    const obj=T.obj||kind||(names.length?names.slice(0,6).join(', ')+(names.length>6?' va boshqa obyektlar':''):'');
     const title=T.t||[place,T.yol?T.yol+' bo‘yida':'',T.u?T.u+' unikal raqamli':'',ga?'umumiy maydoni '+ga+' gektar yer uchastkasida':'hududida',
-      (obj||proj||'obyektlar')+(kind&&!obj?' ('+kind+')':'')+' barpo etish bo‘yicha master-reja ishlab chiqish'].filter(Boolean).join(' ');
+      (obj||proj||'obyektlar')+' barpo etish bo‘yicha master-reja ishlab chiqish'].filter(Boolean).join(' ');
     const s=site();return {T,r,d,k,land,ga,place,obj,proj,kind,title,x,P,s}}
   /* ---- drawing helpers ---- */
   function mrPara(ctx,t,x,y,w,size,o){o=o||{};const lh=size*(o.lh||1.42),fnt=(o.w||'500')+' '+size+'px '+FONT;let n=0;
@@ -3326,7 +3326,7 @@ const MAP=(function(){
       else mrSheet(ctx,RENDER[2],{x:b.x,y:y+6*U,w:lw,h:bh},U);
       const rx=b.x+lw+24*U,rw=b.w-lw-24*U;let ry=y+6*U;rrect(ctx,rx,ry,rw,b.y+b.h-ry,14*U);ctx.fillStyle=MRC.SOFT;ctx.fill();ry+=26*U;
       txt(ctx,'QAYDNOMA',rx+rw/2,ry,17*U,{al:'center',halo:false,col:MRC.NV,w:'800'});ry+=24*U;
-      const list=I.P.map(p=>[lotLabel(p.no),p.name,p.land]).concat(I.x?I.x.bud.map((o,i)=>['B-'+(i+1),o.type+(o.name?' — '+o.name:''),o.land]):[]);
+      const list=I.P.map(p=>[p.name,p.land]).concat(I.x?I.x.bud.map(o=>[o.type+(o.name?' — '+o.name:''),o.land]):[]).map((z,i)=>[String(i+1)].concat(z));
       const room=b.y+b.h-ry-210*U,lh=Math.max(15*U,Math.min(24*U,room/Math.max(list.length,1)));list.forEach(([n,t,a],i)=>{const yy=ry+i*lh;if(yy>ry+room)return;txt(ctx,n,rx+16*U,yy,Math.min(12*U,lh*0.6),{halo:false,col:MRC.AC,w:'800'});
         txt(ctx,clipLines(ctx,t,rw-150*U,1,'600 '+Math.min(12*U,lh*0.6)+'px '+FONT)[0],rx+66*U,yy,Math.min(12*U,lh*0.6),{halo:false,col:MRC.INK,w:'600'});if(a)txt(ctx,nUz(a,'#,##0')+' m²',rx+rw-14*U,yy,Math.min(11.5*U,lh*0.58),{al:'right',halo:false,col:MRC.MU,w:'600'})});
       if(!list.length)txt(ctx,'LOT va obyektlar kiritilmagan',rx+rw/2,ry+10*U,12*U,{al:'center',halo:false,col:MRC.MU});
@@ -3335,12 +3335,13 @@ const MAP=(function(){
       const fp=I.P.reduce((a,p)=>a+(p.fp||0),0)+(I.x?I.x.bud.reduce((a,o)=>a+(o.fp||0),0):0),gr=I.P.reduce((a,p)=>a+(p.green||0),0)+(I.x?I.x.bud.reduce((a,o)=>a+(o.green||0),0):0)+(I.x&&I.x.green||0);
       [['Hudud maydoni',I.land?nUz(I.land,'#,##0')+' m²':'—'],['Binolar soni',I.x?nUz(Object.values(I.x.bldg).reduce((a,b)=>a+b,0))+' ta':'—'],['Qurilish osti maydoni',fp?nUz(fp,'#,##0')+' m²':'—'],['Qurilish zichligi',I.land&&fp?fmtNum(fp/I.land,'0.#%'):'—'],['Yashil hudud',gr?nUz(gr,'#,##0')+' m²':'—'],['Umumiy qiymati',I.x&&I.x.cost?plMlrd(I.x.cost)+' so‘m':'—']].forEach(([a,v])=>{txt(ctx,a,rx+16*U,ty,12.5*U,{halo:false,col:MRC.INK,w:'500'});txt(ctx,v,rx+rw-16*U,ty,12.5*U,{al:'right',halo:false,col:MRC.NV,w:'800'});ty+=25*U})},{toc:1});
     /* LOT list */
-    if(I.P.length){const per=16;for(let p0=0;p0<I.P.length;p0+=per){const chunk=I.P.slice(p0,p0+per);
-      add(p0?'LOTlar (davomi)':'LOTlar',(ctx,W,H,U)=>{const b=mrBox(W,H,U),cols=[['LOT №',0.08],['Nomi',0.27],['Yer, m²',0.1,1],['Qurilish osti, m²',0.11,1],['Qavat',0.06,1],['Umumiy maydon, m²',0.12,1],['Ish o‘rni',0.08,1],['Investitsiya, mlrd so‘m',0.18,1]],rh=Math.min(52*U,(b.h-60*U)/(per+1));
+    const OB=I.P.map(P=>({name:P.name+(P.dx?' (DXSH)':''),land:P.land,fp:P.fp,fl:P.fl,floor:P.floor,jobs:P.jobs,sum:P.dx?P.inv:P.total})).concat(I.x?I.x.bud.map(o=>({name:o.type+(o.name?' — '+o.name:'')+' (byudjet)',land:o.land,fp:o.fp,fl:o.fl,floor:o.area,jobs:o.jobs,sum:o.cost})):[]);
+    if(OB.length){const per=16;for(let p0=0;p0<OB.length;p0+=per){const chunk=OB.slice(p0,p0+per);
+      add(p0?'Loyihalangan obyektlar (davomi)':'Loyihalangan obyektlar',(ctx,W,H,U)=>{const b=mrBox(W,H,U),cols=[['№',0.06],['Obyekt nomi',0.29],['Yer, m²',0.1,1],['Qurilish osti, m²',0.11,1],['Qavat',0.06,1],['Umumiy maydon, m²',0.12,1],['Ish o‘rni',0.08,1],['Qiymati, mlrd so‘m',0.18,1]],rh=Math.min(52*U,(b.h-60*U)/(per+1));
         let y=b.y;ctx.fillStyle=MRC.NV;ctx.fillRect(b.x,y,b.w,rh);let cx=b.x;cols.forEach(([t,w,r])=>{txt(ctx,t,r?cx+w*b.w-12*U:cx+12*U,y+rh/2,14*U,{al:r?'right':'left',halo:false,col:'#fff',w:'800'});cx+=w*b.w});y+=rh;
-        chunk.forEach((P,i)=>{ctx.fillStyle=i%2?'#fff':MRC.SOFT;ctx.fillRect(b.x,y,b.w,rh);const v=[lotLabel(P.no),P.name+(P.dx?' (DXSH)':''),nUz(P.land,'#,##0'),nUz(P.fp,'#,##0'),P.fl?nUz(P.fl):'—',nUz(P.floor,'#,##0'),P.jobs?nUz(P.jobs):'—',plMlrd(P.dx?P.inv:P.total).replace(' mlrd','')];let cx=b.x;
+        chunk.forEach((P,i)=>{ctx.fillStyle=i%2?'#fff':MRC.SOFT;ctx.fillRect(b.x,y,b.w,rh);const v=[String(p0+i+1),P.name,nUz(P.land,'#,##0'),nUz(P.fp,'#,##0'),P.fl?nUz(P.fl):'—',nUz(P.floor,'#,##0'),P.jobs?nUz(P.jobs):'—',plMlrd(P.sum||0).replace(' mlrd','')];let cx=b.x;
           cols.forEach(([t,w,r],j)=>{txt(ctx,j===1?clipLines(ctx,v[j],w*b.w-20*U,1,'600 '+(14*U)+'px '+FONT)[0]:v[j],r?cx+w*b.w-12*U:cx+12*U,y+rh/2,14*U,{al:r?'right':'left',halo:false,col:j===0?MRC.AC:MRC.INK,w:j<2?'700':'500'});cx+=w*b.w});y+=rh});
-        if(p0+per>=I.P.length){const tot=I.P.reduce((a,P)=>a+((P.dx?P.inv:P.total)||0),0);ctx.fillStyle='#fdf1de';ctx.fillRect(b.x,y,b.w,rh);txt(ctx,'Jami: '+I.P.length+' ta LOT · yer '+nUz(I.P.reduce((a,P)=>a+(P.land||0),0),'#,##0')+' m² · ish o‘rni '+nUz(I.P.reduce((a,P)=>a+(P.jobs||0),0))+' ta',b.x+12*U,y+rh/2,14*U,{halo:false,col:'#8a4406',w:'800'});txt(ctx,plMlrd(tot)+' so‘m',b.x+b.w-12*U,y+rh/2,14*U,{al:'right',halo:false,col:'#8a4406',w:'800'})}},{toc:!p0})}}
+        if(p0+per>=OB.length){const tot=OB.reduce((a,P)=>a+(P.sum||0),0);ctx.fillStyle='#fdf1de';ctx.fillRect(b.x,y,b.w,rh);txt(ctx,'Jami: '+OB.length+' ta obyekt · yer '+nUz(OB.reduce((a,P)=>a+(P.land||0),0),'#,##0')+' m² · ish o‘rni '+nUz(OB.reduce((a,P)=>a+(P.jobs||0),0))+' ta',b.x+12*U,y+rh/2,14*U,{halo:false,col:'#8a4406',w:'800'});txt(ctx,plMlrd(tot)+' so‘m',b.x+b.w-12*U,y+rh/2,14*U,{al:'right',halo:false,col:'#8a4406',w:'800'})}},{toc:!p0})}}
     /* the board */
     if(PL.has())add('Arxitektura-badiiy yechimlar',(ctx,W,H,U)=>{mrSheet(ctx,render13,mrBox(W,H,U),U)},{toc:1});
     /* renders: one per page, then four per page */
@@ -3356,7 +3357,8 @@ const MAP=(function(){
       rrect(ctx,rx,yy+5*U,64*U,rh-10*U,10*U);ctx.fillStyle=MRC.NV;ctx.fill();txt(ctx,String(k+1).padStart(2,'0'),rx+32*U,yy+rh/2,Math.min(20*U,rh*0.38),{al:'center',halo:false,col:'#fff',w:'800'});
       txt(ctx,t.toUpperCase(),rx+84*U,yy+rh/2,Math.min(17*U,rh*0.33),{halo:false,col:MRC.INK,w:'800'});txt(ctx,String(a).padStart(2,'0')+(z>a?'–'+String(z).padStart(2,'0'):''),rx+rw-20*U,yy+rh/2,Math.min(17*U,rh*0.33),{al:'right',halo:false,col:MRC.AC,w:'800'})})}
   /* every page as a JPEG, one at a time so the page stays responsive */
-  async function mrBuild(W,onPage){const pages=mrPlan(),I=mrInfo(),H=Math.round(W/1.41421),U=W/1350,out=[];
+  async function mrBuild(W,onPage){NOLOT=true;try{return await mrBuild0(W,onPage)}finally{NOLOT=false}}
+  async function mrBuild0(W,onPage){const pages=mrPlan(),I=mrInfo(),H=Math.round(W/1.41421),U=W/1350,out=[];
     for(let i=0;i<pages.length;i++){const p=pages[i],cv=document.createElement('canvas');cv.width=W;cv.height=H;const ctx=cv.getContext('2d');
       if(p.cover)p.draw(ctx,W,H,U);else{mrChrome(ctx,W,H,U,p.t,i+1);if(p.contents)mrContents(ctx,W,H,U,pages,I);else p.draw(ctx,W,H,U)}
       out.push(cv.toDataURL('image/jpeg',0.86));if(onPage)onPage(i+1,pages.length);await new Promise(r=>setTimeout(r,0))}
