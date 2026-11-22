@@ -1264,7 +1264,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1795385465';
+const BUILD_ID='1795386886';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname.replace(/[^/]*$/,'')+'version.txt?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const v=(t.match(/\d{9,}/)||[])[0];
     if(!v||+v<=+BUILD_ID)return;let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}
@@ -2511,7 +2511,35 @@ const MAP=(function(){
     placeLabel(ctx,'Loyiha hududi',k,P,24*U,W,H,box,U);decorations(ctx,P,W,H,U,box)}
   /* ----- cover page: three floating map slabs (republic → region → district) joined by beams of light,
      the project name on top and the key figures as an infographic below ----- */
-  function cover(W,H,info){const cv=document.createElement('canvas');cv.width=W;cv.height=H;const ctx=cv.getContext('2d'),wide=W>H,U=(wide?H:W)/1000;
+  /* cover with the album picture: photo on top, a raised title card, soft figure tiles */
+  function coverPhotoImg(){const z=imgList('Xarita','A19')[0];return (z&&PL.img[z.k])||mrMainRender()}
+  function photoCover(W,H,info,im){const cv=document.createElement('canvas');cv.width=W;cv.height=H;const ctx=cv.getContext('2d'),wide=W>H,U=(wide?H:W)/1000,r=region(),d=district();
+    ctx.fillStyle=MRC.BG;ctx.fillRect(0,0,W,H);
+    const ph=wide?{x:0,y:0,w:W*0.56,h:H}:{x:0,y:0,w:W,h:H*0.5};mrCover(ctx,im,ph.x,ph.y,ph.w,ph.h,0);
+    {const g=ctx.createLinearGradient(0,ph.y,0,ph.y+ph.h);g.addColorStop(0,'rgba(10,22,45,0.72)');g.addColorStop(0.32,'rgba(10,22,45,0.12)');g.addColorStop(0.75,'rgba(10,22,45,0)');g.addColorStop(1,wide?'rgba(10,22,45,0.25)':'rgba(236,239,244,0.9)');ctx.fillStyle=g;ctx.fillRect(ph.x,ph.y,ph.w,ph.h)}
+    mrLogo(ctx,50*U,46*U,96*U,U,false);const T=mrText();if(T.org)txt(ctx,T.org.toUpperCase(),164*U,94*U,15*U,{halo:false,col:'#fff',w:'800'});
+    txt(ctx,(info.kind||'').toUpperCase(),wide?ph.w-40*U:W-50*U,94*U,13*U,{al:'right',halo:false,col:'#fff',w:'800'});
+    /* title card */
+    const cx=wide?ph.w+40*U:70*U,cw=wide?W-ph.w-80*U:W-140*U,cy=wide?110*U:ph.h-120*U,chh=wide?330*U:270*U;neo(ctx,cx,cy,cw,chh,28*U,U,{d:9,top:'#ffffff',bot:'#eef1f5'});
+    let y=cy+52*U;txt(ctx,(info.what||'Loyiha').toUpperCase(),cx+40*U,y,15*U,{halo:false,col:MRC.AC,w:'800'});y+=22*U;
+    const sz=String(info.proj).length>40?42*U:54*U,lines=clipLines(ctx,info.proj,cw-80*U,2,'800 '+sz+'px '+FONT);lines.forEach(l=>{y+=sz*1.12;txt(ctx,l,cx+40*U,y,sz,{halo:false,col:MRC.NV,w:'800',bl:'alphabetic'})});
+    y+=30*U;ctx.fillStyle=MRC.AC;ctx.fillRect(cx+40*U,y,90*U,5*U);y+=34*U;
+    const where=[d&&d.name,r&&r.name].filter(Boolean).join(' · ')||'O‘zbekiston Respublikasi';mrIcon(ctx,'pin',cx+56*U,y,17*U,U);txt(ctx,where,cx+86*U,y,19*U,{halo:false,col:MRC.INK,w:'600'});
+    /* figures */
+    const kx=cx,ky=cy+chh+34*U,kw=cw,cards=[['doc','Jami qiymat',info.cost,'mln so‘m'],['area','Umumiy maydon',info.area,'gektar'],['id','LOTlar',info.lots,'ta'],['house','Ish o‘rinlari',info.jobs,'ta']],g=22*U,tw=(kw-g)/2,th=wide?112*U:118*U;
+    cards.forEach(([ic,l,v,u],i)=>{const x=kx+(i%2)*(tw+g),yy=ky+Math.floor(i/2)*(th+g);neo(ctx,x,yy,tw,th,22*U,U);mrIcon(ctx,ic,x+46*U,yy+th/2,26*U,U);
+      txt(ctx,l.toUpperCase(),x+88*U,yy+th/2-26*U,12.5*U,{halo:false,col:MRC.MU,w:'800'});txt(ctx,String(v),x+88*U,yy+th/2+8*U,32*U,{halo:false,col:MRC.NV,w:'800'});txt(ctx,u,x+88*U,yy+th/2+36*U,13*U,{halo:false,col:MRC.MU,w:'600'})});
+    /* who pays */
+    let by=ky+2*(th+g)+10*U;const tot=(info.bud||0)+(info.inv||0);
+    if(tot>0&&by<H-170*U){txt(ctx,'MOLIYALASHTIRISH MANBALARI',kx,by,12.5*U,{halo:false,col:MRC.MU,w:'800'});by+=22*U;const bh=26*U;neoIn(ctx,kx,by,kw,bh,13*U,U);
+      const f=info.bud/tot;ctx.save();rrect(ctx,kx+4*U,by+4*U,(kw-8*U),bh-8*U,9*U);ctx.clip();let gg=ctx.createLinearGradient(kx,0,kx+kw,0);gg.addColorStop(0,'#c0392b');gg.addColorStop(1,'#e57368');ctx.fillStyle=gg;ctx.fillRect(kx+4*U,by+4*U,(kw-8*U)*f,bh-8*U);
+      gg=ctx.createLinearGradient(kx,0,kx+kw,0);gg.addColorStop(0,'#2e7d32');gg.addColorStop(1,'#5fb066');ctx.fillStyle=gg;ctx.fillRect(kx+4*U+(kw-8*U)*f,by+4*U,(kw-8*U)*(1-f),bh-8*U);ctx.restore();by+=bh+26*U;
+      txt(ctx,'Byudjet: '+info.budTxt+' mln so‘m ('+Math.round(f*100)+'%)',kx,by,15*U,{halo:false,col:'#a12a20',w:'700'});txt(ctx,'Investor: '+info.invTxt+' mln so‘m ('+Math.round((1-f)*100)+'%)',kx+kw,by,15*U,{al:'right',halo:false,col:'#256b2a',w:'700'})}
+    /* footer */
+    const fy=H-64*U;ctx.fillStyle=MRC.NV;ctx.fillRect(0,fy,W,64*U);ctx.fillStyle=MRC.AC;ctx.fillRect(0,fy,W,3*U);
+    txt(ctx,info.kind?info.kind:'Hisobot',50*U,fy+33*U,17*U,{halo:false,col:'#fff',w:'800'});txt(ctx,info.date,W-50*U,fy+33*U,17*U,{al:'right',halo:false,col:'#fff',w:'700'});
+    return cv.toDataURL('image/jpeg',0.92)}
+  function cover(W,H,info){{const pim=coverPhotoImg();if(pim)return photoCover(W,H,info,pim)}const cv=document.createElement('canvas');cv.width=W;cv.height=H;const ctx=cv.getContext('2d'),wide=W>H,U=(wide?H:W)/1000;
     const r=region(),d=district(),k=kmz(),S=typeof STAT!=='undefined'&&r?STAT.r[r.id]:null,D=S&&d?S.d[d.name]:null;
     const NAVY0='#0a1630',NAVY1='#14284f',GOLD='#d99a00',RED='#e53935',INK='#14284f',SOFT='#4a5874',DIM='#8a94a6';
     const T=(t,x,y,size,o)=>{o=o||{};ctx.font=(o.w||'500')+' '+size+'px '+FONT;ctx.textAlign=o.al||'left';ctx.textBaseline=o.bl||'alphabetic';
@@ -3196,7 +3224,7 @@ const MAP=(function(){
     const NV='#16294a',AC='#c8893a',INK='#1b2a44',MU='#6b778c',LN='#e3e7ee',SOFT='#f4f6fa';
     const J='Jamlama',proj=String(V(J,'C5')||'Loyiha').trim(),r=region(),d=district();
     const n0=v=>nUz(v,'#,##0'),n2=v=>nUz(v,'#,##0.##'),T=(t,x,y,s,o)=>txt(ctx,t,x,y,s*U,Object.assign({halo:false},o||{}));
-    ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle=MRC.BG;ctx.fillRect(0,0,W,H);
     /* ---- header ---- */
     const hb=164*U;{const g=ctx.createLinearGradient(0,0,W,hb);g.addColorStop(0,NV);g.addColorStop(1,'#26457a');ctx.fillStyle=g;ctx.fillRect(0,0,W,hb);ctx.fillStyle=AC;ctx.fillRect(0,hb,W,4*U);
       /* faint plot grid in the band, as on a survey sheet */
@@ -3227,7 +3255,7 @@ const MAP=(function(){
     {const tw=(hw-3*16*U)/4,th=104*U,dens=P.land?P.fp/P.land:0;
       [['Yer maydoni',P.land?n0(P.land)+' m²':'—',P.land?n2(P.land/10000)+' gektar':''],['Qurilish osti',P.fp?n0(P.fp)+' m²':'—',dens?'zichlik '+fmtNum(dens,'0.#%'):''],
        ['Qavatlar',P.fl?n0(P.fl)+' qavat':'—',P.fh?'qavat balandligi '+n2(P.fh)+' m':''],['Umumiy maydon',P.floor?n0(P.floor)+' m²':'—',P.vol?'hajmi '+n0(P.vol)+' m³':'']].forEach(([a,b,c],i)=>{const x=hx+i*(tw+16*U);
-        rrect(ctx,x,y,tw,th,12*U);ctx.fillStyle=SOFT;ctx.fill();ctx.fillStyle=AC;ctx.fillRect(x+16*U,y+16*U,26*U,3*U);
+        neo(ctx,x,y,tw,th,16*U,U,{d:5});ctx.fillStyle=AC;ctx.fillRect(x+16*U,y+16*U,26*U,3*U);
         T(a.toUpperCase(),x+16*U,y+36*U,10.5,{col:MU,w:'800'});T(b,x+16*U,y+66*U,23,{col:NV,w:'800'});T(c,x+16*U,y+90*U,11,{col:MU,w:'500'})});y+=th+30*U}
     /* ---- two columns ---- */
     const cw=(hw-34*U)/2,lx=hx,rx2=hx+cw+34*U,top=y;
@@ -3247,7 +3275,7 @@ const MAP=(function(){
         parts.forEach(([a,v,c])=>{rrect(ctx,rx2,ry-6*U,12*U,12*U,3*U);ctx.fillStyle=c;ctx.fill();T(a,rx2+20*U,ry,12,{col:'#4a566c',w:'500'});T(fmtNum(v/tot,'0.#%'),rx2+cw-110*U,ry,11.5,{al:'right',col:MU,w:'600'});T(n0(v)+' m²',rx2+cw,ry,12,{al:'right',col:INK,w:'700'});ry+=24*U})}}
     /* money and people */
     ry=head('Iqtisodiy ko‘rsatkichlar',rx2,ry+14*U);
-    {rrect(ctx,rx2,ry-8*U,cw,70*U,12*U);const g=ctx.createLinearGradient(rx2,0,rx2+cw,0);g.addColorStop(0,'#fbf3e6');g.addColorStop(1,'#fff');ctx.fillStyle=g;ctx.fill();
+    {neo(ctx,rx2,ry-8*U,cw,70*U,14*U,U,{d:5,top:'#fdf6ea',bot:'#f1e6d3'});
       T(P.dx?'DXSH OBYEKTI UMUMIY QIYMATI':'INVESTITSIYA HAJMI (TAXMINIY)',rx2+16*U,ry+10*U,10.5,{col:'#8a5a1c',w:'800'});T(mln(P.total)+' mln so‘m',rx2+16*U,ry+40*U,24,{col:NV,w:'800'});
       T(plMlrd(P.total)+' so‘m',rx2+cw-14*U,ry+40*U,12,{al:'right',col:MU,w:'600'});ry+=82*U;
       const ec=(P.costs||[]).filter(z=>z[1]>0).map(([a,v])=>[a,mln(v)+' mln']);
@@ -3283,7 +3311,17 @@ const MAP=(function(){
     if(P.pool){const pa=Math.sqrt(P.pool*sc*sc);ctx.fillStyle='#3fa9c9';rrect(ctx,px+16*U,py+16*U,Math.min(pa*1.4,pw*0.25),Math.min(pa/1.4,ph*0.25),6*U);ctx.fill()}
     txt(ctx,'Sxema (masshtabda) · LOT rasmi yuklanmagan',x+w/2,y+h-28*U,12.5*U,{al:'center',halo:false,col:'#7a8496',w:'700'})}
   /* ===== Master reja (MR) presentation: A3 landscape pages, each drawn whole on a canvas ===== */
-  const MRC={NV:'#16294a',NV2:'#26457a',AC:'#c8893a',INK:'#1b2a44',MU:'#5d6a82',LN:'#dfe4ec',SOFT:'#eef2f8'};
+  const MRC={NV:'#16294a',NV2:'#26457a',AC:'#c8893a',INK:'#1b2a44',MU:'#5d6a82',LN:'#dfe4ec',SOFT:'#eef2f8',BG:'#eceff4'};
+  /* a raised panel: one light shadow up-left, one dark shadow down-right, a faint top highlight */
+  function neo(ctx,x,y,w,h,r,U,o){o=o||{};const d=(o.d||7)*U;ctx.save();rrect(ctx,x,y,w,h,r);ctx.fillStyle=MRC.BG;
+    ctx.shadowColor='rgba(255,255,255,0.95)';ctx.shadowBlur=d*2.2;ctx.shadowOffsetX=-d;ctx.shadowOffsetY=-d;ctx.fill();
+    ctx.shadowColor='rgba(150,163,186,0.55)';ctx.shadowOffsetX=d;ctx.shadowOffsetY=d;ctx.fill();ctx.restore();
+    const g=ctx.createLinearGradient(x,y,x+w,y+h);g.addColorStop(0,o.top||'#f6f8fb');g.addColorStop(1,o.bot||'#e6eaf0');rrect(ctx,x,y,w,h,r);ctx.fillStyle=g;ctx.fill();
+    ctx.save();rrect(ctx,x+0.5*U,y+0.5*U,w-U,h-U,r);ctx.strokeStyle='rgba(255,255,255,0.7)';ctx.lineWidth=1.2*U;ctx.stroke();ctx.restore()}
+  /* a pressed-in well */
+  function neoIn(ctx,x,y,w,h,r,U){ctx.save();rrect(ctx,x,y,w,h,r);ctx.fillStyle='#e4e8ee';ctx.fill();ctx.clip();const d=5*U;
+    ctx.shadowColor='rgba(150,163,186,0.6)';ctx.shadowBlur=d*2;ctx.shadowOffsetX=d;ctx.shadowOffsetY=d;ctx.lineWidth=d*2;ctx.strokeStyle='#e4e8ee';rrect(ctx,x-d,y-d,w+d,h+d,r);ctx.stroke();
+    ctx.shadowColor='rgba(255,255,255,0.9)';ctx.shadowOffsetX=-d;ctx.shadowOffsetY=-d;rrect(ctx,x,y,w+d,h+d,r);ctx.stroke();ctx.restore()}
   function mrInfo(){const J='Jamlama',T=mrText(),r=region(),d=district(),k=kmz(),a=k?area(k):0,x=(()=>{try{return info()}catch(e){return null}})(),land=a||(x?x.land:0);
     const ga=land?nUz(land/10000,'#,##0.###'):'',place=[r?r.name:'',d?d.name:'',T.mfy||''].filter(Boolean).join(', ');
     const P=(()=>{try{return passportData()}catch(e){return []}})(),names=[...new Set(P.map(p=>p.name).concat(x?x.bud.map(b=>b.type):[]))];
@@ -3295,7 +3333,7 @@ const MAP=(function(){
   /* ---- drawing helpers ---- */
   function mrPara(ctx,t,x,y,w,size,o){o=o||{};const lh=size*(o.lh||1.42),fnt=(o.w||'500')+' '+size+'px '+FONT;let n=0;
     String(t||'').split(/\n/).forEach(p=>{if(o.max&&n>=o.max)return;const ls=clipLines(ctx,p.trim(),w,o.max?o.max-n:60,fnt);ls.forEach(l=>{txt(ctx,l,x,y,size,{halo:false,col:o.col||MRC.INK,w:o.w||'500',al:o.al,bl:'top'});y+=lh;n++})});return y}
-  function mrIcon(ctx,k,x,y,r,U,bg){ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fillStyle=bg||MRC.NV;ctx.fill();ctx.strokeStyle='#fff';ctx.fillStyle='#fff';ctx.lineWidth=r*0.11;ctx.lineJoin='round';ctx.lineCap='round';const s=r*0.5;ctx.beginPath();
+  function mrIcon(ctx,k,x,y,r,U,bg){const soft=!bg;if(soft){neo(ctx,x-r,y-r,2*r,2*r,r,U,{d:Math.max(2.5,r/U*0.16)});ctx.beginPath();ctx.arc(x,y,r*0.72,0,7);const gg=ctx.createLinearGradient(x-r,y-r,x+r,y+r);gg.addColorStop(0,MRC.NV2);gg.addColorStop(1,MRC.NV);ctx.fillStyle=gg;ctx.fill();r=r*0.86}else{ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fillStyle=bg;ctx.fill()}ctx.strokeStyle='#fff';ctx.fillStyle='#fff';ctx.lineWidth=r*0.11;ctx.lineJoin='round';ctx.lineCap='round';const s=r*0.5;ctx.beginPath();
     if(k==='pin'){ctx.arc(x,y-s*0.25,s*0.55,Math.PI*0.8,Math.PI*2.2);ctx.lineTo(x,y+s*0.9);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.arc(x,y-s*0.25,s*0.18,0,7);ctx.fill()}
     else if(k==='area'){ctx.rect(x-s*0.75,y-s*0.75,s*1.5,s*1.5);ctx.stroke();txt(ctx,'m²',x,y+s*0.05,s*0.75,{al:'center',halo:false,col:'#fff',w:'800'})}
     else if(k==='id'){ctx.rect(x-s*0.85,y-s*0.6,s*1.7,s*1.2);ctx.moveTo(x-s*0.5,y-s*0.15);ctx.lineTo(x+s*0.5,y-s*0.15);ctx.moveTo(x-s*0.5,y+s*0.2);ctx.lineTo(x+s*0.2,y+s*0.2);ctx.stroke()}
@@ -3319,7 +3357,7 @@ const MAP=(function(){
   function mrFoot(ctx,W,H,U,no){const fy=H-42*U;ctx.fillStyle=MRC.NV;ctx.fillRect(0,fy,W,42*U);ctx.fillStyle=MRC.AC;ctx.fillRect(0,fy,W,2.5*U);
     txt(ctx,'Master reja',40*U,fy+22*U,17*U,{halo:false,col:'#fff',w:'800'});ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(W-150*U,fy+42*U);ctx.lineTo(W-120*U,fy+2.5*U);ctx.lineTo(W,fy+2.5*U);ctx.lineTo(W,fy+42*U);ctx.closePath();ctx.fill();
     txt(ctx,String(no),W-50*U,fy+22*U,19*U,{al:'center',halo:false,col:MRC.NV,w:'800'})}
-  function mrChrome(ctx,W,H,U,title,no){ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+  function mrChrome(ctx,W,H,U,title,no){ctx.fillStyle=MRC.BG;ctx.fillRect(0,0,W,H);
     ctx.fillStyle=MRC.NV;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(250*U,0);ctx.lineTo(205*U,96*U);ctx.lineTo(0,96*U);ctx.closePath();ctx.fill();
     ctx.fillStyle=MRC.AC;ctx.beginPath();ctx.moveTo(250*U,0);ctx.lineTo(262*U,0);ctx.lineTo(217*U,96*U);ctx.lineTo(205*U,96*U);ctx.closePath();ctx.fill();
     mrLogo(ctx,40*U,14*U,68*U,U,false);txt(ctx,'MASTER REJA',122*U,48*U,13*U,{halo:false,col:'#fff',w:'800'});
@@ -3333,7 +3371,7 @@ const MAP=(function(){
   function mrCover(ctx,im,x,y,w,h,rad){ctx.save();if(rad){rrect(ctx,x,y,w,h,rad);ctx.clip()}else{ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip()}const s=Math.max(w/im.naturalWidth,h/im.naturalHeight);ctx.drawImage(im,x+(w-im.naturalWidth*s)/2,y+(h-im.naturalHeight*s)/2,im.naturalWidth*s,im.naturalHeight*s);ctx.restore()}
   /* a map sheet drawn into the content box, keeping its own proportions */
   function mrSheet(ctx,fn,b,U){const r=1.4142;let w=b.w,h=w/r;if(h>b.h){h=b.h;w=h*r}const c=document.createElement('canvas');c.width=Math.round(w);c.height=Math.round(h);PH=false;NOSUB=true;try{fn(c)}finally{NOSUB=false}if(PH)return false;
-    const x=b.x+(b.w-w)/2,y=b.y+(b.h-h)/2;ctx.save();ctx.shadowColor='rgba(20,40,80,0.12)';ctx.shadowBlur=18*U;ctx.fillStyle='#fff';ctx.fillRect(x,y,w,h);ctx.restore();ctx.drawImage(c,x,y);ctx.strokeStyle=MRC.LN;ctx.lineWidth=1*U;ctx.strokeRect(x,y,w,h);return true}
+    const x=b.x+(b.w-w)/2,y=b.y+(b.h-h)/2;neo(ctx,x-10*U,y-10*U,w+20*U,h+20*U,18*U,U);ctx.save();rrect(ctx,x,y,w,h,8*U);ctx.clip();ctx.fillStyle='#fff';ctx.fillRect(x,y,w,h);ctx.drawImage(c,x,y);ctx.restore();return true}
   const mrMainRender=()=>{const g=imgList('Xarita','A15').map(z=>PL.img[z.k]).filter(Boolean);if(g.length)return g[0];const m=plMeta();return m.m&&PL.img[m.m.k]||null};
   /* ---- the pages ---- */
   function mrPlan(){const I=mrInfo(),pages=[];const add=(t,draw,o)=>pages.push(Object.assign({t,draw},o||{}));
@@ -3349,14 +3387,14 @@ const MAP=(function(){
       const d=new Date();txt(ctx,String(d.getFullYear())+'-yil',W-80*U,by+42*U,17*U,{al:'right',halo:false,col:'#fff',w:'700'})},{cover:1});
     /* 2. preface */
     add('Muqaddima',(ctx,W,H,U)=>{const b=mrBox(W,H,U),cw=(b.w-40*U)/2;
-      const pill=(t,x,y)=>{ctx.font='800 '+(17*U)+'px '+FONT;const w=ctx.measureText(t).width+70*U;rrect(ctx,x,y,w,40*U,20*U);ctx.fillStyle=MRC.NV;ctx.fill();mrIcon(ctx,'target',x+20*U,y+20*U,14*U,U,MRC.AC);txt(ctx,t,x+42*U,y+20*U,17*U,{halo:false,col:'#fff',w:'800'});return y+58*U};
-      rrect(ctx,b.x,b.y,cw,b.h,16*U);ctx.fillStyle=MRC.SOFT;ctx.fill();let y=pill('MAQSAD',b.x+24*U,b.y+22*U);
+      const pill=(t,x,y)=>{ctx.font='800 '+(17*U)+'px '+FONT;const w=ctx.measureText(t).width+70*U;ctx.save();ctx.shadowColor='rgba(22,41,74,0.35)';ctx.shadowBlur=10*U;ctx.shadowOffsetY=4*U;rrect(ctx,x,y,w,40*U,20*U);{const gg=ctx.createLinearGradient(x,y,x,y+40*U);gg.addColorStop(0,MRC.NV2);gg.addColorStop(1,MRC.NV);ctx.fillStyle=gg}ctx.fill();ctx.restore();mrIcon(ctx,'target',x+20*U,y+20*U,14*U,U,MRC.AC);txt(ctx,t,x+42*U,y+20*U,17*U,{halo:false,col:'#fff',w:'800'});return y+58*U};
+      neo(ctx,b.x,b.y,cw,b.h,22*U,U);let y=pill('MAQSAD',b.x+24*U,b.y+22*U);
       y=mrPara(ctx,'HUDUD: '+(I.place||'—'),b.x+30*U,y,cw-60*U,16*U,{w:'700'});y=mrPara(ctx,'MAQSAD: '+(I.obj||I.proj||'master reja hududida obyektlarni')+' joylashtirish.',b.x+30*U,y+4*U,cw-60*U,16*U,{w:'700'})+18*U;
       txt(ctx,'MASTER REJANING OLIY MAQSADI:',b.x+30*U,y,16*U,{halo:false,col:MRC.NV,w:'800',bl:'top'});y+=34*U;
       ['Hududda xizmat ko‘rsatish va ishlab chiqarish obyektlari faoliyatini yo‘lga qo‘yish.','Hududda ijtimoiy-iqtisodiy barqarorlikni ta’minlash va rivojlantirish.'].forEach(t=>{mrIcon(ctx,'check',b.x+48*U,y+12*U,15*U,U);y=Math.max(mrPara(ctx,t,b.x+76*U,y,cw-110*U,15.5*U),y+30*U)+8*U});
       y=pill('VAZIFALAR',b.x+24*U,y+14*U);
       ['Milliy rivojlanish ustuvorliklarini amalga oshirish.','Barqaror iqtisodiy o‘sish sur’atlarini ta’minlash.','Hudud muhiti sifatini yaxshilash asosida aholining hayot sifatini barqaror rivojlantirish.','Hududning raqobatbardoshligini va investitsion jozibadorligini oshirish.'].forEach(t=>{mrIcon(ctx,'check',b.x+48*U,y+12*U,15*U,U);y=Math.max(mrPara(ctx,t,b.x+76*U,y,cw-110*U,15.5*U),y+30*U)+10*U});
-      const rx=b.x+cw+40*U;rrect(ctx,rx,b.y,cw,b.h,16*U);ctx.strokeStyle=MRC.LN;ctx.lineWidth=1.5*U;ctx.stroke();y=pill('MASTER REJA HAQIDA',rx+24*U,b.y+22*U);
+      const rx=b.x+cw+40*U;neo(ctx,rx,b.y,cw,b.h,22*U,U);y=pill('MASTER REJA HAQIDA',rx+24*U,b.y+22*U);
       y=mrPara(ctx,'MASTER-REJA — hududni strategik asosda hajmiy-fazoviy rejalashtirishni belgilovchi hujjat. U konseptualligi va mutanosibligi bilan ajralib turadi.',rx+30*U,y,cw-60*U,15.5*U)+14*U;
       txt(ctx,'HUDUDNI IJTIMOIY-IQTISODIY RIVOJLANTIRISH STRATEGIYASI',rx+30*U,y,15*U,{halo:false,col:MRC.NV,w:'800',bl:'top'});y+=28*U;
       y=mrPara(ctx,'Hududni rivojlantirishning maqsadlari, vazifalari va dasturlarini belgilaydi. Master-reja hududning jozibadorligini oshirishga, shu jumladan shaharsozlik siyosatini amalga oshirishga xizmat qiladi.',rx+30*U,y,cw-60*U,15.5*U)+14*U;
@@ -3375,11 +3413,11 @@ const MAP=(function(){
       sec('house','TAKLIF ETILAYOTGAN OBYEKTLAR',(I.T.u?I.T.u+' unikal raqamli ':'')+(I.ga?I.ga+' ga yer uchastkasida ':'')+(I.obj||'obyektlar')+' joylashtirish taklif etiladi.');
       txt(ctx,'AMALIYOTGA TATBIQ ETILADIGAN BOSQICHLAR',b.x,y+4*U,19*U,{halo:false,col:MRC.NV,w:'800',bl:'top'});y+=40*U;
       const sw=(lw-24*U)/2,sh=Math.min(150*U,b.y+b.h-y);[['YER UCHASTKASINI RASMIYLASHTIRISH','Master reja asosida yer maydonini xarid qilgan tadbirkor yerga egalik huquqini o‘z nomiga rasmiylashtiradi.'],['LOYIHALASH VA QURILISH ISHLARI','Ishlab chiqilgan master reja asosida loyiha-smeta hujjatlari tayyorlanadi va qurilish ishlari olib boriladi.']].forEach(([t,s],i)=>{const x=b.x+i*(sw+24*U);
-        rrect(ctx,x,y,sw,sh,14*U);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=MRC.LN;ctx.lineWidth=1.5*U;ctx.stroke();ctx.save();rrect(ctx,x,y,sw,sh,14*U);ctx.clip();ctx.fillStyle=MRC.NV;ctx.fillRect(x,y,96*U,sh);ctx.restore();
+        neo(ctx,x,y,sw,sh,18*U,U);ctx.save();rrect(ctx,x,y,sw,sh,18*U);ctx.clip();ctx.fillStyle=MRC.NV;ctx.fillRect(x,y,96*U,sh);ctx.restore();
         txt(ctx,(i+1)+'-',x+48*U,y+sh/2-12*U,34*U,{al:'center',halo:false,col:'#fff',w:'800'});txt(ctx,'BOSQICH',x+48*U,y+sh/2+22*U,12*U,{al:'center',halo:false,col:MRC.AC,w:'800'});
         txt(ctx,t,x+116*U,y+20*U,14.5*U,{halo:false,col:MRC.NV,w:'800',bl:'top'});mrPara(ctx,s,x+116*U,y+48*U,sw-136*U,14*U,{max:4})});
       /* key facts and borders */
-      const ph=Math.min(520*U,b.h*0.62);rrect(ctx,rx,b.y,rw,ph,16*U);ctx.fillStyle=MRC.SOFT;ctx.fill();txt(ctx,'ASOSIY MA’LUMOTLAR',rx+24*U,b.y+30*U,16*U,{halo:false,col:MRC.NV,w:'800'});
+      const ph=Math.min(520*U,b.h*0.62);neo(ctx,rx,b.y,rw,ph,22*U,U);txt(ctx,'ASOSIY MA’LUMOTLAR',rx+24*U,b.y+30*U,16*U,{halo:false,col:MRC.NV,w:'800'});
       const facts=[['pin','Joylashuv',I.place||'—'],['id','Yer uchastkasining unikal raqami',I.T.u||'—'],['area','Maydoni',I.ga?I.ga+' ga':'—'],['road','Yo‘l',I.T.yol||'—'],['house','Taklif etilayotgan obyekt',I.obj||'—']];
       let fy=b.y+62*U;const fh=(ph-74*U)/facts.length;facts.forEach(([ic,l,v],i)=>{mrIcon(ctx,ic,rx+44*U,fy+fh/2,22*U,U);txt(ctx,l,rx+80*U,fy+fh/2-18*U,14*U,{halo:false,col:MRC.INK,w:'800',bl:'top'});mrPara(ctx,v,rx+80*U,fy+fh/2+2*U,rw-100*U,12.5*U,{col:MRC.MU,max:2});
         if(i<facts.length-1){ctx.strokeStyle='#cfd7e4';ctx.lineWidth=1*U;ctx.beginPath();ctx.moveTo(rx+24*U,fy+fh);ctx.lineTo(rx+rw-24*U,fy+fh);ctx.stroke()}fy+=fh});
@@ -3391,14 +3429,14 @@ const MAP=(function(){
       const head=(t,x,y,ic)=>{mrIcon(ctx,ic,x+18*U,y+18*U,18*U,U);txt(ctx,t,x+46*U,y+18*U,16*U,{halo:false,col:MRC.NV,w:'800'});return y+46*U};
       let y=head('IQLIM TAVSIFI',b.x,b.y,'sun');
       if(C){y=mrPara(ctx,C.y0+'–'+C.y1+' yillar ma’lumotiga ko‘ra o‘rtacha yillik harorat '+nUz(C.yr.t,'#,##0.0')+' °C, yillik yog‘in '+nUz(C.yr.p,'#,##0')+' mm, quyoshli vaqt yiliga '+nUz(C.yr.sun,'#,##0')+' soat. Yiliga o‘rtacha '+nUz(C.hot,'#,##0')+' kun harorat 35 °C dan oshadi, '+nUz(C.frost,'#,##0')+' kun sovuq bo‘ladi.',b.x,y,cw,14*U)+14*U;
-        const cols=[['Oy',0.3],['Eng yuqori',0.24],['Eng past',0.24],['Yog‘in',0.22]],rh=Math.min(30*U,(b.y+b.h-y)/14);ctx.fillStyle=MRC.NV;ctx.fillRect(b.x,y,cw,rh);let cx=b.x;cols.forEach(([t,w],i)=>{txt(ctx,t,i?cx+w*cw-8*U:cx+8*U,y+rh/2,12*U,{al:i?'right':'left',halo:false,col:'#fff',w:'800'});cx+=w*cw});y+=rh;
-        C.m.forEach((o,k)=>{ctx.fillStyle=k%2?'#fff':MRC.SOFT;ctx.fillRect(b.x,y,cw,rh);let cx=b.x;[MN[k],nUz(o.tx,'#,##0.0')+' °C',nUz(o.tn,'#,##0.0')+' °C',nUz(o.p,'#,##0')+' mm'].forEach((t,i)=>{txt(ctx,t,i?cx+cols[i][1]*cw-8*U:cx+8*U,y+rh/2,12*U,{al:i?'right':'left',halo:false,col:MRC.INK,w:i?'500':'600'});cx+=cols[i][1]*cw});y+=rh});
+        const cols=[['Oy',0.3],['Eng yuqori',0.24],['Eng past',0.24],['Yog‘in',0.22]],rh=Math.min(30*U,(b.y+b.h-y)/14);neo(ctx,b.x-8*U,y-8*U,cw+16*U,rh*14+16*U,14*U,U,{d:5});rrect(ctx,b.x,y,cw,rh,8*U);ctx.fillStyle=MRC.NV;ctx.fill();let cx=b.x;cols.forEach(([t,w],i)=>{txt(ctx,t,i?cx+w*cw-8*U:cx+8*U,y+rh/2,12*U,{al:i?'right':'left',halo:false,col:'#fff',w:'800'});cx+=w*cw});y+=rh;
+        C.m.forEach((o,k)=>{ctx.fillStyle=k%2?'rgba(255,255,255,0.0)':'rgba(255,255,255,0.55)';ctx.fillRect(b.x,y,cw,rh);let cx=b.x;[MN[k],nUz(o.tx,'#,##0.0')+' °C',nUz(o.tn,'#,##0.0')+' °C',nUz(o.p,'#,##0')+' mm'].forEach((t,i)=>{txt(ctx,t,i?cx+cols[i][1]*cw-8*U:cx+8*U,y+rh/2,12*U,{al:i?'right':'left',halo:false,col:MRC.INK,w:i?'500':'600'});cx+=cols[i][1]*cw});y+=rh});
         ctx.fillStyle='#fdf1de';ctx.fillRect(b.x,y,cw,rh);txt(ctx,'Yil: o‘rtacha '+nUz(C.yr.t,'#,##0.0')+' °C, yog‘in '+nUz(C.yr.p,'#,##0')+' mm',b.x+8*U,y+rh/2,12*U,{halo:false,col:'#8a4406',w:'800'})}
       else mrPara(ctx,'Iqlim ma’lumoti hali olinmagan: «Xaritada joylashuv» bo‘limida «Ob-havo ma’lumotini olish» tugmasini bosing.',b.x,y,cw,14*U,{col:MRC.MU});
       /* middle: key figures and the wind rose */
       const mx=b.x+cw+24*U;y=head('ASOSIY OB-HAVO KO‘RSATKICHLARI',mx,b.y,'drop');
       if(C){const tiles=[['O‘rtacha yillik harorat',nUz(C.yr.t,'#,##0.0')+' °C'],['Yillik yog‘in',nUz(C.yr.p,'#,##0')+' mm'],['Eng yuqori harorat',nUz(C.ext.max[0],'#,##0.0')+' °C'],['Eng past harorat',nUz(C.ext.min[0],'#,##0.0')+' °C'],['Quyoshli soatlar',nUz(C.yr.sun,'#,##0')+' soat'],['Issiq kunlar (35 °C+)',nUz(C.hot,'#,##0')+' kun']];
-        const tw=(cw-14*U)/2,th=78*U;tiles.forEach(([l,v],i)=>{const x=mx+(i%2)*(tw+14*U),yy=y+Math.floor(i/2)*(th+12*U);rrect(ctx,x,yy,tw,th,12*U);ctx.fillStyle=MRC.SOFT;ctx.fill();ctx.fillStyle=MRC.AC;ctx.fillRect(x+14*U,yy+14*U,24*U,3*U);txt(ctx,l,x+14*U,yy+32*U,12*U,{halo:false,col:MRC.MU,w:'700'});txt(ctx,v,x+14*U,yy+58*U,22*U,{halo:false,col:MRC.NV,w:'800'})});y+=3*(th+12*U)+10*U;
+        const tw=(cw-14*U)/2,th=78*U;tiles.forEach(([l,v],i)=>{const x=mx+(i%2)*(tw+14*U),yy=y+Math.floor(i/2)*(th+12*U);neo(ctx,x,yy,tw,th,16*U,U,{d:5});ctx.fillStyle=MRC.AC;ctx.fillRect(x+14*U,yy+14*U,24*U,3*U);txt(ctx,l,x+14*U,yy+32*U,12*U,{halo:false,col:MRC.MU,w:'700'});txt(ctx,v,x+14*U,yy+58*U,22*U,{halo:false,col:MRC.NV,w:'800'})});y+=3*(th+12*U)+10*U;
         y=head('SHAMOL YO‘NALISHI',mx,y,'wind');const R=Math.min(cw*0.32,(b.y+b.h-y)/2-28*U),cx=mx+cw/2,cy=y+R+18*U,mxv=Math.max(...C.w8,1);
         ctx.strokeStyle='#cfd7e4';ctx.lineWidth=1*U;[0.33,0.66,1].forEach(q=>{ctx.beginPath();ctx.arc(cx,cy,R*q,0,7);ctx.stroke()});
         ctx.beginPath();C.w8.forEach((v,i)=>{const a=-Math.PI/2+i*Math.PI/4,rr=R*v/mxv;i?ctx.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr):ctx.moveTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr)});ctx.closePath();ctx.fillStyle='rgba(38,69,122,0.35)';ctx.fill();ctx.strokeStyle=MRC.NV2;ctx.lineWidth=2*U;ctx.stroke();
@@ -3428,7 +3466,7 @@ const MAP=(function(){
       const bh=b.y+b.h-y-10*U,lw=b.w*0.7,pl=imgList('Xarita','A16')[0],pi=pl&&PL.img[pl.k];
       if(pi){const s=Math.min(lw/pi.naturalWidth,bh/pi.naturalHeight),iw=pi.naturalWidth*s,ih=pi.naturalHeight*s;ctx.drawImage(pi,b.x+(lw-iw)/2,y+6*U+(bh-ih)/2,iw,ih);ctx.strokeStyle=MRC.LN;ctx.lineWidth=1*U;ctx.strokeRect(b.x+(lw-iw)/2,y+6*U+(bh-ih)/2,iw,ih)}
       else mrSheet(ctx,RENDER[2],{x:b.x,y:y+6*U,w:lw,h:bh},U);
-      const rx=b.x+lw+24*U,rw=b.w-lw-24*U;let ry=y+6*U;rrect(ctx,rx,ry,rw,b.y+b.h-ry,14*U);ctx.fillStyle=MRC.SOFT;ctx.fill();ry+=26*U;
+      const rx=b.x+lw+24*U,rw=b.w-lw-24*U;let ry=y+6*U;neo(ctx,rx,ry,rw,b.y+b.h-ry,20*U,U);ry+=26*U;
       txt(ctx,'QAYDNOMA',rx+rw/2,ry,17*U,{al:'center',halo:false,col:MRC.NV,w:'800'});ry+=24*U;
       const list=I.P.map(p=>[p.name,p.land]).concat(I.x?I.x.bud.map(o=>[o.type+(o.name?' — '+o.name:''),o.land]):[]).map((z,i)=>[String(i+1)].concat(z));
       const room=b.y+b.h-ry-210*U,lh=Math.max(15*U,Math.min(24*U,room/Math.max(list.length,1)));list.forEach(([n,t,a],i)=>{const yy=ry+i*lh;if(yy>ry+room)return;txt(ctx,n,rx+16*U,yy,Math.min(12*U,lh*0.6),{halo:false,col:MRC.AC,w:'800'});
@@ -3443,8 +3481,8 @@ const MAP=(function(){
     const OB=I.P.map(P=>({name:P.name+(P.dx?' (DXSH)':''),land:P.land,fp:P.fp,fl:P.fl,floor:P.floor,jobs:P.jobs,sum:P.dx?P.inv:P.total})).concat(I.x?I.x.bud.map(o=>({name:o.type+(o.name?' — '+o.name:'')+' (byudjet)',land:o.land,fp:o.fp,fl:o.fl,floor:o.area,jobs:o.jobs,sum:o.cost})):[]);
     if(OB.length){const per=16;for(let p0=0;p0<OB.length;p0+=per){const chunk=OB.slice(p0,p0+per);
       add(p0?'Loyihalangan obyektlar (davomi)':'Loyihalangan obyektlar',(ctx,W,H,U)=>{const b=mrBox(W,H,U),cols=[['№',0.06],['Obyekt nomi',0.29],['Yer, m²',0.1,1],['Qurilish osti, m²',0.11,1],['Qavat',0.06,1],['Umumiy maydon, m²',0.12,1],['Ish o‘rni',0.08,1],['Qiymati, mlrd so‘m',0.18,1]],rh=Math.min(52*U,(b.h-60*U)/(per+1));
-        let y=b.y;ctx.fillStyle=MRC.NV;ctx.fillRect(b.x,y,b.w,rh);let cx=b.x;cols.forEach(([t,w,r])=>{txt(ctx,t,r?cx+w*b.w-12*U:cx+12*U,y+rh/2,14*U,{al:r?'right':'left',halo:false,col:'#fff',w:'800'});cx+=w*b.w});y+=rh;
-        chunk.forEach((P,i)=>{ctx.fillStyle=i%2?'#fff':MRC.SOFT;ctx.fillRect(b.x,y,b.w,rh);const v=[String(p0+i+1),P.name,nUz(P.land,'#,##0'),nUz(P.fp,'#,##0'),P.fl?nUz(P.fl):'—',nUz(P.floor,'#,##0'),P.jobs?nUz(P.jobs):'—',plMlrd(P.sum||0).replace(' mlrd','')];let cx=b.x;
+        let y=b.y;neo(ctx,b.x-10*U,y-10*U,b.w+20*U,rh*(chunk.length+(p0+per>=OB.length?2:1))+20*U,16*U,U);rrect(ctx,b.x,y,b.w,rh,10*U);ctx.fillStyle=MRC.NV;ctx.fill();let cx=b.x;cols.forEach(([t,w,r])=>{txt(ctx,t,r?cx+w*b.w-12*U:cx+12*U,y+rh/2,14*U,{al:r?'right':'left',halo:false,col:'#fff',w:'800'});cx+=w*b.w});y+=rh;
+        chunk.forEach((P,i)=>{ctx.fillStyle=i%2?'rgba(255,255,255,0)':'rgba(255,255,255,0.55)';ctx.fillRect(b.x,y,b.w,rh);const v=[String(p0+i+1),P.name,nUz(P.land,'#,##0'),nUz(P.fp,'#,##0'),P.fl?nUz(P.fl):'—',nUz(P.floor,'#,##0'),P.jobs?nUz(P.jobs):'—',plMlrd(P.sum||0).replace(' mlrd','')];let cx=b.x;
           cols.forEach(([t,w,r],j)=>{txt(ctx,j===1?clipLines(ctx,v[j],w*b.w-20*U,1,'600 '+(14*U)+'px '+FONT)[0]:v[j],r?cx+w*b.w-12*U:cx+12*U,y+rh/2,14*U,{al:r?'right':'left',halo:false,col:j===0?MRC.AC:MRC.INK,w:j<2?'700':'500'});cx+=w*b.w});y+=rh});
         if(p0+per>=OB.length){const tot=OB.reduce((a,P)=>a+(P.sum||0),0);ctx.fillStyle='#fdf1de';ctx.fillRect(b.x,y,b.w,rh);txt(ctx,'Jami: '+OB.length+' ta obyekt · yer '+nUz(OB.reduce((a,P)=>a+(P.land||0),0),'#,##0')+' m² · ish o‘rni '+nUz(OB.reduce((a,P)=>a+(P.jobs||0),0))+' ta',b.x+12*U,y+rh/2,14*U,{halo:false,col:'#8a4406',w:'800'});txt(ctx,plMlrd(tot)+' so‘m',b.x+b.w-12*U,y+rh/2,14*U,{al:'right',halo:false,col:'#8a4406',w:'800'})}},{toc:!p0})}}
     /* the board */
@@ -3457,8 +3495,8 @@ const MAP=(function(){
   function mrContents(ctx,W,H,U,pages,I){const b=mrBox(W,H,U);txt(ctx,'MASTER',b.x+10*U,b.y+50*U,60*U,{halo:false,col:MRC.NV,w:'800'});ctx.font='800 '+(60*U)+'px '+FONT;txt(ctx,'REJA',b.x+10*U+ctx.measureText('MASTER ').width,b.y+50*U,60*U,{halo:false,col:MRC.AC,w:'800'});
     let y=mrPara(ctx,I.title,b.x+10*U,b.y+100*U,560*U,15.5*U,{lh:1.5,max:9})+20*U;const im=mrMainRender();if(im&&b.y+b.h-y>140*U)mrCover(ctx,im,b.x+10*U,y,560*U,b.y+b.h-y,14*U);
     const items=[];pages.forEach((p,i)=>{if(!p.toc&&!p.contents)return;const last=p.group?pages.reduce((m,q,j)=>q.group===p.group?j:m,i):i;items.push([p.t,i+1,last+1])});
-    const rx=b.x+620*U,rw=b.w-620*U,rh=Math.min(64*U,b.h/items.length);items.forEach(([t,a,z],k)=>{const yy=b.y+k*rh;rrect(ctx,rx,yy+5*U,rw,rh-10*U,10*U);ctx.fillStyle=k%2?'#fff':MRC.SOFT;ctx.fill();ctx.strokeStyle=MRC.LN;ctx.lineWidth=1*U;ctx.stroke();
-      rrect(ctx,rx,yy+5*U,64*U,rh-10*U,10*U);ctx.fillStyle=MRC.NV;ctx.fill();txt(ctx,String(k+1).padStart(2,'0'),rx+32*U,yy+rh/2,Math.min(20*U,rh*0.38),{al:'center',halo:false,col:'#fff',w:'800'});
+    const rx=b.x+620*U,rw=b.w-620*U,rh=Math.min(64*U,b.h/items.length);items.forEach(([t,a,z],k)=>{const yy=b.y+k*rh;neo(ctx,rx,yy+6*U,rw,rh-12*U,14*U,U,{d:4});
+      rrect(ctx,rx+6*U,yy+11*U,58*U,rh-22*U,10*U);{const gg=ctx.createLinearGradient(rx,yy,rx+64*U,yy+rh);gg.addColorStop(0,MRC.NV2);gg.addColorStop(1,MRC.NV);ctx.fillStyle=gg}ctx.fill();txt(ctx,String(k+1).padStart(2,'0'),rx+35*U,yy+rh/2,Math.min(20*U,rh*0.38),{al:'center',halo:false,col:'#fff',w:'800'});
       txt(ctx,t.toUpperCase(),rx+84*U,yy+rh/2,Math.min(17*U,rh*0.33),{halo:false,col:MRC.INK,w:'800'});txt(ctx,String(a).padStart(2,'0')+(z>a?'–'+String(z).padStart(2,'0'):''),rx+rw-20*U,yy+rh/2,Math.min(17*U,rh*0.33),{al:'right',halo:false,col:MRC.AC,w:'800'})})}
   /* every page as a JPEG, one at a time so the page stays responsive */
   async function mrBuild(W,onPage){NOLOT=true;try{return await mrBuild0(W,onPage)}finally{NOLOT=false}}
