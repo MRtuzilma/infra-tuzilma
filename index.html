@@ -582,6 +582,9 @@ table.um td,table.um th{overflow-wrap:break-word}
 .kinfo>span{display:flex;align-items:center;gap:5px}
 .kmsg{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
 .kmsg.err{color:var(--bad)}
+.mrbox{grid-column:1/-1}.mrgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:10px}
+.mrf{display:flex;flex-direction:column;gap:6px;min-width:0}.mrf.wide{grid-column:1/-1}.mrf>label{font-weight:600;font-size:13.5px}
+.mr4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}.mrside{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--muted)}
 .imged{grid-column:1/-1;border:1px dashed var(--field-line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;margin-top:6px}
 .imghd{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}.imghd b{display:inline-flex;gap:6px;align-items:center}
 .imgrow{display:flex;flex-wrap:wrap;gap:10px}
@@ -631,7 +634,7 @@ table.um td,table.um th{overflow-wrap:break-word}
   </div>
   <div class="side">
     <button class="savebtn" id="save" type="button">Saqlash</button>
-    <details class="dlm" id="pdfs" hidden><summary class="pdfbtn"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Yuklab olish</summary><div class="menu"><button type="button" data-full="0"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>Infratuzilma obyektlari (PDF)</b><small>Faqat infratuzilma: bo'limlar jadvali va qisqacha infografika</small></span></button><button type="button" data-full="1"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>Umumiy ma'lumotlar (PDF)</b><small>Muqova, jamlanma, obyektlar, LOTlar, hudud ko'rsatkichlari, diagrammalar, xaritalar va har bir bo'lim tafsiloti</small></span></button><button type="button" data-full="map"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>Joylashuv (PDF)</b><small>Xaritada joylashuvning 4 ta varag'i, har biri alohida yotiq sahifada</small></span></button><button type="button" data-full="word"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>Batafsil hisobot (Word)</b><small>40–50 betlik .docx: joylashuv, aholi, transport, iqlim, xarajatlar, moliyalashtirish, ilovalar</small></span></button></div></details>
+    <details class="dlm" id="pdfs" hidden><summary class="pdfbtn"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg>Yuklab olish</summary><div class="menu"><button type="button" data-full="0"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>Infratuzilma obyektlari (PDF)</b><small>Faqat infratuzilma: bo'limlar jadvali va qisqacha infografika</small></span></button><button type="button" data-full="1"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>Umumiy ma'lumotlar (PDF)</b><small>Muqova, jamlanma, obyektlar, LOTlar, hudud ko'rsatkichlari, diagrammalar, xaritalar va har bir bo'lim tafsiloti</small></span></button><button type="button" data-full="mr"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3z M3 9h18 M8 13h8 M8 16h5"/></svg><span><b>Master reja — MR (PDF)</b><small>A3 yotiq taqdimot: muqova, kirish, joylashuv, tabiiy sharoit, bosh reja, LOTlar va renderlar</small></span></button><button type="button" data-full="map"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>Joylashuv (PDF)</b><small>Xaritada joylashuvning 4 ta varag'i, har biri alohida yotiq sahifada</small></span></button><button type="button" data-full="word"><svg class="ic pre" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12 M7 10l5 5 5-5 M5 21h14"/></svg><span><b>Batafsil hisobot (Word)</b><small>40–50 betlik .docx: joylashuv, aholi, transport, iqlim, xarajatlar, moliyalashtirish, ilovalar</small></span></button></div></details>
 
   </div>
   <div class="tots" id="tots"><div class="tb bud"><span>Byudjetdan jami</span><b id="t-bud">—</b><small>mln so'm</small></div><div class="tb inv"><span>Investordan jami</span><b id="t-inv">—</b><small>mln so'm</small></div><div class="tb all"><span>Jami qiymat</span><b id="t-all">—</b><small>mln so'm</small></div></div>
@@ -1143,7 +1146,7 @@ const LOTEXTRA=[["Avtoturargoh (1 joy)",'joy',4500000],["Kirish darvozasi",'dona
   const c={};LOTCAT.forEach((k,i)=>{c['B'+(1+i)]=[k.rate,6]});
   LOTSITE.forEach((k,i)=>{c['B'+(30+i)]=[k.rate,6]});
   M.sheets.push({name:'LotNarx',rows:40,cols:2,show:2,cells:c,merges:[],dv:[],cf:[],widths:{},hidden:[]});
-  M.sheets.push({name:'Xarita',rows:14,cols:2,show:2,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
+  M.sheets.push({name:'Xarita',rows:20,cols:2,show:2,cells:{},merges:[],dv:[],cf:[],widths:{},hidden:[]});
   /* number of lots: investor LOTs plus DXSH objects that carry a LOT number; typed by hand only when there are none */
   const J=M.sheets.find(s=>s.name==='Jamlama');J.cells.F12=[null,6];
   J.cells.C8=['=IF(COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79)>0,COUNTA(Lot!B5:B104)+COUNT(Bino!R60:R79),IF(F12="",0,F12))',6];
@@ -1215,7 +1218,7 @@ M.sheets.forEach(sh=>{sh.ed={};sh.dv.forEach(dv=>dv.ranges.forEach(r=>expand(r).
   const BN=SH.Bino;for(let r=3;r<=22;r++){BN.ed['A'+r]={t:'text'};BN.ed['B'+r]={t:'num'}}BN.ed.P1={t:'num'};BN.ed.P2={t:'num'};
   [[30,49],[60,79]].forEach(x=>{for(let r=x[0];r<=x[1];r++){BN.ed['A'+r]={t:'range',s:'Bino',r:'A3:A22'};BN.ed['B'+r]={t:'text'};'CDEFGJN'.split('').forEach(c=>{BN.ed[c+r]={t:'num'}})}});
   const LT=SH.Lot;LOTROWS_ED.forEach(r=>{'ACDEFGIKLNPQ'.split('').forEach(c=>{LT.ed[c+r]={t:'num'}});LT.ed['B'+r]={t:'text'};LT.ed['T'+r]={t:'text'};LT.ed['O'+r]={t:'list',v:LOTSTYLE};LT.ed['S'+r]={t:'list',v:LOTTRADE}});
-  SH.LotNom.ed.A1={t:'text'};['A1','A2','A3','A4','A5','A6','A7','A8','A9','A10','A11','A12','A13'].forEach(a=>{SH.Xarita.ed[a]={t:'text'}});for(let i=1;i<=11;i++)SH.LotNarx.ed['B'+i]={t:'num'};for(let i=30;i<=34;i++)SH.LotNarx.ed['B'+i]={t:'num'};
+  SH.LotNom.ed.A1={t:'text'};['A1','A2','A3','A4','A5','A6','A7','A8','A9','A10','A11','A12','A13','A14','A15','A16','A17'].forEach(a=>{SH.Xarita.ed[a]={t:'text'}});for(let i=1;i<=11;i++)SH.LotNarx.ed['B'+i]={t:'num'};for(let i=30;i<=34;i++)SH.LotNarx.ed['B'+i]={t:'num'};
   for(let r=60;r<=79;r++){BN.ed['R'+r]={t:'num'};BN.ed['T'+r]={t:'num'}}for(let r=30;r<=49;r++)BN.ed['T'+r]={t:'num'};
   const B=SH.Baza,kinds={E:{t:'num'},H:{t:'date'},F:{t:'list',v:['Sayt narxi','≈ Taxminiy']}};
   for(let r=5;r<=304;r++)for(const c of 'BCDEFGHJKLM'){const a=c+r;if(!isFormula(B,a))B.ed[a]=kinds[c]||{t:'text'}}
@@ -1249,7 +1252,7 @@ function applyOver(next){
   });
   over=next;
 }
-const BUILD_ID='1794684725';
+const BUILD_ID='1795370122';
 (function(){if(BUILD_ID.indexOf('BUILD')>=0||!/^https?:$/.test(location.protocol))return;
   fetch(location.pathname.replace(/[^/]*$/,'')+'version.txt?t='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():'').then(t=>{const v=(t.match(/\d{9,}/)||[])[0];
     if(!v||+v<=+BUILD_ID)return;let k=0;try{k=+sessionStorage.getItem('infra-upd')||0}catch(e){}
@@ -1965,14 +1968,14 @@ function pickIn(o){
 /* extra objects of a LOT (sheet Lot, column T) or of a building (sheet Bino, column AA with the sum kept in AB) */
 /* ===== pictures kept with a LOT, an object or the project logo: the cell holds only their keys, the pictures sit in the render store (PL) ===== */
 const imgList=(sheet,cell)=>{try{const a=JSON.parse(V(sheet,cell)||'null');return Array.isArray(a)?a.filter(z=>z&&z.k):[]}catch(e){return []}};
-async function imgAdd(sheet,cell,files,max){if(!files||!files.length)return;const list=imgList(sheet,cell);ui.imgMsg={c:sheet+cell,t:'Rasm tayyorlanmoqda…'};render();let where='local';
+async function imgAdd(sheet,cell,files,max,px){if(!files||!files.length)return;const list=imgList(sheet,cell);ui.imgMsg={c:sheet+cell,t:'Rasm tayyorlanmoqda…'};render();let where='local';
   try{for(const f of [...files]){if(!/^image\//.test(f.type))continue;if(list.length>=max){ui.imgMsg={c:sheet+cell,t:'Ko‘pi bilan '+max+' ta rasm qo‘yiladi.'};break}
-      const p=await plPrep(f,1800),k=cur+'-'+sheet.toLowerCase()+cell.toLowerCase()+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,4);
+      const p=await plPrep(f,px||1800),k=cur+'-'+sheet.toLowerCase()+cell.toLowerCase()+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,4);
       where=await PL.put(k,p.d);const im=new Image();await new Promise(ok=>{im.onload=ok;im.onerror=ok;im.src=p.d});PL.img[k]=im;list.push({k,w:p.w,h:p.h})}
     commit(sheet,cell,list.length?JSON.stringify(list):null);ui.imgMsg={c:sheet+cell,t:'✓ Yuklandi'+(where==='shared'?' va umumiy saqlashga yozildi.':' (shu brauzerda).')+' Loyihani «Saqlash» bilan saqlang.'}}
   catch(e){ui.imgMsg={c:sheet+cell,t:"Rasmni yuklab bo'lmadi. JPG yoki PNG fayl tanlang.",err:1}}render()}
-function imgEditor(sheet,cell,label,hint,max){const list=imgList(sheet,cell);list.forEach(z=>PL.need(z.k));
-  const f=h('input',{type:'file',accept:'image/*',multiple:'',style:'display:none',onchange:e=>{imgAdd(sheet,cell,e.target.files,max);e.target.value=''}});
+function imgEditor(sheet,cell,label,hint,max,px){const list=imgList(sheet,cell);list.forEach(z=>PL.need(z.k));
+  const f=h('input',{type:'file',accept:'image/*',multiple:'',style:'display:none',onchange:e=>{imgAdd(sheet,cell,e.target.files,max,px);e.target.value=''}});
   const msg=ui.imgMsg&&ui.imgMsg.c===sheet+cell?h('span',{class:'kmsg'+(ui.imgMsg.err?' err':'')},ui.imgMsg.t):null;
   return h('div',{class:'imged'},h('div',{class:'imghd'},h('b',null,icon('xarita',1),label),h('span',{class:'fine'},hint)),
     h('div',{class:'imgrow'},...list.map((z,i)=>h('figure',{class:'imgth'},PL.img[z.k]?h('img',{src:PL.img[z.k].src,alt:label+' '+(i+1)}):h('span',{class:'imgph'},'…'),
@@ -1980,6 +1983,33 @@ function imgEditor(sheet,cell,label,hint,max){const list=imgList(sheet,cell);lis
         h('button',{type:'button',class:'imgdel','aria-label':'Rasmni olib tashlash',onclick:()=>{const a=imgList(sheet,cell).filter(q=>q.k!==z.k);commit(sheet,cell,a.length?JSON.stringify(a):null);render()}},'×'),
         i>0?h('button',{type:'button',class:'imgmain',title:'Asosiy qilish',onclick:()=>{const a=imgList(sheet,cell),j=a.findIndex(q=>q.k===z.k);if(j>0){const [m]=a.splice(j,1);a.unshift(m);commit(sheet,cell,JSON.stringify(a));render()}}},'★'):null)),
       list.length<max?h('label',{class:'imgadd'},icon('plus',1),h('span',null,'Rasm qo‘shish'),f):null),msg)}
+/* ===== Master reja (MR) presentation: the facts only a person can give (cadastre number, borders, designer) and its pictures ===== */
+const mrText=()=>{try{const o=JSON.parse(V('Xarita','A14')||'null');return o&&typeof o==='object'?o:{}}catch(e){return {}}};
+const mrSet=(k,v)=>{const o=mrText();if(v)o[k]=v;else delete o[k];commit('Xarita','A14',Object.keys(o).length?JSON.stringify(o):null)};
+function mrFields(){const T=mrText();
+  const inp=(k,lab,ph,o)=>{o=o||{};const id='mr-'+k,el=o.area?h('textarea',{class:'pltext',id,rows:String(o.rows||3),placeholder:ph,onchange:e=>mrSet(k,e.target.value.trim())},T[k]||''):h('input',{class:'in',type:'text',id,value:T[k]||'',placeholder:ph,onchange:e=>mrSet(k,e.target.value.trim())});
+    return h('div',{class:'mrf'+(o.wide?' wide':'')},h('label',{for:id},lab),el,o.hint?h('small',{class:'fine'},o.hint):null)};
+  return h('details',{class:'pr mrbox',open:ui.mrOpen?'':null,ontoggle:e=>{ui.mrOpen=e.target.open}},
+    h('summary',null,icon('project',1),"Master reja (MR) taqdimoti uchun ma'lumotlar"),
+    h('p',{class:'fine'},"«Yuklab olish» → «Master reja (MR)» tugmasi A3 yotiq taqdimot tayyorlaydi. Bo‘sh qolgan maydonlar avtomatik to‘ldiriladi yoki taqdimotda chiqmaydi."),
+    h('div',{class:'mrgrid'},
+      inp('u','Yer uchastkasining unikal (kadastr) raqami','masalan: KA1712216043/3-3'),
+      inp('mfy','Mahalla (MFY) nomi','masalan: “Bulakrabot” MFY'),
+      inp('yol','Asosiy avtomobil yo‘li','masalan: M-37 “Samarqand – Navoiy – Buxoro” xalqaro yo‘li'),
+      inp('obj','Taklif etilayotgan obyektlar','bo‘sh qolsa: LOTlar va obyektlar nomidan',{hint:'Masalan: “Service area” yoki “Service point” yo‘lbo‘yi servis obyektlari'}),
+      inp('asos','Hujjat asosi','masalan: Vazirlar Mahkamasining 2022-yil 14-fevraldagi 71-son qarori'),
+      inp('t','Master rejaning to‘liq nomi','bo‘sh qolsa: viloyat, tuman, mahalla, raqam va maydondan tuziladi',{wide:1,area:1,rows:2}),
+      h('div',{class:'mrf wide'},h('label',null,'Hudud chegaralari'),h('div',{class:'mr4'},
+        ...[['sh','Shimolda'],['j','Janubda'],['sq','Sharqda'],['g','G‘arbda']].map(([k,l])=>h('label',{class:'mrside'},h('span',null,l),h('input',{class:'in',type:'text',value:T['c'+k]||'',placeholder:'masalan: bo‘sh yer maydoni',onchange:e=>mrSet('c'+k,e.target.value.trim())}))))),
+      inp('geo','Muhandislik-geologik sharoit','Har bir qator alohida. Masalan:\nGrunt: lyossimon qumloq, o‘rtacha zich\nYer osti suvlari: 5–15 m chuqurlikda',{wide:1,area:1,rows:4}),
+      inp('seys','Seysmiklik','masalan: 8 ball'),
+      inp('ink','Muhandislik infratuzilmasi haqida','bo‘sh qolsa: loyihadagi tarmoqlardan',{area:1,rows:2}),
+      inp('org','Loyihalovchi tashkilot','masalan: Smart Building Engineers'),
+      inp('tel','Telefonlar','masalan: +998 99 505 56 55'),
+      inp('web','Sayt yoki ijtimoiy tarmoq','masalan: @smartbuilding_official'),
+      h('div',{class:'mrf wide'},imgEditor('Xarita','A16','Bosh reja chizmasi',"Master reja (bosh plan) chizmasi — «Bosh reja» varag‘ida qaydnoma bilan chiqadi.",1,3200)),
+      h('div',{class:'mrf wide'},imgEditor('Xarita','A15','Umumiy ko‘rinish renderlari',"Har biri alohida to‘liq varaqda chiqadi (12 tagacha). Bo‘sh bo‘lsa, planshetdagi bosh render olinadi.",12,2800)),
+      h('div',{class:'mrf wide'},imgEditor('Xarita','A17','Lavhalar',"Bir varaqda 4 tadan chiqadi (16 tagacha).",16,1800))))}
 function extrasEditor(sheet,cell,sumCell,key){
   const list=()=>parseList(V(sheet,cell)),ex=extrasOf(list());
   const save=a=>{commit(sheet,cell,a.length?JSON.stringify(a):null);if(sumCell){const s=extrasOf(a).reduce((t,e)=>t+e.s,0);commit(sheet,sumCell,s||null)}};
@@ -2284,14 +2314,14 @@ const MAP=(function(){
     const pxPerKm=P.pxPerDegLat/111.32,km=niceKm((mb.w*0.18)/pxPerKm),len=km*pxPerKm,sx=mb.x+20*U,sy=H-46*U;
     ctx.fillStyle='#222';ctx.fillRect(sx,sy,len/2,8*U);ctx.strokeStyle='#222';ctx.lineWidth=1.5*U;ctx.strokeRect(sx,sy,len,8*U);
     ctx.font=(16*U)+'px '+FONT;ctx.textBaseline='bottom';ctx.textAlign='left';ctx.fillText('0',sx-4*U,sy-4*U);ctx.textAlign='center';ctx.fillText((km>=1?km:km*1000)+' '+(km>=1?'km':'m'),sx+len,sy-4*U)}
-  let NOSUB=false;
+  let NOSUB=false,PH=false;
   function frame(ctx,W,H,U,title,sub){if(NOSUB)sub=String(sub).replace(/^\d-rasm( · )?/,'');
     ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.fillStyle='#1a1a1a';ctx.textAlign='left';ctx.textBaseline='alphabetic';
     let fs=34*U;ctx.font='700 '+fs+'px '+FONT;while(ctx.measureText(title).width>W-72*U&&fs>18*U){fs-=1*U;ctx.font='700 '+fs+'px '+FONT}ctx.fillText(title,36*U,58*U);
     ctx.fillStyle='#555';ctx.font=(22*U)+'px '+FONT;ctx.fillText(sub,36*U,92*U);
     ctx.strokeStyle='#d0d0d0';ctx.lineWidth=1.5*U;ctx.beginPath();ctx.moveTo(36*U,112*U);ctx.lineTo(W-36*U,112*U);ctx.stroke();
     return {x:60*U,y:140*U,w:W-120*U,h:H-140*U-80*U}}
-  function placeholder(ctx,W,H,U,msg){ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.fillStyle='#9aa0a8';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=(26*U)+'px '+FONT;ctx.fillText(msg,W/2,H/2)}
+  function placeholder(ctx,W,H,U,msg){PH=true;ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);ctx.fillStyle='#9aa0a8';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=(26*U)+'px '+FONT;ctx.fillText(msg,W/2,H/2)}
   function render1(cv){const ctx=cv.getContext('2d'),W=cv.width,H=cv.height,U=W/1200,r=region();
     const fb=frame(ctx,W,H,U,r?"O'zbekiston Respublikasida "+r.name+' joylashuvi':"O'zbekiston Respublikasi",'1-rasm'),box={x:fb.x-20*U,y:fb.y,w:fb.w*0.58,h:fb.h},P=makeProj([UZB.country],W,H,r?box:fb);
     if(r)draw(ctx,r.geom,P,{fill:COL.fill});UZB.regions.forEach(x=>draw(ctx,x.geom,P,{stroke:COL.inner,width:1.1*U}));
@@ -3138,6 +3168,185 @@ const MAP=(function(){
       txt(ctx,(P.fl?nUz(P.fl)+' qavat · ':'')+nUz(P.fp,'#,##0')+' m²',bx+bw/2,by+bh/2,Math.min(14*U,bh*0.3),{al:'center',halo:false,col:'#fff',w:'800'})}
     if(P.pool){const pa=Math.sqrt(P.pool*sc*sc);ctx.fillStyle='#3fa9c9';rrect(ctx,px+16*U,py+16*U,Math.min(pa*1.4,pw*0.25),Math.min(pa/1.4,ph*0.25),6*U);ctx.fill()}
     txt(ctx,'Sxema (masshtabda) · LOT rasmi yuklanmagan',x+w/2,y+h-28*U,12.5*U,{al:'center',halo:false,col:'#7a8496',w:'700'})}
+  /* ===== Master reja (MR) presentation: A3 landscape pages, each drawn whole on a canvas ===== */
+  const MRC={NV:'#16294a',NV2:'#26457a',AC:'#c8893a',INK:'#1b2a44',MU:'#5d6a82',LN:'#dfe4ec',SOFT:'#eef2f8'};
+  function mrInfo(){const J='Jamlama',T=mrText(),r=region(),d=district(),k=kmz(),a=k?area(k):0,x=(()=>{try{return info()}catch(e){return null}})(),land=a||(x?x.land:0);
+    const ga=land?nUz(land/10000,'#,##0.###'):'',place=[r?r.name:'',d?d.name:'',T.mfy||''].filter(Boolean).join(', ');
+    const P=(()=>{try{return passportData()}catch(e){return []}})(),names=[...new Set(P.map(p=>p.name).concat(x?x.bud.map(b=>b.type):[]))];
+    const obj=T.obj||(names.length?names.slice(0,6).join(', ')+(names.length>6?' va boshqa obyektlar':''):'');
+    const proj=String(V(J,'C5')||'').trim(),kind=String(V(J,'F11')||'').trim();
+    const title=T.t||[place,T.yol?T.yol+' bo‘yida':'',T.u?T.u+' unikal raqamli':'',ga?'umumiy maydoni '+ga+' gektar yer uchastkasida':'hududida',
+      (obj||proj||'obyektlar')+(kind&&!obj?' ('+kind+')':'')+' barpo etish bo‘yicha master-reja ishlab chiqish'].filter(Boolean).join(' ');
+    const s=site();return {T,r,d,k,land,ga,place,obj,proj,kind,title,x,P,s}}
+  /* ---- drawing helpers ---- */
+  function mrPara(ctx,t,x,y,w,size,o){o=o||{};const lh=size*(o.lh||1.42),fnt=(o.w||'500')+' '+size+'px '+FONT;let n=0;
+    String(t||'').split(/\n/).forEach(p=>{if(o.max&&n>=o.max)return;const ls=clipLines(ctx,p.trim(),w,o.max?o.max-n:60,fnt);ls.forEach(l=>{txt(ctx,l,x,y,size,{halo:false,col:o.col||MRC.INK,w:o.w||'500',al:o.al,bl:'top'});y+=lh;n++})});return y}
+  function mrIcon(ctx,k,x,y,r,U,bg){ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fillStyle=bg||MRC.NV;ctx.fill();ctx.strokeStyle='#fff';ctx.fillStyle='#fff';ctx.lineWidth=r*0.11;ctx.lineJoin='round';ctx.lineCap='round';const s=r*0.5;ctx.beginPath();
+    if(k==='pin'){ctx.arc(x,y-s*0.25,s*0.55,Math.PI*0.8,Math.PI*2.2);ctx.lineTo(x,y+s*0.9);ctx.closePath();ctx.stroke();ctx.beginPath();ctx.arc(x,y-s*0.25,s*0.18,0,7);ctx.fill()}
+    else if(k==='area'){ctx.rect(x-s*0.75,y-s*0.75,s*1.5,s*1.5);ctx.stroke();txt(ctx,'m²',x,y+s*0.05,s*0.75,{al:'center',halo:false,col:'#fff',w:'800'})}
+    else if(k==='id'){ctx.rect(x-s*0.85,y-s*0.6,s*1.7,s*1.2);ctx.moveTo(x-s*0.5,y-s*0.15);ctx.lineTo(x+s*0.5,y-s*0.15);ctx.moveTo(x-s*0.5,y+s*0.2);ctx.lineTo(x+s*0.2,y+s*0.2);ctx.stroke()}
+    else if(k==='road'){ctx.moveTo(x-s*0.3,y-s*0.9);ctx.lineTo(x-s*0.8,y+s*0.9);ctx.moveTo(x+s*0.3,y-s*0.9);ctx.lineTo(x+s*0.8,y+s*0.9);ctx.moveTo(x,y-s*0.7);ctx.lineTo(x,y-s*0.35);ctx.moveTo(x,y-s*0.05);ctx.lineTo(x,y+s*0.3);ctx.moveTo(x,y+s*0.6);ctx.lineTo(x,y+s*0.9);ctx.stroke()}
+    else if(k==='coord'){ctx.arc(x,y,s*0.6,0,7);ctx.moveTo(x-s,y);ctx.lineTo(x+s,y);ctx.moveTo(x,y-s);ctx.lineTo(x,y+s);ctx.stroke()}
+    else if(k==='house'){ctx.moveTo(x-s*0.8,y);ctx.lineTo(x,y-s*0.8);ctx.lineTo(x+s*0.8,y);ctx.moveTo(x-s*0.55,y-s*0.2);ctx.lineTo(x-s*0.55,y+s*0.75);ctx.lineTo(x+s*0.55,y+s*0.75);ctx.lineTo(x+s*0.55,y-s*0.2);ctx.stroke();ctx.fillRect(x-s*0.15,y+s*0.25,s*0.3,s*0.5)}
+    else if(k==='doc'){ctx.moveTo(x-s*0.6,y-s*0.85);ctx.lineTo(x+s*0.3,y-s*0.85);ctx.lineTo(x+s*0.6,y-s*0.55);ctx.lineTo(x+s*0.6,y+s*0.85);ctx.lineTo(x-s*0.6,y+s*0.85);ctx.closePath();[-0.3,0,0.3].forEach(q=>{ctx.moveTo(x-s*0.35,y+s*q);ctx.lineTo(x+s*0.35,y+s*q)});ctx.stroke()}
+    else if(k==='gear'){ctx.arc(x,y,s*0.45,0,7);for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.moveTo(x+Math.cos(a)*s*0.6,y+Math.sin(a)*s*0.6);ctx.lineTo(x+Math.cos(a)*s*0.9,y+Math.sin(a)*s*0.9)}ctx.stroke()}
+    else if(k==='target'){ctx.arc(x,y,s*0.8,0,7);ctx.stroke();ctx.beginPath();ctx.arc(x,y,s*0.4,0,7);ctx.stroke();ctx.beginPath();ctx.arc(x,y,s*0.12,0,7);ctx.fill()}
+    else if(k==='check'){ctx.moveTo(x-s*0.6,y);ctx.lineTo(x-s*0.15,y+s*0.45);ctx.lineTo(x+s*0.65,y-s*0.45);ctx.stroke()}
+    else if(k==='sun'){ctx.arc(x,y,s*0.4,0,7);ctx.stroke();for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.moveTo(x+Math.cos(a)*s*0.6,y+Math.sin(a)*s*0.6);ctx.lineTo(x+Math.cos(a)*s*0.9,y+Math.sin(a)*s*0.9)}ctx.stroke()}
+    else if(k==='drop'){ctx.moveTo(x,y-s*0.9);ctx.quadraticCurveTo(x+s*0.75,y+s*0.05,x+s*0.5,y+s*0.5);ctx.arc(x,y+s*0.3,s*0.55,0.4,Math.PI-0.4);ctx.quadraticCurveTo(x-s*0.75,y+s*0.05,x,y-s*0.9);ctx.stroke()}
+    else if(k==='wind'){[-0.4,0,0.4].forEach((q,i)=>{ctx.moveTo(x-s*0.8,y+s*q);ctx.lineTo(x+s*(0.4-i*0.15),y+s*q)});ctx.stroke()}
+    else if(k==='quake'){ctx.moveTo(x-s*0.9,y);ctx.lineTo(x-s*0.5,y);ctx.lineTo(x-s*0.3,y-s*0.6);ctx.lineTo(x,y+s*0.6);ctx.lineTo(x+s*0.25,y-s*0.3);ctx.lineTo(x+s*0.45,y);ctx.lineTo(x+s*0.9,y);ctx.stroke()}}
+  function mrLogo(ctx,x,y,sz,U,dark){const lg=imgList('Xarita','A13')[0],li=lg&&PL.img[lg.k];
+    if(li){rrect(ctx,x,y,sz,sz,sz*0.16);ctx.fillStyle='#fff';ctx.fill();const sc=Math.min(sz*0.84/li.naturalWidth,sz*0.84/li.naturalHeight);ctx.drawImage(li,x+(sz-li.naturalWidth*sc)/2,y+(sz-li.naturalHeight*sc)/2,li.naturalWidth*sc,li.naturalHeight*sc);return}
+    const ex=x+sz/2,ey=y+sz/2,c=dark?MRC.NV:'#fff',q=sz/90;ctx.strokeStyle=c;ctx.lineWidth=3*q;ctx.lineJoin='round';ctx.beginPath();ctx.arc(ex,ey,sz*0.46,0,7);ctx.stroke();ctx.beginPath();
+    ctx.moveTo(ex-22*q,ey+14*q);ctx.lineTo(ex-22*q,ey-4*q);ctx.lineTo(ex-7*q,ey-17*q);ctx.lineTo(ex+8*q,ey-4*q);ctx.lineTo(ex+8*q,ey+14*q);ctx.moveTo(ex+8*q,ey-4*q);ctx.lineTo(ex+16*q,ey-11*q);ctx.lineTo(ex+24*q,ey-4*q);ctx.lineTo(ex+24*q,ey+14*q);ctx.moveTo(ex-27*q,ey+14*q);ctx.lineTo(ex+29*q,ey+14*q);ctx.stroke()}
+  /* header with the section title, footer with the page number */
+  function mrChrome(ctx,W,H,U,title,no){ctx.fillStyle='#fff';ctx.fillRect(0,0,W,H);
+    ctx.fillStyle=MRC.NV;ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(250*U,0);ctx.lineTo(205*U,96*U);ctx.lineTo(0,96*U);ctx.closePath();ctx.fill();
+    ctx.fillStyle=MRC.AC;ctx.beginPath();ctx.moveTo(250*U,0);ctx.lineTo(262*U,0);ctx.lineTo(217*U,96*U);ctx.lineTo(205*U,96*U);ctx.closePath();ctx.fill();
+    mrLogo(ctx,40*U,14*U,68*U,U,false);txt(ctx,'MASTER REJA',122*U,48*U,13*U,{halo:false,col:'#fff',w:'800'});
+    txt(ctx,String(title).toUpperCase(),262*U,42*U,30*U,{halo:false,col:MRC.NV,w:'800'});
+    ctx.fillStyle=MRC.NV;ctx.fillRect(250*U,74*U,W-310*U,2.5*U);for(let i=0;i<4;i++){ctx.save();ctx.translate(W-56*U-i*14*U,75*U);ctx.transform(1,0,-0.4,1,0,0);ctx.fillStyle=i%2?MRC.NV:MRC.AC;ctx.fillRect(-4*U,-7*U,8*U,14*U);ctx.restore()}
+    const fy=H-42*U;ctx.fillStyle=MRC.NV;ctx.fillRect(0,fy,W,42*U);ctx.fillStyle=MRC.AC;ctx.fillRect(0,fy,W,2.5*U);
+    txt(ctx,'Master reja',40*U,fy+22*U,17*U,{halo:false,col:'#fff',w:'800'});
+    ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(W-150*U,fy+42*U);ctx.lineTo(W-120*U,fy+2.5*U);ctx.lineTo(W,fy+2.5*U);ctx.lineTo(W,fy+42*U);ctx.closePath();ctx.fill();
+    txt(ctx,String(no),W-50*U,fy+22*U,19*U,{al:'center',halo:false,col:MRC.NV,w:'800'})}
+  const mrBox=(W,H,U)=>({x:40*U,y:112*U,w:W-80*U,h:H-112*U-58*U});
+  function mrCover(ctx,im,x,y,w,h,rad){ctx.save();if(rad){rrect(ctx,x,y,w,h,rad);ctx.clip()}else{ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip()}const s=Math.max(w/im.naturalWidth,h/im.naturalHeight);ctx.drawImage(im,x+(w-im.naturalWidth*s)/2,y+(h-im.naturalHeight*s)/2,im.naturalWidth*s,im.naturalHeight*s);ctx.restore()}
+  /* a map sheet drawn into the content box, keeping its own proportions */
+  function mrSheet(ctx,fn,b,U){const r=1.4142;let w=b.w,h=w/r;if(h>b.h){h=b.h;w=h*r}const c=document.createElement('canvas');c.width=Math.round(w);c.height=Math.round(h);PH=false;NOSUB=true;try{fn(c)}finally{NOSUB=false}if(PH)return false;
+    const x=b.x+(b.w-w)/2,y=b.y+(b.h-h)/2;ctx.save();ctx.shadowColor='rgba(20,40,80,0.12)';ctx.shadowBlur=18*U;ctx.fillStyle='#fff';ctx.fillRect(x,y,w,h);ctx.restore();ctx.drawImage(c,x,y);ctx.strokeStyle=MRC.LN;ctx.lineWidth=1*U;ctx.strokeRect(x,y,w,h);return true}
+  const mrMainRender=()=>{const g=imgList('Xarita','A15').map(z=>PL.img[z.k]).filter(Boolean);if(g.length)return g[0];const m=plMeta();return m.m&&PL.img[m.m.k]||null};
+  /* ---- the pages ---- */
+  function mrPlan(){const I=mrInfo(),pages=[];const add=(t,draw,o)=>pages.push(Object.assign({t,draw},o||{}));
+    /* 1. cover */
+    add('Muqova',(ctx,W,H,U)=>{const im=mrMainRender();
+      if(im)mrCover(ctx,im,0,0,W,H,0);else{const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,MRC.NV);g.addColorStop(1,'#2c4f86');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=1*U;for(let gx=0;gx<W;gx+=40*U){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke()}for(let gy=0;gy<H;gy+=40*U){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke()}}
+      const g=ctx.createLinearGradient(0,0,W,0);g.addColorStop(0,'rgba(10,22,45,0.92)');g.addColorStop(0.5,'rgba(10,22,45,0.6)');g.addColorStop(1,'rgba(10,22,45,0.08)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+      mrLogo(ctx,90*U,80*U,120*U,U,false);if(I.T.org)txt(ctx,I.T.org.toUpperCase(),90*U,232*U,15*U,{halo:false,col:'#fff',w:'800'});
+      txt(ctx,'MASTER REJA',84*U,440*U,150*U,{halo:false,col:'#fff',w:'800'});ctx.fillStyle=MRC.AC;ctx.fillRect(92*U,530*U,120*U,5*U);
+      mrPara(ctx,I.title,92*U,560*U,860*U,23*U,{col:'#eef2f8',lh:1.45,max:8});
+      const by=H-82*U;ctx.fillStyle='rgba(10,22,45,0.78)';ctx.fillRect(0,by,W,82*U);ctx.fillStyle=MRC.AC;ctx.fillRect(0,by,W,3*U);
+      let cx=92*U;[['phone',I.T.tel],['house',I.T.org],['target',I.T.web]].filter(z=>z[1]).forEach(([k,t])=>{mrIcon(ctx,k==='phone'?'doc':k,cx+16*U,by+42*U,16*U,U,MRC.AC);txt(ctx,t,cx+42*U,by+42*U,17*U,{halo:false,col:'#fff',w:'600'});ctx.font='600 '+(17*U)+'px '+FONT;cx+=ctx.measureText(t).width+110*U});
+      const d=new Date();txt(ctx,String(d.getFullYear())+'-yil',W-80*U,by+42*U,17*U,{al:'right',halo:false,col:'#fff',w:'700'})},{cover:1});
+    /* 2. preface */
+    add('Muqaddima',(ctx,W,H,U)=>{const b=mrBox(W,H,U),cw=(b.w-40*U)/2;
+      const pill=(t,x,y)=>{ctx.font='800 '+(17*U)+'px '+FONT;const w=ctx.measureText(t).width+70*U;rrect(ctx,x,y,w,40*U,20*U);ctx.fillStyle=MRC.NV;ctx.fill();mrIcon(ctx,'target',x+20*U,y+20*U,14*U,U,MRC.AC);txt(ctx,t,x+42*U,y+20*U,17*U,{halo:false,col:'#fff',w:'800'});return y+58*U};
+      rrect(ctx,b.x,b.y,cw,b.h,16*U);ctx.fillStyle=MRC.SOFT;ctx.fill();let y=pill('MAQSAD',b.x+24*U,b.y+22*U);
+      y=mrPara(ctx,'HUDUD: '+(I.place||'—'),b.x+30*U,y,cw-60*U,16*U,{w:'700'});y=mrPara(ctx,'MAQSAD: '+(I.obj||I.proj||'master reja hududida obyektlarni')+' joylashtirish.',b.x+30*U,y+4*U,cw-60*U,16*U,{w:'700'})+18*U;
+      txt(ctx,'MASTER REJANING OLIY MAQSADI:',b.x+30*U,y,16*U,{halo:false,col:MRC.NV,w:'800',bl:'top'});y+=34*U;
+      ['Hududda xizmat ko‘rsatish va ishlab chiqarish obyektlari faoliyatini yo‘lga qo‘yish.','Hududda ijtimoiy-iqtisodiy barqarorlikni ta’minlash va rivojlantirish.'].forEach(t=>{mrIcon(ctx,'check',b.x+48*U,y+12*U,15*U,U);y=Math.max(mrPara(ctx,t,b.x+76*U,y,cw-110*U,15.5*U),y+30*U)+8*U});
+      y=pill('VAZIFALAR',b.x+24*U,y+14*U);
+      ['Milliy rivojlanish ustuvorliklarini amalga oshirish.','Barqaror iqtisodiy o‘sish sur’atlarini ta’minlash.','Hudud muhiti sifatini yaxshilash asosida aholining hayot sifatini barqaror rivojlantirish.','Hududning raqobatbardoshligini va investitsion jozibadorligini oshirish.'].forEach(t=>{mrIcon(ctx,'check',b.x+48*U,y+12*U,15*U,U);y=Math.max(mrPara(ctx,t,b.x+76*U,y,cw-110*U,15.5*U),y+30*U)+10*U});
+      const rx=b.x+cw+40*U;rrect(ctx,rx,b.y,cw,b.h,16*U);ctx.strokeStyle=MRC.LN;ctx.lineWidth=1.5*U;ctx.stroke();y=pill('MASTER REJA HAQIDA',rx+24*U,b.y+22*U);
+      y=mrPara(ctx,'MASTER-REJA — hududni strategik asosda hajmiy-fazoviy rejalashtirishni belgilovchi hujjat. U konseptualligi va mutanosibligi bilan ajralib turadi.',rx+30*U,y,cw-60*U,15.5*U)+14*U;
+      txt(ctx,'HUDUDNI IJTIMOIY-IQTISODIY RIVOJLANTIRISH STRATEGIYASI',rx+30*U,y,15*U,{halo:false,col:MRC.NV,w:'800',bl:'top'});y+=28*U;
+      y=mrPara(ctx,'Hududni rivojlantirishning maqsadlari, vazifalari va dasturlarini belgilaydi. Master-reja hududning jozibadorligini oshirishga, shu jumladan shaharsozlik siyosatini amalga oshirishga xizmat qiladi.',rx+30*U,y,cw-60*U,15.5*U)+14*U;
+      y=mrPara(ctx,'Master-reja quyidagilar uchun vosita bo‘lib xizmat qiladi:',rx+30*U,y,cw-60*U,15.5*U,{w:'700'})+4*U;
+      ['muvofiqlashtirish vositasi;','tarmoqlararo va fanlararo yondashuv vositasi;','investitsiyalarni jalb qilish vositasi;','marketing vositasi;','joylashtirishni aniqlash vositasi.'].forEach(t=>{ctx.fillStyle=MRC.AC;ctx.fillRect(rx+34*U,y+8*U,8*U,8*U);y=mrPara(ctx,t,rx+52*U,y,cw-90*U,15.5*U)+2*U});
+      mrPara(ctx,'Master-reja hududning rejalashtirish tuzilishini, funksional zonalarini, obyektlarni joylashtirishni (xizmat ko‘rsatish markazlari, transport aloqalari, muhandislik tarmoqlari) hamda hududni rivojlantirishning texnik-iqtisodiy ko‘rsatkichlarini o‘z ichiga oladi.',rx+30*U,y+12*U,cw-60*U,15.5*U)},{toc:1});
+    /* 3. contents (filled in once every page is known) */
+    add('Mundarija',null,{toc:0,contents:1});
+    /* 4. introduction */
+    add('Kirish',(ctx,W,H,U)=>{const b=mrBox(W,H,U),lw=b.w*0.66,rx=b.x+lw+30*U,rw=b.w-lw-30*U;let y=b.y+6*U;
+      const sec=(ic,t,body)=>{mrIcon(ctx,ic,b.x+30*U,y+30*U,28*U,U);txt(ctx,t,b.x+76*U,y+4*U,19*U,{halo:false,col:MRC.NV,w:'800',bl:'top'});y=Math.max(mrPara(ctx,body,b.x+76*U,y+32*U,lw-90*U,15*U,{max:4}),y+70*U)+30*U};
+      sec('doc','LOYIHA HAQIDA',(I.T.asos?'Master reja '+I.T.asos+' asosida ishlab chiqilgan. ':'')+(I.proj?'«'+I.proj+'»'+(I.kind?' — '+I.kind:'')+'. ':'')+(I.ga?'Umumiy maydoni '+I.ga+' gektar.':''));
+      sec('pin','JOYLASHUV',(I.place||'Joylashuv kiritilmagan')+(I.T.yol?', '+I.T.yol+' bo‘yida':'')+'.');
+      const B=budgetItems(),nets=B?B.items.map(i=>i.name.toLowerCase()):[];
+      sec('gear','MUHANDISLIK INFRATUZILMASI',I.T.ink||(nets.length?'Master reja bo‘yicha hududni '+nets.join(', ')+' tarmoqlari bilan ta’minlash loyihalangan; ular byudjet hisobidan amalga oshiriladi.':'Loyiha hududi atrofidagi aholi punkti infratuzilmasi rivojlanganligini hisobga olib, obyektni elektr, ichimlik suvi va aloqa tarmoqlariga ulash uchun texnik shartlar olish imkoniyati mavjud.'));
+      sec('house','TAKLIF ETILAYOTGAN OBYEKTLAR',(I.T.u?I.T.u+' unikal raqamli ':'')+(I.ga?I.ga+' ga yer uchastkasida ':'')+(I.obj||'obyektlar')+' joylashtirish taklif etiladi.');
+      txt(ctx,'AMALIYOTGA TATBIQ ETILADIGAN BOSQICHLAR',b.x,y+4*U,19*U,{halo:false,col:MRC.NV,w:'800',bl:'top'});y+=40*U;
+      const sw=(lw-24*U)/2,sh=Math.min(150*U,b.y+b.h-y);[['YER UCHASTKASINI RASMIYLASHTIRISH','Master reja asosida yer maydonini xarid qilgan tadbirkor yerga egalik huquqini o‘z nomiga rasmiylashtiradi.'],['LOYIHALASH VA QURILISH ISHLARI','Ishlab chiqilgan master reja asosida loyiha-smeta hujjatlari tayyorlanadi va qurilish ishlari olib boriladi.']].forEach(([t,s],i)=>{const x=b.x+i*(sw+24*U);
+        rrect(ctx,x,y,sw,sh,14*U);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=MRC.LN;ctx.lineWidth=1.5*U;ctx.stroke();ctx.save();rrect(ctx,x,y,sw,sh,14*U);ctx.clip();ctx.fillStyle=MRC.NV;ctx.fillRect(x,y,96*U,sh);ctx.restore();
+        txt(ctx,(i+1)+'-',x+48*U,y+sh/2-12*U,34*U,{al:'center',halo:false,col:'#fff',w:'800'});txt(ctx,'BOSQICH',x+48*U,y+sh/2+22*U,12*U,{al:'center',halo:false,col:MRC.AC,w:'800'});
+        txt(ctx,t,x+116*U,y+20*U,14.5*U,{halo:false,col:MRC.NV,w:'800',bl:'top'});mrPara(ctx,s,x+116*U,y+48*U,sw-136*U,14*U,{max:4})});
+      /* key facts and borders */
+      const ph=Math.min(520*U,b.h*0.62);rrect(ctx,rx,b.y,rw,ph,16*U);ctx.fillStyle=MRC.SOFT;ctx.fill();txt(ctx,'ASOSIY MA’LUMOTLAR',rx+24*U,b.y+30*U,16*U,{halo:false,col:MRC.NV,w:'800'});
+      const facts=[['pin','Joylashuv',I.place||'—'],['id','Yer uchastkasining unikal raqami',I.T.u||'—'],['area','Maydoni',I.ga?I.ga+' ga':'—'],['road','Yo‘l',I.T.yol||'—'],['house','Taklif etilayotgan obyekt',I.obj||'—']];
+      let fy=b.y+62*U;const fh=(ph-74*U)/facts.length;facts.forEach(([ic,l,v],i)=>{mrIcon(ctx,ic,rx+44*U,fy+fh/2,22*U,U);txt(ctx,l,rx+80*U,fy+fh/2-18*U,14*U,{halo:false,col:MRC.INK,w:'800',bl:'top'});mrPara(ctx,v,rx+80*U,fy+fh/2+2*U,rw-100*U,12.5*U,{col:MRC.MU,max:2});
+        if(i<facts.length-1){ctx.strokeStyle='#cfd7e4';ctx.lineWidth=1*U;ctx.beginPath();ctx.moveTo(rx+24*U,fy+fh);ctx.lineTo(rx+rw-24*U,fy+fh);ctx.stroke()}fy+=fh});
+      const C4=[['Shimolda',I.T.csh],['Janubda',I.T.cj],['Sharqda',I.T.csq],['G‘arbda',I.T.cg]];if(C4.some(z=>z[1])){let ty=b.y+ph+26*U;txt(ctx,'HUDUD CHEGARALARI',rx+rw,ty,19*U,{al:'right',halo:false,col:MRC.NV,w:'800',bl:'top'});ty+=36*U;
+        const rh=Math.min(40*U,(b.y+b.h-ty)/5);ctx.fillStyle=MRC.NV;ctx.fillRect(rx,ty,rw,rh);txt(ctx,'YO‘NALISH',rx+rw*0.22,ty+rh/2,13*U,{al:'center',halo:false,col:'#fff',w:'800'});txt(ctx,'CHEGARA',rx+rw*0.66,ty+rh/2,13*U,{al:'center',halo:false,col:'#fff',w:'800'});ty+=rh;
+        C4.forEach(([a,v],i)=>{ctx.fillStyle=i%2?'#fff':MRC.SOFT;ctx.fillRect(rx,ty,rw,rh);txt(ctx,a,rx+rw*0.22,ty+rh/2,13*U,{al:'center',halo:false,col:MRC.INK,w:'600'});txt(ctx,clipLines(ctx,v||'—',rw*0.52,1,'500 '+(13*U)+'px '+FONT)[0],rx+rw*0.66,ty+rh/2,13*U,{al:'center',halo:false,col:MRC.INK,w:'500'});ty+=rh})}},{toc:1});
+    /* 5. natural conditions */
+    add('Tabiiy shart-sharoitlar',(ctx,W,H,U)=>{const b=mrBox(W,H,U),C=climate(),cw=(b.w-48*U)/3;const MN=['Yanvar','Fevral','Mart','Aprel','May','Iyun','Iyul','Avgust','Sentabr','Oktabr','Noyabr','Dekabr'];
+      const head=(t,x,y,ic)=>{mrIcon(ctx,ic,x+18*U,y+18*U,18*U,U);txt(ctx,t,x+46*U,y+18*U,16*U,{halo:false,col:MRC.NV,w:'800'});return y+46*U};
+      let y=head('IQLIM TAVSIFI',b.x,b.y,'sun');
+      if(C){y=mrPara(ctx,C.y0+'–'+C.y1+' yillar ma’lumotiga ko‘ra o‘rtacha yillik harorat '+nUz(C.yr.t,'#,##0.0')+' °C, yillik yog‘in '+nUz(C.yr.p,'#,##0')+' mm, quyoshli vaqt yiliga '+nUz(C.yr.sun,'#,##0')+' soat. Yiliga o‘rtacha '+nUz(C.hot,'#,##0')+' kun harorat 35 °C dan oshadi, '+nUz(C.frost,'#,##0')+' kun sovuq bo‘ladi.',b.x,y,cw,14*U)+14*U;
+        const cols=[['Oy',0.3],['Eng yuqori',0.24],['Eng past',0.24],['Yog‘in',0.22]],rh=Math.min(30*U,(b.y+b.h-y)/14);ctx.fillStyle=MRC.NV;ctx.fillRect(b.x,y,cw,rh);let cx=b.x;cols.forEach(([t,w],i)=>{txt(ctx,t,i?cx+w*cw-8*U:cx+8*U,y+rh/2,12*U,{al:i?'right':'left',halo:false,col:'#fff',w:'800'});cx+=w*cw});y+=rh;
+        C.m.forEach((o,k)=>{ctx.fillStyle=k%2?'#fff':MRC.SOFT;ctx.fillRect(b.x,y,cw,rh);let cx=b.x;[MN[k],nUz(o.tx,'#,##0.0')+' °C',nUz(o.tn,'#,##0.0')+' °C',nUz(o.p,'#,##0')+' mm'].forEach((t,i)=>{txt(ctx,t,i?cx+cols[i][1]*cw-8*U:cx+8*U,y+rh/2,12*U,{al:i?'right':'left',halo:false,col:MRC.INK,w:i?'500':'600'});cx+=cols[i][1]*cw});y+=rh});
+        ctx.fillStyle='#fdf1de';ctx.fillRect(b.x,y,cw,rh);txt(ctx,'Yil: o‘rtacha '+nUz(C.yr.t,'#,##0.0')+' °C, yog‘in '+nUz(C.yr.p,'#,##0')+' mm',b.x+8*U,y+rh/2,12*U,{halo:false,col:'#8a4406',w:'800'})}
+      else mrPara(ctx,'Iqlim ma’lumoti hali olinmagan: «Xaritada joylashuv» bo‘limida «Ob-havo ma’lumotini olish» tugmasini bosing.',b.x,y,cw,14*U,{col:MRC.MU});
+      /* middle: key figures and the wind rose */
+      const mx=b.x+cw+24*U;y=head('ASOSIY OB-HAVO KO‘RSATKICHLARI',mx,b.y,'drop');
+      if(C){const tiles=[['O‘rtacha yillik harorat',nUz(C.yr.t,'#,##0.0')+' °C'],['Yillik yog‘in',nUz(C.yr.p,'#,##0')+' mm'],['Eng yuqori harorat',nUz(C.ext.max[0],'#,##0.0')+' °C'],['Eng past harorat',nUz(C.ext.min[0],'#,##0.0')+' °C'],['Quyoshli soatlar',nUz(C.yr.sun,'#,##0')+' soat'],['Issiq kunlar (35 °C+)',nUz(C.hot,'#,##0')+' kun']];
+        const tw=(cw-14*U)/2,th=78*U;tiles.forEach(([l,v],i)=>{const x=mx+(i%2)*(tw+14*U),yy=y+Math.floor(i/2)*(th+12*U);rrect(ctx,x,yy,tw,th,12*U);ctx.fillStyle=MRC.SOFT;ctx.fill();ctx.fillStyle=MRC.AC;ctx.fillRect(x+14*U,yy+14*U,24*U,3*U);txt(ctx,l,x+14*U,yy+32*U,12*U,{halo:false,col:MRC.MU,w:'700'});txt(ctx,v,x+14*U,yy+58*U,22*U,{halo:false,col:MRC.NV,w:'800'})});y+=3*(th+12*U)+10*U;
+        y=head('SHAMOL YO‘NALISHI',mx,y,'wind');const R=Math.min(cw*0.32,(b.y+b.h-y)/2-28*U),cx=mx+cw/2,cy=y+R+18*U,mxv=Math.max(...C.w8,1);
+        ctx.strokeStyle='#cfd7e4';ctx.lineWidth=1*U;[0.33,0.66,1].forEach(q=>{ctx.beginPath();ctx.arc(cx,cy,R*q,0,7);ctx.stroke()});
+        ctx.beginPath();C.w8.forEach((v,i)=>{const a=-Math.PI/2+i*Math.PI/4,rr=R*v/mxv;i?ctx.lineTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr):ctx.moveTo(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr)});ctx.closePath();ctx.fillStyle='rgba(38,69,122,0.35)';ctx.fill();ctx.strokeStyle=MRC.NV2;ctx.lineWidth=2*U;ctx.stroke();
+        ['Sh','ShSh','Sh','JSh','J','JG‘','G‘','ShG‘'].forEach((t,i)=>{const a=-Math.PI/2+i*Math.PI/4;txt(ctx,['Sh','ShSq','Sq','JSq','J','JG‘','G‘','ShG‘'][i],cx+Math.cos(a)*(R+16*U),cy+Math.sin(a)*(R+16*U),11*U,{al:'center',halo:false,col:MRC.MU,w:'700'})});
+        const dom=['shimol','shimoli-sharq','sharq','janubi-sharq','janub','janubi-g‘arb','g‘arb','shimoli-g‘arb'][C.w8.indexOf(mxv)];txt(ctx,'Asosiy yo‘nalish: '+dom+(C.ws!=null?' · '+nUz(C.ws,'#,##0.0')+' m/s':''),cx,cy+R+40*U,13*U,{al:'center',halo:false,col:MRC.INK,w:'700'})}
+      /* right: ground and earthquakes */
+      const gx=b.x+2*(cw+24*U);y=head('MUHANDISLIK-GEOLOGIK SHAROIT',gx,b.y,'gear');
+      const geo=I.T.geo||'Muhandislik-geologik qidiruv ishlari loyiha-smeta bosqichida bajariladi. Grunt tavsifi, yer osti suvlari sathi va gruntning yuk ko‘tarish qobiliyati qidiruv natijalari bo‘yicha aniqlanadi.';
+      String(geo).split(/\n+/).filter(Boolean).forEach(l=>{mrIcon(ctx,'check',gx+12*U,y+10*U,11*U,U,MRC.NV2);y=mrPara(ctx,l,gx+32*U,y,cw-32*U,13.5*U)+8*U});
+      y=head('SEYSMIKLIK',gx,y+10*U,'quake');y=mrPara(ctx,I.T.seys?'Hudud '+I.T.seys+' seysmik zonada joylashgan. Loyihalash ishlari amaldagi qurilish me’yorlari va seysmik talablarga muvofiq bajarilishi lozim.':'Seysmiklik darajasi kiritilmagan. Loyihalash amaldagi qurilish me’yorlari va seysmik talablarga muvofiq bajariladi.',gx,y,cw,13.5*U)+16*U;
+      const sun=sunInfo();if(sun&&y<b.y+b.h-150*U){y=head('QUYOSH (INSOLYATSIYA)',gx,y,'sun');sun.forEach(z=>{if(y>b.y+b.h-22*U)return;txt(ctx,z.t,gx,y+10*U,12.5*U,{halo:false,col:MRC.INK,w:'600'});txt(ctx,z.rise+' – '+z.set+' · '+z.len,gx+cw,y+10*U,12.5*U,{al:'right',halo:false,col:MRC.NV,w:'700'});y+=26*U})}},{toc:1});
+    /* 6. location */
+    add('Loyiha hududi joylashuvi',(ctx,W,H,U)=>{const b=mrBox(W,H,U),lw=b.w*0.66;mrSheet(ctx,RENDER[2],{x:b.x,y:b.y,w:lw,h:b.h},U);
+      const rx=b.x+lw+30*U,rw=b.w-lw-30*U,c=I.s;const dms=(v,p,n)=>{const a=Math.abs(v),d=Math.floor(a),m=Math.floor((a-d)*60),s=((a-d)*60-m)*60;return d+'°'+String(m).padStart(2,'0')+'′'+s.toFixed(1).replace('.',',')+'″ '+(v>=0?p:n)};
+      const facts=[['pin','Hududiy joylashuv',I.place||'—'],['area','Yer maydoni',I.ga?I.ga+' gektar':'—'],['id','Unikal raqami',I.T.u||'—'],['road','Asosiy avtomobil yo‘li',I.T.yol||'—'],['coord','Koordinatalar',c?dms(c[1],'Sh','J')+'\n'+dms(c[0],'Sq','G‘'):'—']];
+      let y=b.y;const fh=Math.min(92*U,b.h*0.55/facts.length);facts.forEach(([ic,l,v])=>{mrIcon(ctx,ic,rx+24*U,y+fh/2,22*U,U);txt(ctx,l,rx+58*U,y+fh/2-20*U,15*U,{halo:false,col:MRC.NV,w:'800',bl:'top'});mrPara(ctx,v,rx+58*U,y+fh/2+2*U,rw-60*U,13*U,{col:MRC.INK,w:'600',max:2});
+        ctx.strokeStyle=MRC.LN;ctx.lineWidth=1*U;ctx.beginPath();ctx.moveTo(rx+58*U,y+fh-2*U);ctx.lineTo(rx+rw,y+fh-2*U);ctx.stroke();y+=fh});
+      const th=(b.y+b.h-y-30*U)/2;[[RENDER[0],'O‘zbekiston Respublikasi'],[RENDER[1],r0(I.r)]].forEach(([fn,cap],i)=>{const yy=y+14*U+i*(th+16*U);if(th>60*U){mrSheet(ctx,fn,{x:rx,y:yy,w:rw,h:th-4*U},U)}});
+      function r0(r){return r?r.name:''}},{toc:1});
+    /* 7… map sheets that have data */
+    [['Hudud o‘lchamlari va quyosh yo‘li',RENDER[3]],['Hudud relyefi',render5],['Masofaviy ko‘rsatkichlar',render9],['Temiryo‘l va havo yo‘li',render8],['Ijtimoiy-demografik tavsif',render7],['Muhandislik infratuzilmasi',render10],['Qurilish sohasiga ta’sir',render11],['Aholi soniga ta’sir',render12]].forEach(([t,fn])=>{
+      if(!fn)return;const probe=document.createElement('canvas');probe.width=240;probe.height=170;PH=false;try{NOSUB=true;fn(probe)}catch(e){PH=true}finally{NOSUB=false}if(PH)return;
+      add(t,(ctx,W,H,U)=>{mrSheet(ctx,fn,mrBox(W,H,U),U)},{toc:1})});
+    /* bosh reja with its key */
+    add('Bosh reja',(ctx,W,H,U)=>{const b=mrBox(W,H,U);let y=mrPara(ctx,I.title,b.x+b.w*0.08,b.y-6*U,b.w*0.84,15*U,{w:'800',al:'center',max:3,col:MRC.INK});
+      const bh=b.y+b.h-y-10*U,lw=b.w*0.7,pl=imgList('Xarita','A16')[0],pi=pl&&PL.img[pl.k];
+      if(pi){const s=Math.min(lw/pi.naturalWidth,bh/pi.naturalHeight),iw=pi.naturalWidth*s,ih=pi.naturalHeight*s;ctx.drawImage(pi,b.x+(lw-iw)/2,y+6*U+(bh-ih)/2,iw,ih);ctx.strokeStyle=MRC.LN;ctx.lineWidth=1*U;ctx.strokeRect(b.x+(lw-iw)/2,y+6*U+(bh-ih)/2,iw,ih)}
+      else mrSheet(ctx,RENDER[2],{x:b.x,y:y+6*U,w:lw,h:bh},U);
+      const rx=b.x+lw+24*U,rw=b.w-lw-24*U;let ry=y+6*U;rrect(ctx,rx,ry,rw,b.y+b.h-ry,14*U);ctx.fillStyle=MRC.SOFT;ctx.fill();ry+=26*U;
+      txt(ctx,'QAYDNOMA',rx+rw/2,ry,17*U,{al:'center',halo:false,col:MRC.NV,w:'800'});ry+=24*U;
+      const list=I.P.map(p=>[lotLabel(p.no),p.name,p.land]).concat(I.x?I.x.bud.map((o,i)=>['B-'+(i+1),o.type+(o.name?' — '+o.name:''),o.land]):[]);
+      const room=b.y+b.h-ry-210*U,lh=Math.max(15*U,Math.min(24*U,room/Math.max(list.length,1)));list.forEach(([n,t,a],i)=>{const yy=ry+i*lh;if(yy>ry+room)return;txt(ctx,n,rx+16*U,yy,Math.min(12*U,lh*0.6),{halo:false,col:MRC.AC,w:'800'});
+        txt(ctx,clipLines(ctx,t,rw-150*U,1,'600 '+Math.min(12*U,lh*0.6)+'px '+FONT)[0],rx+66*U,yy,Math.min(12*U,lh*0.6),{halo:false,col:MRC.INK,w:'600'});if(a)txt(ctx,nUz(a,'#,##0')+' m²',rx+rw-14*U,yy,Math.min(11.5*U,lh*0.58),{al:'right',halo:false,col:MRC.MU,w:'600'})});
+      if(!list.length)txt(ctx,'LOT va obyektlar kiritilmagan',rx+rw/2,ry+10*U,12*U,{al:'center',halo:false,col:MRC.MU});
+      let ty=b.y+b.h-196*U;ctx.strokeStyle='#cfd7e4';ctx.lineWidth=1*U;ctx.beginPath();ctx.moveTo(rx+16*U,ty-14*U);ctx.lineTo(rx+rw-16*U,ty-14*U);ctx.stroke();
+      txt(ctx,'TEXNIK-IQTISODIY KO‘RSATKICHLAR',rx+rw/2,ty,13.5*U,{al:'center',halo:false,col:MRC.NV,w:'800'});ty+=26*U;
+      const fp=I.P.reduce((a,p)=>a+(p.fp||0),0)+(I.x?I.x.bud.reduce((a,o)=>a+(o.fp||0),0):0),gr=I.P.reduce((a,p)=>a+(p.green||0),0)+(I.x?I.x.bud.reduce((a,o)=>a+(o.green||0),0):0)+(I.x&&I.x.green||0);
+      [['Hudud maydoni',I.land?nUz(I.land,'#,##0')+' m²':'—'],['Binolar soni',I.x?nUz(Object.values(I.x.bldg).reduce((a,b)=>a+b,0))+' ta':'—'],['Qurilish osti maydoni',fp?nUz(fp,'#,##0')+' m²':'—'],['Qurilish zichligi',I.land&&fp?fmtNum(fp/I.land,'0.#%'):'—'],['Yashil hudud',gr?nUz(gr,'#,##0')+' m²':'—'],['Umumiy qiymati',I.x&&I.x.cost?plMlrd(I.x.cost)+' so‘m':'—']].forEach(([a,v])=>{txt(ctx,a,rx+16*U,ty,12.5*U,{halo:false,col:MRC.INK,w:'500'});txt(ctx,v,rx+rw-16*U,ty,12.5*U,{al:'right',halo:false,col:MRC.NV,w:'800'});ty+=25*U})},{toc:1});
+    /* LOT list */
+    if(I.P.length){const per=16;for(let p0=0;p0<I.P.length;p0+=per){const chunk=I.P.slice(p0,p0+per);
+      add(p0?'LOTlar (davomi)':'LOTlar',(ctx,W,H,U)=>{const b=mrBox(W,H,U),cols=[['LOT №',0.08],['Nomi',0.27],['Yer, m²',0.1,1],['Qurilish osti, m²',0.11,1],['Qavat',0.06,1],['Umumiy maydon, m²',0.12,1],['Ish o‘rni',0.08,1],['Investitsiya, mlrd so‘m',0.18,1]],rh=Math.min(52*U,(b.h-60*U)/(per+1));
+        let y=b.y;ctx.fillStyle=MRC.NV;ctx.fillRect(b.x,y,b.w,rh);let cx=b.x;cols.forEach(([t,w,r])=>{txt(ctx,t,r?cx+w*b.w-12*U:cx+12*U,y+rh/2,14*U,{al:r?'right':'left',halo:false,col:'#fff',w:'800'});cx+=w*b.w});y+=rh;
+        chunk.forEach((P,i)=>{ctx.fillStyle=i%2?'#fff':MRC.SOFT;ctx.fillRect(b.x,y,b.w,rh);const v=[lotLabel(P.no),P.name+(P.dx?' (DXSH)':''),nUz(P.land,'#,##0'),nUz(P.fp,'#,##0'),P.fl?nUz(P.fl):'—',nUz(P.floor,'#,##0'),P.jobs?nUz(P.jobs):'—',plMlrd(P.dx?P.inv:P.total).replace(' mlrd','')];let cx=b.x;
+          cols.forEach(([t,w,r],j)=>{txt(ctx,j===1?clipLines(ctx,v[j],w*b.w-20*U,1,'600 '+(14*U)+'px '+FONT)[0]:v[j],r?cx+w*b.w-12*U:cx+12*U,y+rh/2,14*U,{al:r?'right':'left',halo:false,col:j===0?MRC.AC:MRC.INK,w:j<2?'700':'500'});cx+=w*b.w});y+=rh});
+        if(p0+per>=I.P.length){const tot=I.P.reduce((a,P)=>a+((P.dx?P.inv:P.total)||0),0);ctx.fillStyle='#fdf1de';ctx.fillRect(b.x,y,b.w,rh);txt(ctx,'Jami: '+I.P.length+' ta LOT · yer '+nUz(I.P.reduce((a,P)=>a+(P.land||0),0),'#,##0')+' m² · ish o‘rni '+nUz(I.P.reduce((a,P)=>a+(P.jobs||0),0))+' ta',b.x+12*U,y+rh/2,14*U,{halo:false,col:'#8a4406',w:'800'});txt(ctx,plMlrd(tot)+' so‘m',b.x+b.w-12*U,y+rh/2,14*U,{al:'right',halo:false,col:'#8a4406',w:'800'})}},{toc:!p0})}}
+    /* the board */
+    if(PL.has())add('Arxitektura-badiiy yechimlar',(ctx,W,H,U)=>{mrSheet(ctx,render13,mrBox(W,H,U),U)},{toc:1});
+    /* renders: one per page, then four per page */
+    const gal=imgList('Xarita','A15').map(z=>PL.img[z.k]).filter(Boolean);const views=gal.length?gal:(mrMainRender()?[mrMainRender()]:[]);
+    views.forEach((im,i)=>add('Umumiy ko‘rinish',(ctx,W,H,U)=>{mrCover(ctx,im,0,96*U,W,H-96*U-42*U,0)},{toc:i===0,group:'view'}));
+    const lv=imgList('Xarita','A17').map(z=>PL.img[z.k]).filter(Boolean);for(let i=0;i<lv.length;i+=4){const four=lv.slice(i,i+4);
+      add('Lavhalar',(ctx,W,H,U)=>{const b=mrBox(W,H,U),g=16*U,n=four.length,cols=n===1?1:2,rows=n<=2?1:2,cw=(b.w-(cols-1)*g)/cols,ch=(b.h-(rows-1)*g)/rows;four.forEach((im,k)=>mrCover(ctx,im,b.x+(k%cols)*(cw+g),b.y+Math.floor(k/cols)*(ch+g),cw,ch,14*U))},{toc:i===0,group:'lav'})}
+    return pages}
+  /* contents page: the sections with their page numbers */
+  function mrContents(ctx,W,H,U,pages,I){const b=mrBox(W,H,U);txt(ctx,'MASTER',b.x+10*U,b.y+50*U,60*U,{halo:false,col:MRC.NV,w:'800'});ctx.font='800 '+(60*U)+'px '+FONT;txt(ctx,'REJA',b.x+10*U+ctx.measureText('MASTER ').width,b.y+50*U,60*U,{halo:false,col:MRC.AC,w:'800'});
+    let y=mrPara(ctx,I.title,b.x+10*U,b.y+100*U,560*U,15.5*U,{lh:1.5,max:9})+20*U;const im=mrMainRender();if(im&&b.y+b.h-y>140*U)mrCover(ctx,im,b.x+10*U,y,560*U,b.y+b.h-y,14*U);
+    const items=[];pages.forEach((p,i)=>{if(!p.toc&&!p.contents)return;const last=p.group?pages.reduce((m,q,j)=>q.group===p.group?j:m,i):i;items.push([p.t,i+1,last+1])});
+    const rx=b.x+620*U,rw=b.w-620*U,rh=Math.min(64*U,b.h/items.length);items.forEach(([t,a,z],k)=>{const yy=b.y+k*rh;rrect(ctx,rx,yy+5*U,rw,rh-10*U,10*U);ctx.fillStyle=k%2?'#fff':MRC.SOFT;ctx.fill();ctx.strokeStyle=MRC.LN;ctx.lineWidth=1*U;ctx.stroke();
+      rrect(ctx,rx,yy+5*U,64*U,rh-10*U,10*U);ctx.fillStyle=MRC.NV;ctx.fill();txt(ctx,String(k+1).padStart(2,'0'),rx+32*U,yy+rh/2,Math.min(20*U,rh*0.38),{al:'center',halo:false,col:'#fff',w:'800'});
+      txt(ctx,t.toUpperCase(),rx+84*U,yy+rh/2,Math.min(17*U,rh*0.33),{halo:false,col:MRC.INK,w:'800'});txt(ctx,String(a).padStart(2,'0')+(z>a?'–'+String(z).padStart(2,'0'):''),rx+rw-20*U,yy+rh/2,Math.min(17*U,rh*0.33),{al:'right',halo:false,col:MRC.AC,w:'800'})})}
+  /* every page as a JPEG, one at a time so the page stays responsive */
+  async function mrBuild(W,onPage){const pages=mrPlan(),I=mrInfo(),H=Math.round(W/1.41421),U=W/1350,out=[];
+    for(let i=0;i<pages.length;i++){const p=pages[i],cv=document.createElement('canvas');cv.width=W;cv.height=H;const ctx=cv.getContext('2d');
+      if(p.cover)p.draw(ctx,W,H,U);else{mrChrome(ctx,W,H,U,p.t,i+1);if(p.contents)mrContents(ctx,W,H,U,pages,I);else p.draw(ctx,W,H,U)}
+      out.push(cv.toDataURL('image/jpeg',0.86));if(onPage)onPage(i+1,pages.length);await new Promise(r=>setTimeout(r,0))}
+    return out}
   const RENDER=[render1,render2,render3,render4];
 
   /* ----- relief: heights of the project area from open satellite elevation data (SRTM / Copernicus, ~30 m cells).
@@ -3432,7 +3641,7 @@ const MAP=(function(){
 
   /* the four sheets as JPEG pictures for the PDF (A4 landscape) */
   function images(w,thumb){w=w||2400;const big=document.createElement('canvas');big.width=w;big.height=Math.round(w/1.4142);NOSUB=!!thumb;try{return RENDER.map(fn=>{fn(big);return big.toDataURL('image/jpeg',0.9)})}finally{NOSUB=false}}
-  return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region(),dem,loadDem,relStats,render5,relief,pop,loadPop,render6,render7,extra,render8,render9,render10,render11,render12,render13,passport,qurData,popData,residents,roads,loadRoads,site,cover,climate,loadClimate,facts,sunInfo,relStats2:()=>relStats()};
+  return {X,region,district,kmz,label,load,area,RENDER,images,ready:()=>!!region(),dem,loadDem,relStats,render5,relief,pop,loadPop,render6,render7,extra,render8,render9,render10,render11,render12,render13,passport,mrBuild,qurData,popData,residents,roads,loadRoads,site,cover,climate,loadClimate,facts,sunInfo,relStats2:()=>relStats()};
 })();
 
 /* first page: region, district and the KMZ outline */
@@ -3466,7 +3675,8 @@ function mapFields(){
     out.push(qrow('Loyiha logotipi',imgEditor(X,'A13','Logotip',"Planshet, LOT pasportlari va muqovada chiqadi.",1),{icon:'project',opt:true}));
     out.push(qrow('Master reja umumiy qiymati, so‘m',numIn('A9','avtomatik: '+nUz(Math.round(auto),'#,##0')),{for:'f-Xarita-A9',icon:'money',opt:true,hint:"11-rasm uchun. Bo‘sh qoldirilsa, loyihadagi barcha summalar (LOTlar, byudjet, DXSH) yig‘indisi olinadi."}));
     out.push(qrow('Ko‘chib keladigan aholi, kishi',numIn('A10','masalan: 12 000'),{for:'f-Xarita-A10',icon:'pin',opt:true,
-      hint:"12-rasm uchun. Master rejadagi turar joylarga boshqa joydan ko‘chib keladigan aholi soni. Ular uylar qurila boshlagandan 2 yil o‘tib joylasha boshlaydi. Kiritilmasa, 12-rasmda faqat stat.uz prognozi ko‘rsatiladi."}))}
+      hint:"12-rasm uchun. Master rejadagi turar joylarga boshqa joydan ko‘chib keladigan aholi soni. Ular uylar qurila boshlagandan 2 yil o‘tib joylasha boshlaydi. Kiritilmasa, 12-rasmda faqat stat.uz prognozi ko‘rsatiladi."}));
+    out.push(mrFields())}
   return out;
 }
 /* ----- population statistics: the copy built into the site, or a newer one fetched from stat.uz (SIAT) and kept in this browser ----- */
@@ -3632,7 +3842,7 @@ const PL={img:{},busy:{},err:'',
     if(v)this.idbPut(k,v);return v},
   /* the picture as an <img>, loaded once; the board is drawn again when it arrives */
   need(k){if(!k||this.img[k]||this.busy[k])return;this.busy[k]=this.get(k).then(u=>new Promise(ok=>{if(!u){ok();return}const i=new Image();i.onload=()=>{this.img[k]=i;ok()};i.onerror=()=>ok();i.src=u})).finally(()=>{delete this.busy[k];scheduleRender()})},
-  keys(){const m=plMeta(),out=[m.m&&m.m.k].concat(m.it.map(i=>i.k));imgList('Xarita','A13').forEach(z=>out.push(z.k));LOTROWS.forEach(r=>imgList('Lot','X'+r).forEach(z=>out.push(z.k)));for(let r=30;r<=79;r++)imgList('Bino','AD'+r).forEach(z=>out.push(z.k));return out.filter(Boolean)},
+  keys(){const m=plMeta(),out=[m.m&&m.m.k].concat(m.it.map(i=>i.k));['A13','A15','A16','A17'].forEach(c=>imgList('Xarita',c).forEach(z=>out.push(z.k)));LOTROWS.forEach(r=>imgList('Lot','X'+r).forEach(z=>out.push(z.k)));for(let r=30;r<=79;r++)imgList('Bino','AD'+r).forEach(z=>out.push(z.k));return out.filter(Boolean)},
   async ready(){const ks=this.keys();ks.forEach(k=>this.need(k));await Promise.all(ks.map(k=>this.busy[k]).filter(Boolean))},
   has(){const m=plMeta();return !!(m.m&&this.img[m.m.k])}};
 async function plPrep(file,max){const u=URL.createObjectURL(file);try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('img'));i.src=u});
@@ -4208,6 +4418,10 @@ let dl=null;const PDFLIB=['lib/pdfmake-0.2.12.min.js','lib/vfs_fonts-0.2.12.js']
 function loadScript(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>{s.remove();no(new Error('load'))};document.head.appendChild(s)})}
 function pdfMsg(t){const e=$('pdfmsg');e.textContent=t;e.hidden=!t}
 
+/* the MR presentation: every page drawn as one A3 picture */
+async function mrPdf(b){const imgs=await MAP.mrBuild(3200,(i,n)=>{b.textContent='Tayyorlanmoqda… '+i+'/'+n});
+  return await new Promise((ok,no)=>{try{pdfMake.createPdf({pageSize:'A3',pageOrientation:'landscape',pageMargins:[0,0,0,0],info:{title:'Master reja — '+String(V('Jamlama','C5')||'')},
+    content:imgs.map((im,i)=>({image:im,width:1190.55,height:841.89,pageBreak:i?'before':undefined}))}).getBlob(ok)}catch(e){no(e)}})}
 async function makeFile(kind,full,b){
   if(makeFile.busy)return;makeFile.busy=true;
   const keep=[...b.childNodes];b.textContent='Tayyorlanmoqda…';pdfMsg('');
@@ -4215,8 +4429,8 @@ async function makeFile(kind,full,b){
     if(full!=='word'&&typeof pdfMake==='undefined'){await loadScript(PDFLIB[0]);await loadScript(PDFLIB[1])}
     try{await PL.ready()}catch(e){}
     if(full==='map'&&!MAP.ready()){pdfMsg("Joylashuv uchun «Loyiha birlamchi ma'lumotlari» bo'limida viloyatni tanlang (tuman va KMZ ham kerak).");b.replaceChildren(...keep);makeFile.busy=false;return}
-    const blob=full==='word'?await wordReport():await new Promise((ok,no)=>{try{pdfMake.createPdf(full==='map'?mapDoc():reportDoc(full)).getBlob(ok)}catch(e){no(e)}});if(full==='word')kind='docx';
-    const d=new Date(),name='Infratuzilma-'+(full==='word'?'batafsil-hisobot':full==='map'?'joylashuv':full?'umumiy-malumotlar':'infratuzilma-obyektlari')+'-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.'+kind;
+    const blob=full==='word'?await wordReport():full==='mr'?await mrPdf(b):await new Promise((ok,no)=>{try{pdfMake.createPdf(full==='map'?mapDoc():reportDoc(full)).getBlob(ok)}catch(e){no(e)}});if(full==='word')kind='docx';
+    const d=new Date(),name=(full==='mr'?'Master-reja-'+String(V('Jamlama','C5')||'loyiha').replace(/[^0-9A-Za-zА-Яа-яЎўҚқҒғҲҳ‘’' -]+/g,'').trim().slice(0,40).replace(/\s+/g,'-'):'Infratuzilma-'+(full==='word'?'batafsil-hisobot':full==='map'?'joylashuv':full?'umumiy-malumotlar':'infratuzilma-obyektlari'))+'-'+d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+'.'+kind;
     await dl.save({filename:name,data:blob});
     pdfMsg('Fayl saqlashga berildi.');$('pdfs').open=false;
   }catch(e){
@@ -4230,7 +4444,7 @@ async function makeFile(kind,full,b){
   clearTimeout(makeFile.t);makeFile.t=setTimeout(()=>{if(!makeFile.busy)pdfMsg('')},6000);
 }
 $('pdfs').addEventListener('toggle',()=>{if(makeFile.busy&&$('pdfs').open)$('pdfs').open=false});
-document.querySelectorAll('#pdfs .menu button').forEach(b=>b.addEventListener('click',()=>{$('pdfs').open=false;makeFile('pdf',b.dataset.full==='map'?'map':b.dataset.full==='word'?'word':b.dataset.full==='1',$('pdfs').querySelector('summary'))}));
+document.querySelectorAll('#pdfs .menu button').forEach(b=>b.addEventListener('click',()=>{$('pdfs').open=false;makeFile('pdf',b.dataset.full==='map'?'map':b.dataset.full==='mr'?'mr':b.dataset.full==='word'?'word':b.dataset.full==='1',$('pdfs').querySelector('summary'))}));
 document.addEventListener('click',e=>{const d=$('pdfs');if(d&&d.open&&!d.contains(e.target))d.open=false});
 document.addEventListener('keydown',e=>{const d=$('pdfs');if(e.key==='Escape'&&d&&d.open)d.open=false});
 async function connectDownloads(){try{dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null}catch(e){dl=null}
